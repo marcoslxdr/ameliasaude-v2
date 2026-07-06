@@ -34,16 +34,16 @@ const cities: { name: string; src: string }[] = [
     src: "https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=160&h=160&fit=crop&q=80",
   },
   {
-    name: "Belford Roxo",
-    src: "https://images.unsplash.com/photo-1566737236500-c8ac43014a67?w=160&h=160&fit=crop&q=80",
-  },
-  {
-    name: "Duque de Caxias",
-    src: "https://images.unsplash.com/photo-1516306580123-e6e52b1b7b5f?w=160&h=160&fit=crop&q=80",
-  },
-  {
     name: "Nova Iguaçu",
     src: "/nova-iguacu.webp",
+  },
+  {
+    name: "Nilópolis",
+    src: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=160&h=160&fit=crop&q=80",
+  },
+  {
+    name: "Belford Roxo",
+    src: "https://images.unsplash.com/photo-1566737236500-c8ac43014a67?w=160&h=160&fit=crop&q=80",
   },
   {
     name: "São Gonçalo",
@@ -58,8 +58,8 @@ const cities: { name: string; src: string }[] = [
     src: "/sao-joao-de-meriti.jpg",
   },
   {
-    name: "Nilópolis",
-    src: "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=160&h=160&fit=crop&q=80",
+    name: "Duque de Caxias",
+    src: "https://images.unsplash.com/photo-1516306580123-e6e52b1b7b5f?w=160&h=160&fit=crop&q=80",
   },
   {
     name: "Magé",
@@ -187,9 +187,9 @@ function placeNiteroiBesideSaoGoncalo(nodes: OrbitNode[]): OrbitNode[] {
 
 /** Par (direita, esquerda): a cidade da direita espelha a âncora da esquerda no eixo vertical. */
 const ORBIT_MIRROR_PAIRS: [string, string][] = [
-  ["Belford Roxo", "São Gonçalo"],
-  ["Duque de Caxias", "Nova Iguaçu"],
-  ["Nilópolis", "Niterói"],
+  ["Nova Iguaçu", "São Gonçalo"],
+  ["Nilópolis", "Belford Roxo"],
+  ["Duque de Caxias", "Niterói"],
   ["São João de Meriti", "Magé"],
 ];
 

@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { staggerContainer, fadeUp, viewportConfig } from "@/lib/motion";
 import { Shield, Wallet, Zap, Users, Building, Landmark } from "lucide-react";
-import Link from "next/link";
+import { Button } from "@/components/ui/Button";
 
 const items = [
   {
@@ -122,14 +122,9 @@ export function HealthExperience() {
           viewport={viewportConfig}
           className="mt-14 flex justify-center"
         >
-          <motion.a
-            href="#contato"
-            className="inline-flex items-center justify-center rounded-2xl border border-[var(--amelia-line)] bg-[var(--amelia-deep)] px-11 py-4 font-sans text-sm font-medium tracking-[0.05em] text-white shadow-[0_12px_40px_-12px_rgba(0,0,0,0.25)] transition-[background-color,box-shadow,color] hover:bg-[#4a3a6b] hover:shadow-[0_16px_48px_-12px_rgba(0,0,0,0.35)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--amelia-deep)]"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
+          <Button href="#contato" variant="primary">
             Fazer orçamento
-          </motion.a>
+          </Button>
         </motion.div>
       </div>
     </section>

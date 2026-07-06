@@ -10,6 +10,7 @@ import {
   revealLine,
   viewportConfig,
 } from "@/lib/motion";
+import { Button } from "@/components/ui/Button";
 
 export function Hero() {
   const containerRef = useRef<HTMLElement>(null);
@@ -279,30 +280,15 @@ export function Hero() {
             variants={fadeUp}
             className="flex flex-col items-center self-start gap-3 lg:flex-row lg:flex-wrap lg:items-center lg:gap-5"
           >
-            <motion.a
-              href="#experiencia-planos"
-              className="inline-flex items-center gap-1.5 sm:gap-2 whitespace-nowrap bg-[var(--amelia-deep)] text-white font-semibold text-[11px] sm:text-xs tracking-wide px-4 py-2 sm:px-5 sm:py-2.5 rounded-full shadow-lg"
-              whileHover={{
-                scale: 1.03,
-                boxShadow:
-                  "0 20px 48px color-mix(in srgb, var(--amelia-deep) 35%, transparent)",
-              }}
-              whileTap={{ scale: 0.97 }}
-              transition={{ duration: 0.2 }}
-            >
+            <Button href="#experiencia-planos" variant="primary" size="sm">
               Quero meu plano
               <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 stroke-[2.5]" />
-            </motion.a>
+            </Button>
 
-            <motion.a
-              href="#origem"
-              className="inline-flex items-center gap-1.5 text-[var(--amelia-deep)]/60 hover:text-[var(--amelia-deep)] text-xs sm:text-sm font-normal tracking-wide transition-colors duration-300"
-              whileHover={{ x: 4 }}
-              transition={{ type: "spring", stiffness: 400, damping: 25 }}
-            >
+            <Button href="#origem" variant="ghost-link" size="sm">
               Conheça a Amélia
               <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 stroke-[1.75]" />
-            </motion.a>
+            </Button>
           </motion.div>
         </motion.div>
 

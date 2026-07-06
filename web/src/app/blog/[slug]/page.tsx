@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
+import { Button } from "@/components/ui/Button";
 import { getPostBySlug, blogPosts } from "@/data/blog";
 
 interface Props {
@@ -94,12 +95,9 @@ export default async function BlogPostPage({ params }: Props) {
             <p className="mb-6 font-display text-xl tracking-[-0.01em] text-[#1a1a1a]">
               Gostou deste conteúdo?
             </p>
-            <Link
-              href="#contato"
-              className="inline-flex items-center rounded-full bg-[#7b6bb2] px-8 py-3.5 font-sans text-sm font-normal tracking-wide text-white transition-colors duration-300 hover:bg-[#5e4985]"
-            >
+            <Button href="/#contato" variant="primary">
               Fale conosco
-            </Link>
+            </Button>
           </div>
         </article>
 

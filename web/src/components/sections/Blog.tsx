@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { fadeUp, staggerContainer, viewportConfig } from "@/lib/motion";
 import Link from "next/link";
+import { Button } from "@/components/ui/Button";
 import Image from "next/image";
 import { blogPosts } from "@/data/blog";
 
@@ -92,12 +93,9 @@ export function Blog() {
           viewport={viewportConfig}
           className="mt-12 text-center"
         >
-          <Link
-            href="/blog"
-            className="inline-flex items-center rounded-full border border-[var(--amelia-purple)] px-8 py-3.5 font-sans text-sm font-normal tracking-wide text-[var(--amelia-purple)] transition-colors duration-300 hover:bg-[var(--amelia-purple)] hover:text-white"
-          >
+          <Button href="/blog" variant="outline">
             Ver todos os artigos
-          </Link>
+          </Button>
         </motion.div>
       </div>
     </section>

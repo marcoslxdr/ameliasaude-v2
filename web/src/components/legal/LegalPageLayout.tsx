@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
+import { getButtonClassName } from "@/lib/button-styles";
 
 interface LegalPageLayoutProps {
   title: string;
@@ -87,11 +88,11 @@ export function LegalPageLayout({
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`shrink-0 rounded-full px-4 py-2 font-sans text-sm font-medium transition-colors ${
-                    isActive
-                      ? "bg-[#7b6bb2] text-white"
-                      : "text-[#5c5470] hover:bg-[rgba(123,107,178,0.08)] hover:text-[#7b6bb2]"
-                  }`}
+                  className={getButtonClassName(
+                    isActive ? "pagination-active" : "pagination",
+                    "md",
+                    "shrink-0 font-medium",
+                  )}
                 >
                   {link.label}
                 </Link>

@@ -12,16 +12,9 @@ const specialties: {
   variant: SpecialtyVariant;
 }[] = [
   {
-    name: "Cardiologista",
-    variant: "hero",
-    photo:
-      "https://images.unsplash.com/photo-1460672985063-6764ac8b9c74?w=800&h=560&fit=crop&crop=faces",
-  },
-  {
-    name: "Ginecologista",
+    name: "Clínico Geral",
     variant: "compact",
-    photo:
-      "https://images.unsplash.com/photo-1637059824899-a441006a6875?w=400&h=480&fit=crop&crop=faces",
+    photo: "/clinico geral.jpg",
   },
   {
     name: "Pediatra",
@@ -30,31 +23,40 @@ const specialties: {
       "https://images.unsplash.com/photo-1632052999447-e542d08d4f7d?w=400&h=480&fit=crop&crop=faces",
   },
   {
-    name: "Clínico geral",
-    variant: "compact",
-    photo: "/clinico geral.jpg",
+    name: "Cardiologista",
+    variant: "hero",
+    photo:
+      "https://images.unsplash.com/photo-1460672985063-6764ac8b9c74?w=800&h=560&fit=crop&crop=faces",
   },
   {
-    name: "Dermatologista",
+    name: "Gastroenterologista",
     variant: "compact",
-    photo: "/dermatologista.jpg",
+    photo:
+      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=480&fit=crop&crop=faces",
+  },
+  {
+    name: "Ginecologista",
+    variant: "compact",
+    photo:
+      "https://images.unsplash.com/photo-1637059824899-a441006a6875?w=400&h=480&fit=crop&crop=faces",
+  },
+  {
+    name: "Otorrinolaringologista",
+    variant: "hero",
+    photo:
+      "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=800&h=560&fit=crop&crop=faces",
+  },
+  {
+    name: "Urologista",
+    variant: "hero",
+    photo:
+      "https://images.unsplash.com/photo-1559837814-bb5b1e6d0c4e?w=800&h=560&fit=crop&crop=faces",
   },
   {
     name: "Ortopedista",
     variant: "hero",
     photo:
       "https://images.unsplash.com/photo-1597764690472-ec054f1c8637?w=800&h=560&fit=crop&crop=faces",
-  },
-  {
-    name: "Psiquiatra",
-    variant: "hero",
-    photo:
-      "https://images.unsplash.com/photo-1592947945242-69312358628b?w=800&h=560&fit=crop&crop=faces",
-  },
-  {
-    name: "Oftalmologista",
-    variant: "hero",
-    photo: "/oftamologista.webp",
   },
 ];
 

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { getButtonClassName } from "@/lib/button-styles";
 
 interface Category {
   name: string;
@@ -15,17 +16,17 @@ interface CategoryFilterProps {
 export function CategoryFilter({ categories, activeCategory }: CategoryFilterProps) {
   return (
     <div>
-      <h3 className="text-xs font-semibold uppercase tracking-wider text-[#7b6bb2] mb-3">
+      <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-[#7b6bb2]">
         Categorias
       </h3>
       <div className="space-y-1">
         <Link
           href="/blog"
-          className={`block px-3 py-2 rounded-lg text-sm transition-colors ${
-            !activeCategory
-              ? "bg-[#7b6bb2] text-white font-medium"
-              : "text-gray-600 hover:bg-gray-50 hover:text-[#7b6bb2]"
-          }`}
+          className={getButtonClassName(
+            !activeCategory ? "pagination-active" : "pagination",
+            "md",
+            "block w-full text-left font-medium",
+          )}
         >
           Todas
         </Link>
@@ -33,11 +34,11 @@ export function CategoryFilter({ categories, activeCategory }: CategoryFilterPro
           <Link
             key={cat.name}
             href={`/blog?category=${encodeURIComponent(cat.name)}`}
-            className={`block px-3 py-2 rounded-lg text-sm transition-colors ${
-              activeCategory === cat.name
-                ? "bg-[#7b6bb2] text-white font-medium"
-                : "text-gray-600 hover:bg-gray-50 hover:text-[#7b6bb2]"
-            }`}
+            className={getButtonClassName(
+              activeCategory === cat.name ? "pagination-active" : "pagination",
+              "md",
+              "block w-full text-left font-medium",
+            )}
           >
             {cat.name} ({cat.count})
           </Link>

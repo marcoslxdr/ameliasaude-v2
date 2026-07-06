@@ -1,47 +1,72 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, type TargetAndTransition } from "framer-motion";
 import type { ReactNode } from "react";
-
-type ButtonVariant = "purple" | "outline" | "ghost-white" | "ghost-purple";
+import {
+  getButtonClassName,
+  buttonMotionHover,
+  buttonMotionTap,
+  buttonMotionTransition,
+  type ButtonSize,
+  type ButtonVariant,
+} from "@/lib/button-styles";
 
 interface ButtonProps {
   children: ReactNode;
   variant?: ButtonVariant;
+  size?: ButtonSize;
   href?: string;
   onClick?: () => void;
   className?: string;
   "aria-label"?: string;
+  type?: "button" | "submit" | "reset";
 }
 
-const base =
-  "inline-flex items-center gap-2 font-sans text-sm font-normal tracking-wide cursor-pointer transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 rounded-full";
-
-const variants: Record<ButtonVariant, string> = {
-  purple:
-    "bg-[#7b6bb2] text-white border border-[#7b6bb2] px-8 py-3.5 hover:bg-[#5e4985] hover:border-[#5e4985]",
-  outline:
-    "bg-transparent text-[#1a1a1a] border border-[#7b6bb2] px-8 py-3.5 hover:bg-[#7b6bb2] hover:text-white",
-  "ghost-white":
-    "bg-transparent text-white border border-white/40 px-8 py-3.5 hover:bg-white hover:text-[#5e4985] hover:border-white",
-  "ghost-purple":
-    "bg-transparent text-[#7b6bb2] border-0 px-0 py-2 hover:text-[#5e4985] underline-offset-4 hover:underline",
+const motionByVariant: Partial<
+  Record<
+    ButtonVariant,
+    { whileHover?: TargetAndTransition; whileTap?: TargetAndTransition }
+  >
+> = {
+  primary: {
+    whileHover: buttonMotionHover,
+    whileTap: buttonMotionTap,
+  },
+  purple: {
+    whileHover: { scale: 1.02 },
+    whileTap: { scale: 0.97 },
+  },
+  outline: {
+    whileHover: { scale: 1.02 },
+    whileTap: { scale: 0.97 },
+  },
+  "ghost-white": {
+    whileHover: { scale: 1.02 },
+    whileTap: { scale: 0.97 },
+  },
+  "ghost-link": {
+    whileHover: { x: 4 },
+    whileTap: { scale: 0.98 },
+  },
 };
 
 export function Button({
   children,
-  variant = "outline",
+  variant = "primary",
+  size = "md",
   href,
   onClick,
   className = "",
   "aria-label": ariaLabel,
+  type = "button",
 }: ButtonProps) {
-  const classes = `${base} ${variants[variant]} ${className}`;
-
+  const classes = getButtonClassName(variant, size, className);
   const motionProps = {
-    whileHover: { scale: 1.02 },
-    whileTap: { scale: 0.97 },
-    transition: { type: "spring" as const, stiffness: 400, damping: 25 },
+    ...(motionByVariant[variant] ?? {
+      whileHover: { scale: 1.02 },
+      whileTap: { scale: 0.97 },
+    }),
+    transition: buttonMotionTransition,
   };
 
   if (href) {
@@ -60,6 +85,7 @@ export function Button({
 
   return (
     <motion.button
+      type={type}
       onClick={onClick}
       className={classes}
       aria-label={ariaLabel}

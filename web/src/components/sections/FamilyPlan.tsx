@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { staggerContainer, fadeUp, viewportConfig } from "@/lib/motion";
-import { Button } from "@/components/ui/Button";
 
 import Image from "next/image";
 

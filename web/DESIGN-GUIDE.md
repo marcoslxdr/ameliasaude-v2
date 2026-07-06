@@ -88,10 +88,32 @@ Arquivo central: [`src/lib/motion.ts`](src/lib/motion.ts).
 
 | Componente | Arquivo | Função |
 |------------|---------|--------|
-| `Button` | `components/ui/Button.tsx` | Variantes: `purple`, `outline`, `ghost-white`, `ghost-purple`; suporta `href` ou `onClick` |
+| `Button` | `components/ui/Button.tsx` | CTAs pill (`rounded-full`). Variantes em `lib/button-styles.ts` |
 | `AnimatedText` | `components/ui/AnimatedText.tsx` | Wrapper com `fadeUp` ou stagger para texto |
 | `SectionWrapper` | `components/ui/SectionWrapper.tsx` | Seção fullscreen com fade-in opcional |
 | `Logo` | `components/ui/Logo.tsx` | Placeholder SVG; substituir por `public/logo.svg` quando houver marca oficial |
+
+### Botões (padrão: CTA "Quero meu plano")
+
+**Config central:** [`src/lib/button-styles.ts`](src/lib/button-styles.ts)  
+**Componente:** [`src/components/ui/Button.tsx`](src/components/ui/Button.tsx)
+
+| Variante | Uso |
+|----------|-----|
+| `primary` (default) | CTA principal — fundo `--amelia-deep`, pill, sombra |
+| `purple` | CTA alternativo — fundo `--amelia-purple` |
+| `outline` | Secundário com borda roxa |
+| `ghost-white` | Sobre fundos escuros |
+| `ghost-purple` | Link sublinhado roxo |
+| `ghost-link` | Link textual com seta (ex.: "Conheça a Amélia") |
+| `pagination` / `pagination-active` | Navegação blog (pill) |
+
+| Tamanho | Uso |
+|---------|-----|
+| `sm` | Hero e CTAs compactos |
+| `md` (default) | Seções e páginas |
+
+**Regra:** todo botão de ação usa `rounded-full` (pill). Não usar `rounded-lg` / `rounded-2xl` em CTAs.
 
 ---
 

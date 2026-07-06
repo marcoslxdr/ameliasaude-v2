@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { staggerContainer, fadeUpFast } from "@/lib/motion";
 import { CoverageOrbital } from "@/components/sections/CoverageOrbital";
+import { Button } from "@/components/ui/Button";
 
 export function Network() {
   return (
@@ -47,20 +48,12 @@ export function Network() {
                 Rede eficiente, presente em mais de 10 municípios com diversos hospitais no Rio e Grande Rio.
               </motion.p>
               <motion.div variants={fadeUpFast}>
-                <motion.button
-                  type="button"
-                  className="inline-flex cursor-pointer items-center rounded-full border border-[var(--amelia-purple)] px-7 py-3 font-sans text-sm font-normal tracking-wide text-[var(--amelia-purple)] transition-colors duration-200"
-                  whileHover={{
-                    background: "var(--amelia-purple)",
-                    color: "#fff",
-                    scale: 1.02,
-                  }}
-                  whileTap={{ scale: 0.97 }}
-                  transition={{ duration: 0.2 }}
+                <Button
+                  variant="outline"
                   aria-label="Conheça nossa rede (em breve: lista de hospitais)"
                 >
                   Conheça nossa rede
-                </motion.button>
+                </Button>
               </motion.div>
             </motion.div>
           </div>

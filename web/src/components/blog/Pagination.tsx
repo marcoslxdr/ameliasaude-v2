@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { getButtonClassName } from "@/lib/button-styles";
 
 interface PaginationProps {
   currentPage: number;
@@ -10,7 +11,7 @@ interface PaginationProps {
 
 export function Pagination({ currentPage, totalPages }: PaginationProps) {
   const searchParams = useSearchParams();
-  
+
   if (totalPages <= 1) return null;
 
   const buildUrl = (page: number) => {
@@ -20,11 +21,11 @@ export function Pagination({ currentPage, totalPages }: PaginationProps) {
   };
 
   return (
-    <div className="flex items-center justify-center gap-2 mt-10">
+    <div className="mt-10 flex items-center justify-center gap-2">
       {currentPage > 1 && (
         <Link
           href={buildUrl(currentPage - 1)}
-          className="px-4 py-2 rounded-lg border border-[#e4dcf5] text-sm text-gray-600 hover:bg-[#7b6bb2] hover:text-white hover:border-[#7b6bb2] transition-colors"
+          className={getButtonClassName("pagination")}
         >
           Anterior
         </Link>
@@ -34,11 +35,9 @@ export function Pagination({ currentPage, totalPages }: PaginationProps) {
         <Link
           key={page}
           href={buildUrl(page)}
-          className={`px-4 py-2 rounded-lg text-sm transition-colors ${
-            page === currentPage
-              ? "bg-[#7b6bb2] text-white"
-              : "border border-[#e4dcf5] text-gray-600 hover:bg-[#7b6bb2] hover:text-white hover:border-[#7b6bb2]"
-          }`}
+          className={getButtonClassName(
+            page === currentPage ? "pagination-active" : "pagination",
+          )}
         >
           {page}
         </Link>
@@ -47,7 +46,7 @@ export function Pagination({ currentPage, totalPages }: PaginationProps) {
       {currentPage < totalPages && (
         <Link
           href={buildUrl(currentPage + 1)}
-          className="px-4 py-2 rounded-lg border border-[#e4dcf5] text-sm text-gray-600 hover:bg-[#7b6bb2] hover:text-white hover:border-[#7b6bb2] transition-colors"
+          className={getButtonClassName("pagination")}
         >
           Próxima
         </Link>

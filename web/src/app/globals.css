@@ -21,6 +21,9 @@
   --amelia-purple-wash: color-mix(in srgb, var(--amelia-purple) 36%, var(--amelia-white));
   --amelia-lilac: color-mix(in srgb, var(--amelia-purple) 52%, var(--amelia-white));
 
+  /* Botões — pill (padrão "Quero meu plano") */
+  --amelia-button-radius: 9999px;
+
   --background: #ffffff;
   --foreground: #1a1a1a;
 }
