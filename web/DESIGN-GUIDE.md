@@ -28,6 +28,8 @@ Documentação de referência para manter consistência visual, de conteúdo e d
 
 **Contraste:** texto `#1A1A1A` sobre `#FFFFFF` e `#F8F7FF` atende WCAG AA. Em fundo `#5E4985`, usar texto branco ou branco com opacidade controlada para hierarquia.
 
+**Fundos de seção (home):** usar [`HeroBackground`](src/components/ui/HeroBackground.tsx) — gradiente lilás, glow canto superior direito, trama + grain (mesmo da hero). Conteúdo da seção com `relative z-10` acima do fundo.
+
 ---
 
 ## 3. Tipografia
