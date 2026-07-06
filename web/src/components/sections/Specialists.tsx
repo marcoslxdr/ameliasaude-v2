@@ -49,8 +49,7 @@ const specialties: {
   {
     name: "Urologista",
     variant: "hero",
-    photo:
-      "https://images.unsplash.com/photo-1559837814-bb5b1e6d0c4e?w=800&h=560&fit=crop&crop=faces",
+    photo: "/urologista.jpg",
   },
   {
     name: "Ortopedista",
