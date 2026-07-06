@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { staggerContainer, fadeUp, viewportConfig } from "@/lib/motion";
 import telemedicinaPhone from "@/assets/telemedicina-1.webp";
+import { HeroBackground } from "@/components/ui/HeroBackground";
 
 function Phone() {
   return (
@@ -47,9 +48,10 @@ const bullets = [
 
 export function Telemedicine() {
   return (
-    <section id="telemedicina" className="flex flex-col justify-center bg-white overflow-x-clip overflow-y-visible"
+    <section id="telemedicina" className="relative flex flex-col justify-center overflow-x-clip overflow-y-visible"
       style={{ padding: "clamp(5rem,12vh,8rem) clamp(1.25rem,4vw,4rem)" }}>
-      <div className="max-w-[min(100%,1380px)] mx-auto w-full">
+      <HeroBackground />
+      <div className="relative z-10 max-w-[min(100%,1380px)] mx-auto w-full">
         <div
           className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]
             gap-12 lg:gap-8 xl:gap-12 items-center

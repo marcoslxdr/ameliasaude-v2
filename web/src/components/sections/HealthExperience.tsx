@@ -6,6 +6,7 @@ import Image from "next/image";
 import { staggerContainer, fadeUp, viewportConfig } from "@/lib/motion";
 import { Shield, Wallet, Zap, Users, Building, Landmark } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { HeroBackground } from "@/components/ui/HeroBackground";
 
 const items = [
   {
@@ -45,9 +46,10 @@ export function HealthExperience() {
   return (
     <section
       id="experiencia-planos"
-      className="relative flex flex-col justify-center overflow-hidden bg-white"
+      className="relative flex flex-col justify-center overflow-hidden"
       style={{ padding: "clamp(5.25rem, 11vh, 8.5rem) clamp(1.5rem, 5vw, 5rem)" }}
     >
+      <HeroBackground />
       <div className="relative z-10 mx-auto w-full max-w-[1140px]">
         <motion.div
           variants={staggerContainer(0.08, 0)}

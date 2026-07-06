@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { staggerContainer, fadeUp, viewportConfig } from "@/lib/motion";
+import { HeroBackground } from "@/components/ui/HeroBackground";
 
 function IconWhatsApp({ className }: { className?: string }) {
   return (
@@ -93,17 +94,10 @@ export function Contact() {
   return (
     <section
       id="contato"
-      className="relative flex flex-col justify-center overflow-hidden bg-white"
+      className="relative flex flex-col justify-center overflow-hidden"
       style={{ padding: "clamp(5rem, 10vh, 7rem) clamp(1.5rem, 5vw, 5rem) clamp(4rem, 8vh, 6rem)" }}
     >
-      <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-[min(52vh,520px)]"
-        style={{
-          background:
-            "linear-gradient(180deg, var(--amelia-surface) 0%, color-mix(in srgb, var(--amelia-surface) 65%, transparent) 45%, transparent 100%)",
-        }}
-        aria-hidden
-      />
+      <HeroBackground />
 
       <div className="relative z-[1] mx-auto w-full max-w-[1100px]">
         <motion.div

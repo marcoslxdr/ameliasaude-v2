@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { staggerContainer, fadeUp, viewportConfig } from "@/lib/motion";
+import { HeroBackground } from "@/components/ui/HeroBackground";
 
 type SpecialtyVariant = "hero" | "compact";
 
@@ -71,31 +72,7 @@ export function Specialists() {
       className="relative flex flex-col justify-center overflow-hidden"
       style={{ padding: "clamp(5rem, 12vh, 8rem) 0" }}
     >
-      {/* Camadas de profundidade — gradiente + orbes suaves (marca) */}
-      <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#faf8fc] via-white to-[#f3f0fa]"
-        aria-hidden
-      />
-      <motion.div
-        className="pointer-events-none absolute -left-[20%] top-[8%] h-[min(55vw,420px)] w-[min(55vw,420px)] rounded-full bg-[var(--amelia-purple)]/[0.12] blur-[100px]"
-        aria-hidden
-        initial={reduceMotion ? false : { opacity: 0.5, scale: 0.92 }}
-        whileInView={reduceMotion ? undefined : { opacity: 1, scale: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-      />
-      <motion.div
-        className="pointer-events-none absolute -right-[15%] bottom-[5%] h-[min(60vw,480px)] w-[min(60vw,480px)] rounded-full bg-[var(--amelia-deep)]/[0.1] blur-[120px]"
-        aria-hidden
-        initial={reduceMotion ? false : { opacity: 0.45, scale: 0.9 }}
-        whileInView={reduceMotion ? undefined : { opacity: 1, scale: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1.2, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-      />
-      <div
-        className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0)_0%,rgba(255,255,255,0.4)_45%,rgba(250,248,252,0.85)_100%)]"
-        aria-hidden
-      />
+      <HeroBackground />
 
       <div className="relative z-10 mx-auto w-full max-w-[1320px] px-6">
         {/* Bento: 12 colunas — destaques em faixa dupla */}

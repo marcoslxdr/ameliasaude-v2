@@ -4,12 +4,14 @@ import { motion } from "framer-motion";
 import { staggerContainer, fadeUpFast } from "@/lib/motion";
 import { CoverageOrbital } from "@/components/sections/CoverageOrbital";
 import { Button } from "@/components/ui/Button";
+import { HeroBackground } from "@/components/ui/HeroBackground";
 
 export function Network() {
   return (
-    <section id="rede" className="flex flex-col justify-center overflow-x-clip overflow-y-visible bg-white"
+    <section id="rede" className="relative flex flex-col justify-center overflow-x-clip overflow-y-visible"
       style={{ padding: "clamp(5rem,10vh,7rem) clamp(1.5rem,5vw,5rem)" }}>
-      <div className="max-w-[min(100%,1400px)] mx-auto w-full">
+      <HeroBackground />
+      <div className="relative z-10 max-w-[min(100%,1400px)] mx-auto w-full">
         <div
           className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] gap-16 lg:gap-6 xl:gap-10 items-start lg:items-center"
           style={{ minHeight: "min(61.2vh,765px)" }}

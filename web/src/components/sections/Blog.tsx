@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import Image from "next/image";
 import { blogPosts } from "@/data/blog";
+import { HeroBackground } from "@/components/ui/HeroBackground";
 
 const visiblePosts = blogPosts.slice(0, 3);
 
@@ -13,10 +14,11 @@ export function Blog() {
   return (
     <section
       id="blog"
-      className="relative bg-white"
+      className="relative"
       style={{ padding: "clamp(5rem, 10vh, 7rem) clamp(1.5rem, 5vw, 5rem)" }}
     >
-      <div className="mx-auto max-w-[1200px]">
+      <HeroBackground />
+      <div className="relative z-10 mx-auto max-w-[1200px]">
         <motion.div
           variants={staggerContainer(0.1, 0.05)}
           initial="hidden"
