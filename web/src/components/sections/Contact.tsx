@@ -97,7 +97,7 @@ export function Contact() {
       className="relative flex flex-col justify-center overflow-hidden"
       style={{ padding: "clamp(5rem, 10vh, 7rem) clamp(1.5rem, 5vw, 5rem) clamp(4rem, 8vh, 6rem)" }}
     >
-      <HeroBackground />
+      <HeroBackground variant="bloom" />
 
       <div className="relative z-[1] mx-auto w-full max-w-[1100px]">
         <motion.div

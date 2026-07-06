@@ -11,7 +11,7 @@ export function BrandOrigin() {
       aria-labelledby="origem-heading"
       className="relative flex min-h-[max(800px,100svh)] items-center justify-center overflow-x-clip px-[clamp(1.5rem,5vw,5rem)] py-12 md:py-16"
     >
-      <HeroBackground />
+      <HeroBackground variant="origin" />
       <div className="relative z-10 mx-auto flex w-full max-w-[1240px] items-center justify-center">
         <motion.div
           className="grid w-full max-w-5xl grid-cols-1 place-items-center items-center justify-items-center gap-14 md:gap-20 lg:max-w-none lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] lg:justify-items-center lg:gap-24 xl:gap-28"

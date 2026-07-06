@@ -50,7 +50,7 @@ export function Telemedicine() {
   return (
     <section id="telemedicina" className="relative flex flex-col justify-center overflow-x-clip overflow-y-visible"
       style={{ padding: "clamp(5rem,12vh,8rem) clamp(1.25rem,4vw,4rem)" }}>
-      <HeroBackground />
+      <HeroBackground variant="origin" />
       <div className="relative z-10 max-w-[min(100%,1380px)] mx-auto w-full">
         <div
           className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]

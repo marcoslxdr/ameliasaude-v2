@@ -17,7 +17,7 @@ export function Blog() {
       className="relative"
       style={{ padding: "clamp(5rem, 10vh, 7rem) clamp(1.5rem, 5vw, 5rem)" }}
     >
-      <HeroBackground />
+      <HeroBackground variant="haze" />
       <div className="relative z-10 mx-auto max-w-[1200px]">
         <motion.div
           variants={staggerContainer(0.1, 0.05)}

@@ -72,7 +72,7 @@ export function Specialists() {
       className="relative flex flex-col justify-center overflow-hidden"
       style={{ padding: "clamp(5rem, 12vh, 8rem) 0" }}
     >
-      <HeroBackground />
+      <HeroBackground variant="veil" />
 
       <div className="relative z-10 mx-auto w-full max-w-[1320px] px-6">
         {/* Bento: 12 colunas — destaques em faixa dupla */}

@@ -49,7 +49,7 @@ export function HealthExperience() {
       className="relative flex flex-col justify-center overflow-hidden"
       style={{ padding: "clamp(5.25rem, 11vh, 8.5rem) clamp(1.5rem, 5vw, 5rem)" }}
     >
-      <HeroBackground />
+      <HeroBackground variant="bloom" />
       <div className="relative z-10 mx-auto w-full max-w-[1140px]">
         <motion.div
           variants={staggerContainer(0.08, 0)}
