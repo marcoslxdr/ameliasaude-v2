@@ -60,7 +60,7 @@ const channels = [
     title: "Central de Atendimento",
     description: "Agendamentos, autorizações e suporte ao beneficiário.",
     action: "Ligar agora",
-    href: "tel:+5521971724757",
+    href: "tel:+552126400777",
     external: false,
     Icon: IconHeadset,
   },

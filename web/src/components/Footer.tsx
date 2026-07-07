@@ -12,11 +12,11 @@ import {
 const CONTACT = {
   whatsappDisplay: "(21) 97172-4757",
   whatsappHref: "https://wa.me/5521971724757",
-  phoneDisplay: "(21) 97172-4757",
-  phoneHref: "tel:+5521971724757",
-  sacDisplay: "0800 000 000",
-  sacHref: "tel:08000000000",
-  email: "ouvidoria@ameliasaude.com.br",
+  phoneDisplay: "021 26400777",
+  phoneHref: "tel:+552126400777",
+  sacDisplay: "021 2640 0777",
+  sacHref: "tel:+552126400777",
+  email: "atendimento@ameliasaude.com.br",
   site: "https://ameliasaude.com.br/",
 } as const;
 
