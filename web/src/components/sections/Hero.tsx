@@ -114,7 +114,7 @@ export function Hero() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-        className="absolute bottom-0 right-[-28vw] block lg:hidden pointer-events-none z-10"
+        className="absolute bottom-0 right-[-34vw] block lg:hidden pointer-events-none z-10"
         style={{ width: "148vw", height: "70vh" }}
         aria-hidden
       >
@@ -124,7 +124,7 @@ export function Hero() {
           alt=""
           priority
           quality={90}
-          className="object-contain object-[72%_bottom] select-none"
+          className="object-contain object-[78%_bottom] select-none"
           sizes="148vw"
           draggable={false}
         />
@@ -141,7 +141,7 @@ export function Hero() {
       />
 
       {/* Content */}
-      <div className="relative z-30 flex flex-col flex-1 w-full max-w-[1440px] mx-auto px-[clamp(1.5rem,6vw,7rem)] pt-24 sm:pt-28 lg:pt-36 pb-6 lg:pb-28">
+      <div className="relative z-30 flex flex-col flex-1 w-full max-w-[1440px] mx-auto px-[clamp(1.5rem,6vw,7rem)] pt-24 sm:pt-28 lg:pt-36 pb-6 lg:pb-28 max-lg:pr-[40vw] sm:max-lg:pr-[38vw] md:max-lg:pr-[34vw]">
         <motion.div
           variants={staggerContainer(0.13, 0.08)}
           initial="hidden"
@@ -153,12 +153,15 @@ export function Hero() {
           <motion.h1 variants={fadeUp} className="mb-5 lg:mb-7 tracking-tight">
             <span
               className="block font-sans font-normal text-[var(--amelia-deep)] leading-[1.15] mb-4 lg:mb-5"
-              style={{ fontSize: "clamp(1.35rem, 2.6vw, 2.1rem)", maxWidth: "520px" }}
+              style={{
+                fontSize: "clamp(1.35rem, 2.6vw, 2.1rem)",
+                maxWidth: "min(100%, 520px)",
+              }}
             >
               O Plano de saúde com gestão moderna, tecnologia inteligente e cuidado humanizado.
             </span>
             <span
-              className="block font-display font-normal text-[var(--amelia-purple)] leading-[1.04] italic text-[1.85rem] sm:text-[2.25rem] lg:text-[clamp(2.85rem,5.6vw,4.9rem)]"
+              className="block font-display font-normal text-[var(--amelia-purple)] leading-[1.04] italic text-[1.65rem] min-[360px]:text-[1.75rem] min-[390px]:text-[1.85rem] sm:text-[2.25rem] lg:text-[clamp(2.85rem,5.6vw,4.9rem)]"
             >
               Amélia saúde!
             </span>
@@ -174,7 +177,7 @@ export function Hero() {
           {/* Subtext */}
           <motion.p
             variants={fadeUp}
-            className="w-[229px] font-sans font-light text-[var(--amelia-body)] leading-relaxed mb-5 lg:w-auto lg:mb-10"
+            className="w-full max-w-[229px] font-sans font-light text-[var(--amelia-body)] leading-relaxed mb-5 lg:w-auto lg:mb-10"
             style={{
               fontSize: "clamp(0.9rem, 1.35vw, 1.05rem)",
               maxWidth: "430px",
