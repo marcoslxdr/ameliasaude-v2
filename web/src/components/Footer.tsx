@@ -12,10 +12,10 @@ import {
 const CONTACT = {
   whatsappDisplay: "(21) 97172-4757",
   whatsappHref: "https://wa.me/5521971724757",
-  phoneDisplay: "021 26400777",
+  phoneDisplay: "(21) 2640-0777",
   phoneHref: "tel:+552126400777",
-  sacDisplay: "021 2640 0777",
-  sacHref: "tel:+552126400777",
+  sacDisplay: "0800 021 0777",
+  sacHref: "tel:08000210777",
   email: "atendimento@ameliasaude.com.br",
   site: "https://ameliasaude.com.br/",
 } as const;
@@ -231,8 +231,16 @@ export function Footer() {
                     <span className={`font-sans text-[10px] font-semibold uppercase tracking-[0.12em] ${accent}`}>
                       E-mail
                     </span>
-                    <span className="break-all font-sans text-sm text-white/85 group-hover:text-white">
-                      {CONTACT.email}
+                    <span className="font-sans text-sm text-white/85 group-hover:text-white">
+                      {CONTACT.email.includes("@") ? (
+                        <>
+                          {CONTACT.email.split("@")[0]}@
+                          <wbr />
+                          {CONTACT.email.split("@")[1]}
+                        </>
+                      ) : (
+                        CONTACT.email
+                      )}
                     </span>
                   </span>
                 </a>
