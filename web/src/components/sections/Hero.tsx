@@ -114,7 +114,7 @@ export function Hero() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-        className="absolute bottom-0 right-[-34vw] block lg:hidden pointer-events-none z-10"
+        className="absolute bottom-0 right-[-26vw] block lg:hidden pointer-events-none z-10"
         style={{ width: "148vw", height: "70vh" }}
         aria-hidden
       >
@@ -124,7 +124,7 @@ export function Hero() {
           alt=""
           priority
           quality={90}
-          className="object-contain object-[78%_bottom] select-none"
+          className="object-contain object-[76%_bottom] select-none"
           sizes="148vw"
           draggable={false}
         />
@@ -141,7 +141,7 @@ export function Hero() {
       />
 
       {/* Content */}
-      <div className="relative z-30 flex flex-col flex-1 w-full max-w-[1440px] mx-auto px-[clamp(1.5rem,6vw,7rem)] pt-24 sm:pt-28 lg:pt-36 pb-6 lg:pb-28 max-lg:pr-[40vw] sm:max-lg:pr-[38vw] md:max-lg:pr-[34vw]">
+      <div className="relative z-30 flex flex-col flex-1 w-full max-w-[1440px] mx-auto px-[clamp(1.5rem,6vw,7rem)] pt-24 sm:pt-28 lg:pt-36 pb-6 lg:pb-28 max-lg:pr-[44vw] sm:max-lg:pr-[40vw] md:max-lg:pr-[36vw]">
         <motion.div
           variants={staggerContainer(0.13, 0.08)}
           initial="hidden"
