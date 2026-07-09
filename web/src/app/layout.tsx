@@ -31,6 +31,14 @@ export const metadata: Metadata = {
     "sindicato",
     "conselho de classe",
   ],
+  icons: {
+    icon: [
+      { url: "/favicon.svg?v=2", type: "image/svg+xml" },
+      { url: "/favicon-32.png?v=2", type: "image/png", sizes: "32x32" },
+      { url: "/favicon.ico?v=2", sizes: "any" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png?v=2", sizes: "180x180" }],
+  },
   openGraph: {
     title: "Amélia Saúde — Planos de saúde por adesão",
     description:
