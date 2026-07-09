@@ -14,3 +14,5 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 - **Vídeos / Mídia**: Arquivos de vídeo adicionados a `web/public/` devem ser comprimidos (ex: via `ffmpeg`) para ficarem abaixo do limite de 100MB do GitHub e otimizar o carregamento no site.
   - Exemplo de compressão: `ffmpeg -i input.mp4 -vcodec libx264 -crf 24 -preset medium -acodec aac -b:a 128k output.mp4`
+- **Hero mobile (`Hero.tsx`)**: PNG `maria-padilha-hero.png` tem canvas transparente largo — imagem mobile usa `width: 148vw` + `object-[78%_bottom]`. Texto precisa `max-lg:pr-[40vw]` (ajustar por breakpoint) para não sobrepor o rosto; não remover sem testar em 360–412px.
+- **Scroll mobile (`globals.css`)**: Nunca reativar `scroll-snap-type` / `scroll-snap-align` global nem `min-height: 100svh` em toda `section` — trava momentum no touch. Preferir `overflow-x: clip` (não `hidden`) e `scroll-behavior: smooth` só em `@media (hover: hover) and (pointer: fine)`.
