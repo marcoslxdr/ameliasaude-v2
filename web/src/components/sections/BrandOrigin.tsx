@@ -60,7 +60,7 @@ export function BrandOrigin() {
             </h2>
             <p
               className="mx-auto mt-7 max-w-xl font-sans font-light leading-relaxed text-[var(--amelia-body)] md:mt-8"
-              style={{ fontSize: "clamp(1.0625rem, 1.5vw, 1.25rem)", lineHeight: 1.7 }}
+              style={{ fontSize: "clamp(1.1rem, 1.9vw, 1.35rem)" }}
             >
               Operadora carioca com gestão moderna, rede perto de você e um time dedicado a cuidar de
               pessoas.

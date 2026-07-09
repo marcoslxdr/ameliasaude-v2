@@ -77,8 +77,8 @@ export function HealthExperience() {
           </motion.h2>
           <motion.p
             variants={fadeUp}
-            className="mt-8 max-w-2xl font-sans font-light leading-relaxed tracking-[0.06em] text-[#5c5470]"
-            style={{ fontSize: "clamp(1rem, 1.5vw, 1.25rem)" }}
+            className="mt-8 max-w-2xl font-sans font-light leading-relaxed text-[var(--amelia-body)]"
+            style={{ fontSize: "clamp(1.1rem, 1.9vw, 1.35rem)" }}
           >
             A melhor experiência em planos de saúde.
           </motion.p>

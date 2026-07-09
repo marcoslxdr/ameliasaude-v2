@@ -126,8 +126,8 @@ export function Contact() {
           </motion.h2>
           <motion.p
             variants={fadeUp}
-            className="mx-auto max-w-[36rem] font-sans font-normal uppercase tracking-[0.1em] text-[#6b6b6b]"
-            style={{ fontSize: "clamp(0.65rem, 1vw, 0.75rem)", lineHeight: 1.7 }}
+            className="mx-auto max-w-[36rem] font-sans font-light leading-relaxed text-[var(--amelia-body)]"
+            style={{ fontSize: "clamp(1.1rem, 1.9vw, 1.35rem)" }}
           >
             Entre em contato através de um de nossos canais abaixo.
           </motion.p>

@@ -130,8 +130,8 @@ export function About() {
 
           <motion.p
             variants={fadeUp}
-            className="mx-auto mt-6 max-w-2xl font-sans font-light leading-relaxed text-[var(--amelia-muted)]"
-            style={{ fontSize: "clamp(1rem, 1.4vw, 1.15rem)" }}
+            className="mx-auto mt-6 max-w-2xl font-sans font-light leading-relaxed text-[var(--amelia-body)]"
+            style={{ fontSize: "clamp(1.1rem, 1.9vw, 1.35rem)" }}
           >
             Um projeto construído por profissionais com anos de experiência, unidos pelo propósito de
             criar uma operadora moderna, transparente e centrada nas pessoas.

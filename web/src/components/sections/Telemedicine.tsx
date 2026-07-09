@@ -76,8 +76,8 @@ export function Telemedicine() {
                 <em className="italic font-light text-[#7b6bb2]">a qualquer momento.</em>
               </motion.h2>
               <motion.p variants={fadeUp}
-                className="font-sans font-light text-[#6b6b6b] leading-relaxed mb-8"
-                style={{ fontSize: "clamp(0.9rem, 1.4vw, 1.05rem)" }}>
+                className="mb-8 font-sans font-light leading-relaxed text-[var(--amelia-body)]"
+                style={{ fontSize: "clamp(1.1rem, 1.9vw, 1.35rem)" }}>
                 Mais de 30 especialidades disponíveis por telemedicina, com praticidade
                 e comodidade sem sair de casa.
               </motion.p>

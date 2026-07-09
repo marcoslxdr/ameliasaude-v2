@@ -177,9 +177,9 @@ export function Hero() {
           {/* Subtext */}
           <motion.p
             variants={fadeUp}
-            className="w-full max-w-[229px] font-sans font-light text-[var(--amelia-body)] leading-relaxed mb-5 lg:w-auto lg:mb-10"
+            className="mb-5 w-full max-w-[229px] font-sans font-light leading-relaxed text-[var(--amelia-body)] lg:mb-10 lg:w-auto"
             style={{
-              fontSize: "clamp(0.9rem, 1.35vw, 1.05rem)",
+              fontSize: "clamp(1.1rem, 1.9vw, 1.35rem)",
               maxWidth: "430px",
             }}
           >

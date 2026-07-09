@@ -79,12 +79,8 @@ export function FamilyPlan() {
 
           <motion.p
             variants={fadeUp}
-            className="mb-8 max-w-2xl font-sans text-white/80"
-            style={{
-              fontSize: "clamp(1.05rem, 2vw, 1.15rem)",
-              lineHeight: 1.5,
-              marginTop: "0.5rem"
-            }}
+            className="mb-8 mt-2 max-w-2xl font-sans font-light leading-relaxed text-white/80"
+            style={{ fontSize: "clamp(1.1rem, 1.9vw, 1.35rem)" }}
           >
             Acreditamos que cuidar vai além de tratar: é acompanhar, orientar e estar presente em cada momento da vida dos nossos clientes.
           </motion.p>
