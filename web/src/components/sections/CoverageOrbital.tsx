@@ -92,19 +92,17 @@ const ORBIT_POLAR_TWEAKS: Record<
   "Magé": { dAngleDeg: -5, dRadius: 0.85 },
 };
 
-/** Micro-ajustes finos na âncora (cqw/cqh). */
-const MARKER_ANCHOR_NUDGE_CQ: Record<string, { x: number; y: number }> = {};
-
-/** Ancoragem no traço do anel: ponto (left,top) no centro do avatar, não no meio da coluna (avatar+label). */
-const MARKER_ANCHOR_ON_ORBIT_LINE = new Set(["São João de Meriti"]);
-
-function orbitLineAnchorTransform(): string {
-  // Sobe o ancoramento ~metade do bloco abaixo do centro do avatar (label + gap), em escala do quadrado orbital
+/**
+ * Âncora no centro do avatar (não no meio da coluna avatar+label).
+ * Labels de alturas diferentes (wrap mobile / nomes longos) não quebram o espelho L↔R.
+ */
+function orbitAvatarAnchorTransform(): string {
+  // Compensa ~metade do bloco abaixo do avatar (gap + 1–2 linhas de label)
   return "translate(-50%, calc(-50% - clamp(1.05rem, 3.4cqmin, 2.15rem)))";
 }
 
-/** Pilha avatar+texto mais estreita e centrada (evita “faixa” larga no anel interno). */
-const MARKER_COMPACT = new Set(["São Gonçalo"]);
+/** Pilha avatar+texto mais estreita — par interno espelhado. */
+const MARKER_COMPACT = new Set(["São Gonçalo", "Nova Iguaçu"]);
 
 function buildDoubleOrbit(
   innerRadius: number,
@@ -371,14 +369,8 @@ export function CoverageOrbital() {
 
       {/* Cidades posicionadas nas órbitas */}
       {nodes.map(({ city, left, top, zIndex }, i) => {
-        const nudge = MARKER_ANCHOR_NUDGE_CQ[city.name];
         const compact = MARKER_COMPACT.has(city.name);
-        const anchorOnRing = MARKER_ANCHOR_ON_ORBIT_LINE.has(city.name);
-        const anchorTransform = anchorOnRing
-          ? orbitLineAnchorTransform()
-          : nudge
-            ? `translate(calc(-50% + ${nudge.x}cqw), calc(-50% + ${nudge.y}cqh))`
-            : "translate(-50%, -50%)";
+        const anchorTransform = orbitAvatarAnchorTransform();
 
         const orbitMarker = (
           <>
