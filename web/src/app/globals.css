@@ -39,12 +39,22 @@
 *, *::before, *::after { box-sizing: border-box; }
 
 html {
-  scroll-behavior: smooth;
-  /* mandatory + snap em todas as sections podia cortar ou “pular” conteúdo ao rolar */
-  scroll-snap-type: y proximity;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+}
+
+/* Smooth só em desktop com mouse — no touch, smooth + snap travava momentum scroll */
+@media (hover: hover) and (pointer: fine) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 body {
@@ -53,20 +63,14 @@ body {
   font-family: var(--font-dm-sans, "DM Sans", sans-serif);
   font-size: 1rem;
   line-height: 1.625;
-  overflow-x: hidden;
+  /* clip > hidden: overflow-x:hidden cria containing block e mata momentum scroll no iOS */
+  overflow-x: clip;
+  overscroll-behavior-y: none;
 }
 
 .font-display { font-family: var(--font-instrument, "Instrument Serif", serif); }
 
-section {
-  scroll-snap-align: start;
-  scroll-snap-stop: normal;
-  min-height: 100svh;
-}
-
-footer {
-  scroll-snap-align: end;
-}
+/* Sem scroll-snap / min-height global — snap + 100svh em toda section trava rolagem no mobile */
 
 ::selection { background: var(--amelia-purple); color: #fff; }
 
