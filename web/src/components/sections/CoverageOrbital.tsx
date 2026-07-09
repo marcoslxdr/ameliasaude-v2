@@ -93,20 +93,25 @@ const ORBIT_POLAR_TWEAKS: Record<
 };
 
 /**
- * Âncora no centro do avatar (não no meio da coluna avatar+label).
- * Labels de alturas diferentes (wrap mobile / nomes longos) não quebram o espelho L↔R.
+ * Âncora no centro do avatar. Label fica `absolute` (fora do fluxo).
+ * O translate precisa estar no box com tamanho explícito (h/w do avatar):
+ * pai com width:0 faz `translate(-50%)` no X virar 0 e empurra o círculo pra direita.
  */
-function orbitAvatarAnchorTransform(): string {
-  // Compensa ~metade do bloco abaixo do avatar (gap + 1–2 linhas de label)
-  return "translate(-50%, calc(-50% - clamp(1.05rem, 3.4cqmin, 2.15rem)))";
+function orbitAvatarAnchorClass(): string {
+  return "relative h-10 w-10 -translate-x-1/2 -translate-y-1/2 sm:h-[3.75rem] sm:w-[3.75rem] md:h-[4.25rem] md:w-[4.25rem]";
 }
 
-/** Pilha avatar+texto mais estreita — par interno espelhado. */
+/** Label mais estreito (wrap) — só no texto, nunca no container do avatar. */
 const MARKER_COMPACT = new Set(["São Gonçalo", "Nova Iguaçu"]);
 
-/** Label à direita do avatar — evita sobreposição com marcador vizinho. */
-const MARKER_LABEL_RIGHT = new Set(["Duque de Caxias"]);
+/** Quebra forçada do label (órbita intacta — só texto). */
+const MARKER_LABEL_LINES: Record<string, string[]> = {
+  "São João de Meriti": ["São João", "de Meriti"],
+};
 
+function orbitLabelLines(name: string): string[] {
+  return MARKER_LABEL_LINES[name] ?? [name];
+}
 function buildDoubleOrbit(
   innerRadius: number,
   outerRadius: number
@@ -373,51 +378,20 @@ export function CoverageOrbital() {
       {/* Cidades posicionadas nas órbitas */}
       {nodes.map(({ city, left, top, zIndex }, i) => {
         const compact = MARKER_COMPACT.has(city.name);
-        const labelRight = MARKER_LABEL_RIGHT.has(city.name);
-        const anchorTransform = orbitAvatarAnchorTransform();
+        const labelLines = orbitLabelLines(city.name);
+        const stackedLabel = labelLines.length > 1;
 
-        const avatar = (
-          <div className="relative h-10 w-10 shrink-0 sm:h-[3.75rem] sm:w-[3.75rem] md:h-[4.25rem] md:w-[4.25rem]">
-            <div className="relative h-full w-full overflow-hidden rounded-full border-2 border-[rgba(123,107,178,0.28)] shadow-[0_4px_16px_rgba(94,73,133,0.2)]">
-              <Image
-                src={city.src}
-                alt=""
-                fill
-                className="object-cover"
-                sizes="(max-width: 640px) 40px, 68px"
-              />
-            </div>
-            {labelRight && (
-              <span className="absolute left-full top-1/2 ml-1.5 -translate-y-1/2 max-w-[min(14cqi,4.5rem)] text-left font-sans text-[9px] font-normal leading-tight tracking-wide text-[var(--amelia-deep)] whitespace-normal sm:ml-2 sm:max-w-none sm:text-[11px] sm:leading-none sm:whitespace-nowrap md:text-xs">
-                {city.name}
-              </span>
-            )}
-          </div>
-        );
-
-        const label = (
-          <span
-            className={[
-              "text-center font-sans text-[9px] font-normal leading-tight tracking-wide text-[var(--amelia-deep)] sm:text-[11px] sm:leading-none md:text-xs whitespace-normal sm:whitespace-nowrap",
-              compact
-                ? "max-w-[min(11cqi,3.25rem)] text-balance sm:max-w-[min(13cqi,4.25rem)]"
-                : "max-w-[4.25rem] sm:max-w-none",
-              labelRight && "invisible",
-            ]
-              .filter(Boolean)
-              .join(" ")}
-            aria-hidden={labelRight || undefined}
-          >
-            {city.name}
-          </span>
-        );
-
-        const orbitMarker = (
-          <>
-            {avatar}
-            {label}
-          </>
-        );
+        const labelClass = [
+          "absolute left-1/2 top-full mt-1.5 -translate-x-1/2 text-center font-sans text-[9px] font-normal leading-tight tracking-wide text-[var(--amelia-deep)] sm:text-[11px] md:text-xs",
+          stackedLabel
+            ? "max-w-[min(14cqi,4.75rem)] whitespace-normal sm:leading-tight"
+            : "sm:leading-none whitespace-normal sm:whitespace-nowrap",
+          compact
+            ? "max-w-[min(11cqi,3.25rem)] text-balance sm:max-w-[min(13cqi,4.25rem)]"
+            : !stackedLabel && "max-w-[4.25rem] sm:max-w-none",
+        ]
+          .filter(Boolean)
+          .join(" ");
 
         return (
           <div
@@ -431,8 +405,11 @@ export function CoverageOrbital() {
               height: 0,
             }}
           >
-            {/* translate fica fora do motion: scale/opacity do Framer sobrescrevem transform no motion.div */}
-            <div style={{ transform: anchorTransform }}>
+            {/*
+              Translate no box com tamanho do avatar (não no pai width:0).
+              Framer scale/opacity ficam no motion interno pra não sobrescrever o translate.
+            */}
+            <div className={orbitAvatarAnchorClass()}>
               <motion.div
                 initial={{ opacity: 0, scale: 0.88 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -443,7 +420,7 @@ export function CoverageOrbital() {
                   stiffness: 200,
                   damping: 22,
                 }}
-                className="origin-center"
+                className="h-full w-full origin-center"
               >
                 <motion.div
                   animate={
@@ -459,15 +436,26 @@ export function CoverageOrbital() {
                           delay: i * 0.14,
                         }
                   }
-                  className={[
-                    "relative flex flex-col items-center gap-1.5",
-                    compact &&
-                      "min-h-0 justify-center w-[min(13cqi,3.1rem)] sm:w-auto",
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
+                  className="relative h-full w-full"
                 >
-                  {orbitMarker}
+                  <div className="relative h-full w-full overflow-hidden rounded-full border-2 border-[rgba(123,107,178,0.28)] shadow-[0_4px_16px_rgba(94,73,133,0.2)]">
+                    <Image
+                      src={city.src}
+                      alt=""
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 640px) 40px, 68px"
+                    />
+                  </div>
+                  <span className={labelClass}>
+                    {stackedLabel
+                      ? labelLines.map((line) => (
+                          <span key={line} className="block">
+                            {line}
+                          </span>
+                        ))
+                      : city.name}
+                  </span>
                 </motion.div>
               </motion.div>
             </div>
