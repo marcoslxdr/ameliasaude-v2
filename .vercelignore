@@ -1,0 +1,29 @@
+# Root-only large local assets (NOT under web/public — those ship with the app)
+/amelia video.mp4
+/amelia-hero-1.png
+/hero*.png
+/MARIA PADILHA*
+/Logo/
+/6520*
+/Captura-de-tela*
+/Dor de Dente*
+/radiografia*
+/video1.mp4
+/clinico geral.*
+/dermatologista.jpg
+/mesquita.jpg
+/niteroi.webp
+/nova iguacu.webp
+/oftamologista.webp
+/petropolis.jpg
+/*.pdf
+/backups
+
+# Build / deps (Vercel installs fresh)
+node_modules
+web/node_modules
+.next
+web/.next
+.git
+.DS_Store
+*.tsbuildinfo
