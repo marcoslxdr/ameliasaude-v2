@@ -104,6 +104,9 @@ function orbitAvatarAnchorTransform(): string {
 /** Pilha avatar+texto mais estreita — par interno espelhado. */
 const MARKER_COMPACT = new Set(["São Gonçalo", "Nova Iguaçu"]);
 
+/** Label à direita do avatar — evita sobreposição com marcador vizinho. */
+const MARKER_LABEL_RIGHT = new Set(["Duque de Caxias"]);
+
 function buildDoubleOrbit(
   innerRadius: number,
   outerRadius: number
@@ -370,11 +373,12 @@ export function CoverageOrbital() {
       {/* Cidades posicionadas nas órbitas */}
       {nodes.map(({ city, left, top, zIndex }, i) => {
         const compact = MARKER_COMPACT.has(city.name);
+        const labelRight = MARKER_LABEL_RIGHT.has(city.name);
         const anchorTransform = orbitAvatarAnchorTransform();
 
-        const orbitMarker = (
-          <>
-            <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border-2 border-[rgba(123,107,178,0.28)] shadow-[0_4px_16px_rgba(94,73,133,0.2)] sm:h-[3.75rem] sm:w-[3.75rem] md:h-[4.25rem] md:w-[4.25rem]">
+        const avatar = (
+          <div className="relative h-10 w-10 shrink-0 sm:h-[3.75rem] sm:w-[3.75rem] md:h-[4.25rem] md:w-[4.25rem]">
+            <div className="relative h-full w-full overflow-hidden rounded-full border-2 border-[rgba(123,107,178,0.28)] shadow-[0_4px_16px_rgba(94,73,133,0.2)]">
               <Image
                 src={city.src}
                 alt=""
@@ -383,16 +387,35 @@ export function CoverageOrbital() {
                 sizes="(max-width: 640px) 40px, 68px"
               />
             </div>
-            <span
-              className={[
-                "text-center font-sans text-[9px] font-normal leading-tight tracking-wide text-[var(--amelia-deep)] sm:text-[11px] sm:leading-none md:text-xs whitespace-normal sm:whitespace-nowrap",
-                compact
-                  ? "max-w-[min(11cqi,3.25rem)] text-balance sm:max-w-[min(13cqi,4.25rem)]"
-                  : "max-w-[4.25rem] sm:max-w-none",
-              ].join(" ")}
-            >
-              {city.name}
-            </span>
+            {labelRight && (
+              <span className="absolute left-full top-1/2 ml-1.5 -translate-y-1/2 max-w-[min(14cqi,4.5rem)] text-left font-sans text-[9px] font-normal leading-tight tracking-wide text-[var(--amelia-deep)] whitespace-normal sm:ml-2 sm:max-w-none sm:text-[11px] sm:leading-none sm:whitespace-nowrap md:text-xs">
+                {city.name}
+              </span>
+            )}
+          </div>
+        );
+
+        const label = (
+          <span
+            className={[
+              "text-center font-sans text-[9px] font-normal leading-tight tracking-wide text-[var(--amelia-deep)] sm:text-[11px] sm:leading-none md:text-xs whitespace-normal sm:whitespace-nowrap",
+              compact
+                ? "max-w-[min(11cqi,3.25rem)] text-balance sm:max-w-[min(13cqi,4.25rem)]"
+                : "max-w-[4.25rem] sm:max-w-none",
+              labelRight && "invisible",
+            ]
+              .filter(Boolean)
+              .join(" ")}
+            aria-hidden={labelRight || undefined}
+          >
+            {city.name}
+          </span>
+        );
+
+        const orbitMarker = (
+          <>
+            {avatar}
+            {label}
           </>
         );
 
@@ -437,7 +460,7 @@ export function CoverageOrbital() {
                         }
                   }
                   className={[
-                    "flex flex-col items-center gap-1.5",
+                    "relative flex flex-col items-center gap-1.5",
                     compact &&
                       "min-h-0 justify-center w-[min(13cqi,3.1rem)] sm:w-auto",
                   ]
