@@ -31,8 +31,9 @@ export function BrandOrigin() {
               <video
                 className="h-full w-full object-cover"
                 src="/amelia%20video.mp4"
+                poster="/amelia-video-poster.jpg"
                 playsInline
-                preload="metadata"
+                preload="none"
                 controls
                 aria-label="Vídeo institucional da Amélia Saúde"
               />
