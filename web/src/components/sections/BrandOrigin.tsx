@@ -22,7 +22,7 @@ export function BrandOrigin() {
           {/* Video: static wrapper only — never inside motion.div / transform */}
           <div className="order-2 flex min-w-0 justify-center lg:order-1">
             <div
-              className="relative aspect-[9/16] h-[min(72vh,42rem)] w-auto max-w-[min(100%,24rem)] shrink-0 overflow-hidden rounded-[1.5rem] bg-[var(--amelia-purple-faint)] supports-[height:100dvh]:h-[min(72dvh,42rem)] md:h-[min(78vh,46rem)] md:max-w-[min(100%,26rem)] md:supports-[height:100dvh]:h-[min(78dvh,46rem)]"
+              className="relative aspect-[9/16] w-full max-w-[min(100%,24rem)] shrink-0 overflow-hidden rounded-[1.5rem] bg-[var(--amelia-purple-faint)] md:max-w-[min(100%,26rem)]"
               style={{
                 boxShadow:
                   "0 32px 88px -40px color-mix(in srgb, var(--amelia-deep) 44%, transparent)",
@@ -37,17 +37,18 @@ export function BrandOrigin() {
             >
               <video
                 className="absolute inset-0 h-full w-full object-cover"
-                width={1080}
-                height={1920}
-                src="/amelia%20video.mp4"
+                width={720}
+                height={1280}
                 poster="/amelia-video-poster.jpg"
-                playsInline={true}
+                playsInline
                 preload="metadata"
                 muted
                 disableRemotePlayback
                 controls
                 aria-label="Vídeo institucional da Amélia Saúde"
-              />
+              >
+                <source src="/amelia-video.mp4" type="video/mp4" />
+              </video>
             </div>
           </div>
 
