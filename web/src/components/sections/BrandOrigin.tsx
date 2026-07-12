@@ -19,36 +19,40 @@ export function BrandOrigin() {
       <div className="relative z-10 mx-auto flex w-full max-w-[1240px] items-center justify-center">
         {/* Plain grid — no motion transforms on this tree for the video column */}
         <div className="grid w-full max-w-5xl grid-cols-1 place-items-center items-center justify-items-center gap-14 md:gap-20 lg:max-w-none lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] lg:justify-items-center lg:gap-24 xl:gap-28">
-          {/* Video: static wrapper only — never inside motion.div / transform */}
+          {/* Video: static wrapper — no overflow-hidden, no mask-image, no transform.
+               iOS Safari refuses to paint <video> inside a compositing context
+               (mask-image, overflow:hidden+border-radius, transform, filter, will-change).
+               Solution: border-radius directly on <video>, shadow + poster on wrapper. */}
           <div className="order-2 flex min-w-0 justify-center lg:order-1">
             <div
-              className="relative aspect-[9/16] w-full max-w-[min(100%,24rem)] shrink-0 overflow-hidden rounded-[1.5rem] bg-[var(--amelia-purple-faint)] md:max-w-[min(100%,26rem)]"
+              className="relative aspect-[9/16] h-[min(72vh,42rem)] w-auto max-w-[min(100%,24rem)] shrink-0 bg-[var(--amelia-purple-faint)] supports-[height:100dvh]:h-[min(72dvh,42rem)] md:h-[min(78vh,46rem)] md:max-w-[min(100%,26rem)] md:supports-[height:100dvh]:h-[min(78dvh,46rem)]"
               style={{
+                borderRadius: "1.5rem",
                 boxShadow:
                   "0 32px 88px -40px color-mix(in srgb, var(--amelia-deep) 44%, transparent)",
-                // Poster as CSS fallback if <video> fails to paint on iOS
+                // Poster as CSS fallback (background behind the <video>, visible while loading)
                 backgroundImage: "url('/amelia-video-poster.jpg')",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
-                // Rounded clip without transform-gpu (iOS video paint bug)
-                WebkitMaskImage: "linear-gradient(#000, #000)",
-                maskImage: "linear-gradient(#000, #000)",
               }}
             >
               <video
                 className="absolute inset-0 h-full w-full object-cover"
-                width={720}
-                height={1280}
+                width={1080}
+                height={1920}
+                src="/amelia%20video.mp4"
                 poster="/amelia-video-poster.jpg"
                 playsInline
                 preload="metadata"
                 muted
                 disableRemotePlayback
                 controls
+                style={{
+                  borderRadius: "1.5rem",
+                  // Clip corners on the <video> itself — no compositing context on ancestors
+                }}
                 aria-label="Vídeo institucional da Amélia Saúde"
-              >
-                <source src="/amelia-video.mp4" type="video/mp4" />
-              </video>
+              />
             </div>
           </div>
 
