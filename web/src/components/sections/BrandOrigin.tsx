@@ -40,7 +40,7 @@ export function BrandOrigin() {
                 className="absolute inset-0 h-full w-full object-cover"
                 width={1080}
                 height={1920}
-                src="/amelia%20video.mp4"
+                src="/amelia-video.mp4"
                 poster="/amelia-video-poster.jpg"
                 playsInline
                 preload="metadata"
