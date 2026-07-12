@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, DM_Sans } from "next/font/google";
+import { GoogleTag } from "@/components/GoogleTag";
 import "./globals.css";
 
 const instrumentSerif = Instrument_Serif({
@@ -17,8 +18,14 @@ const dmSans = DM_Sans({
   display: "swap",
 });
 
+const SITE_URL = "https://www.ameliasaude.com.br";
+
 export const metadata: Metadata = {
-  title: "Amélia Saúde — Planos de saúde por adesão",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Amélia Saúde — Planos de saúde por adesão",
+    template: "%s | Amélia Saúde",
+  },
   description:
     "Operadora de planos de saúde com contratação em coletivo por adesão no Rio de Janeiro. Acesso via sindicatos, conselhos e associações profissionais.",
   keywords: [
@@ -39,12 +46,28 @@ export const metadata: Metadata = {
     ],
     apple: [{ url: "/apple-touch-icon.png?v=2", sizes: "180x180" }],
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
+  },
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "Amélia Saúde — Planos de saúde por adesão",
     description:
       "Coletivo por adesão no Rio de Janeiro: rede credenciada e atendimento sem burocracia, com contratação via entidades de classe.",
+    url: SITE_URL,
+    siteName: "Amélia Saúde",
     locale: "pt_BR",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Amélia Saúde — Planos de saúde por adesão",
+    description:
+      "Coletivo por adesão no Rio de Janeiro: rede credenciada e atendimento sem burocracia.",
   },
 };
 
@@ -58,7 +81,10 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${instrumentSerif.variable} ${dmSans.variable} h-full`}
     >
-      <body className="min-h-full flex flex-col antialiased">{children}</body>
+      <body className="min-h-full flex flex-col antialiased">
+        <GoogleTag />
+        {children}
+      </body>
     </html>
   );
 }
