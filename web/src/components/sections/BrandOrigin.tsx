@@ -1,40 +1,44 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { fadeUp, staggerContainer, viewportConfig } from "@/lib/motion";
+import { fadeUp, viewportConfig } from "@/lib/motion";
 import { HeroBackground } from "@/components/ui/HeroBackground";
 
+/**
+ * Video MUST stay outside any Framer Motion / CSS-transform ancestor.
+ * iOS Safari will not paint <video> (nor poster) when a parent has transform.
+ */
 export function BrandOrigin() {
   return (
     <section
       id="origem"
       aria-labelledby="origem-heading"
-      className="relative flex min-h-[max(800px,100svh)] items-center justify-center overflow-x-clip px-[clamp(1.5rem,5vw,5rem)] py-12 md:py-16"
+      className="relative flex min-h-[max(800px,100vh)] min-h-[max(800px,100dvh)] items-center justify-center overflow-x-clip px-[clamp(1.5rem,5vw,5rem)] py-12 md:py-16"
     >
       <HeroBackground variant="origin" />
       <div className="relative z-10 mx-auto flex w-full max-w-[1240px] items-center justify-center">
-        <motion.div
-          className="grid w-full max-w-5xl grid-cols-1 place-items-center items-center justify-items-center gap-14 md:gap-20 lg:max-w-none lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] lg:justify-items-center lg:gap-24 xl:gap-28"
-          variants={staggerContainer(0.12, 0.06)}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewportConfig}
-        >
-          <motion.div
-            variants={fadeUp}
-            className="order-2 flex min-w-0 justify-center lg:order-1"
-            style={{ WebkitTransform: "translateZ(0)" }}
-          >
+        {/* Plain grid — no motion transforms on this tree for the video column */}
+        <div className="grid w-full max-w-5xl grid-cols-1 place-items-center items-center justify-items-center gap-14 md:gap-20 lg:max-w-none lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] lg:justify-items-center lg:gap-24 xl:gap-28">
+          {/* Video: static wrapper only — never inside motion.div / transform */}
+          <div className="order-2 flex min-w-0 justify-center lg:order-1">
             <div
-              className="relative aspect-[9/16] h-[min(72svh,42rem)] w-auto max-w-[min(100%,24rem)] shrink-0 overflow-hidden rounded-[1.5rem] bg-[var(--amelia-purple-faint)] transform-gpu [backface-visibility:hidden] md:h-[min(78svh,46rem)] md:max-w-[min(100%,26rem)]"
+              className="relative aspect-[9/16] h-[min(72vh,42rem)] w-auto max-w-[min(100%,24rem)] shrink-0 overflow-hidden rounded-[1.5rem] bg-[var(--amelia-purple-faint)] supports-[height:100dvh]:h-[min(72dvh,42rem)] md:h-[min(78vh,46rem)] md:max-w-[min(100%,26rem)] md:supports-[height:100dvh]:h-[min(78dvh,46rem)]"
               style={{
                 boxShadow:
                   "0 32px 88px -40px color-mix(in srgb, var(--amelia-deep) 44%, transparent)",
-                WebkitTransform: "translateZ(0)",
+                // Poster as CSS fallback if <video> fails to paint on iOS
+                backgroundImage: "url('/amelia-video-poster.jpg')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                // Rounded clip without transform-gpu (iOS video paint bug)
+                WebkitMaskImage: "linear-gradient(#000, #000)",
+                maskImage: "linear-gradient(#000, #000)",
               }}
             >
               <video
-                className="h-full w-full object-cover"
+                className="absolute inset-0 h-full w-full object-cover"
+                width={1080}
+                height={1920}
                 src="/amelia%20video.mp4"
                 poster="/amelia-video-poster.jpg"
                 playsInline={true}
@@ -45,10 +49,13 @@ export function BrandOrigin() {
                 aria-label="Vídeo institucional da Amélia Saúde"
               />
             </div>
-          </motion.div>
+          </div>
 
           <motion.div
             variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportConfig}
             className="order-1 flex min-w-0 flex-col items-center justify-center text-center lg:order-2 lg:items-center lg:py-4 xl:py-6"
           >
             <p className="mb-5 font-sans text-xs font-semibold uppercase tracking-[0.16em] text-[var(--amelia-purple)] md:mb-6">
@@ -76,7 +83,7 @@ export function BrandOrigin() {
               Atendimento humanizado que faz diferença para o seu cuidado!
             </p>
           </motion.div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
