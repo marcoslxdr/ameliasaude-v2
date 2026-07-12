@@ -20,12 +20,17 @@ export function BrandOrigin() {
           whileInView="visible"
           viewport={viewportConfig}
         >
-          <motion.div variants={fadeUp} className="order-2 flex min-w-0 justify-center lg:order-1">
+          <motion.div
+            variants={fadeUp}
+            className="order-2 flex min-w-0 justify-center lg:order-1"
+            style={{ WebkitTransform: "translateZ(0)" }}
+          >
             <div
-              className="relative aspect-[9/16] h-[min(72svh,42rem)] w-auto max-w-[min(100%,24rem)] shrink-0 overflow-hidden rounded-[1.5rem] bg-[var(--amelia-purple-faint)] md:h-[min(78svh,46rem)] md:max-w-[min(100%,26rem)]"
+              className="relative aspect-[9/16] h-[min(72svh,42rem)] w-auto max-w-[min(100%,24rem)] shrink-0 overflow-hidden rounded-[1.5rem] bg-[var(--amelia-purple-faint)] transform-gpu [backface-visibility:hidden] md:h-[min(78svh,46rem)] md:max-w-[min(100%,26rem)]"
               style={{
                 boxShadow:
                   "0 32px 88px -40px color-mix(in srgb, var(--amelia-deep) 44%, transparent)",
+                WebkitTransform: "translateZ(0)",
               }}
             >
               <video
