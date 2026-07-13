@@ -200,10 +200,10 @@ export function Hero() {
             className="flex flex-col items-center self-start gap-3 lg:flex-row lg:flex-wrap lg:items-center lg:gap-5"
           >
             <Button
-              href="#experiencia-planos"
+              href="#lista-de-espera"
               variant="primary"
               size="sm"
-              onClick={() => trackCtaClick("quero_meu_plano", "#experiencia-planos")}
+              onClick={() => trackCtaClick("quero_meu_plano", "#lista-de-espera")}
             >
               Quero meu plano
               <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 stroke-[2.5]" />

@@ -3,10 +3,13 @@ import { LegalPageLayout } from "@/components/legal/LegalPageLayout";
 
 export const metadata: Metadata = {
   title: "Termos de Uso — Amélia Saúde",
-  description:
-    "Condições gerais de uso do site e dos serviços digitais da Amélia Saúde. Leia atentamente antes de navegar.",
+  description: "Termos e condições de uso do site e serviços da Amélia Saúde. Leia nossas políticas antes de utilizar o site.",
   robots: "index, follow",
+  alternates: {
+    canonical: "https://www.ameliasaude.com.br/termos",
+  },
 };
+
 
 const SUMMARY = [
   "Ao usar nosso site, você concorda em fornecer informações verdadeiras e atualizadas.",

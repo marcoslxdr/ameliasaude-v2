@@ -5,10 +5,10 @@ import { Network } from "@/components/sections/Network";
 import { Telemedicine } from "@/components/sections/Telemedicine";
 import { Specialists } from "@/components/sections/Specialists";
 import { HealthExperience } from "@/components/sections/HealthExperience";
-import { WaitingList } from "@/components/sections/WaitingList";
 import { Blog } from "@/components/sections/Blog";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/Footer";
+import { WaitingListModalWrapper } from "@/components/WaitingListModalWrapper";
 
 export default function Home() {
   return (
@@ -21,11 +21,11 @@ export default function Home() {
         <Network />
         <Telemedicine />
         <Specialists />
-        <WaitingList />
         <Blog />
         <Contact />
       </main>
       <Footer />
+      <WaitingListModalWrapper />
     </div>
   );
 }

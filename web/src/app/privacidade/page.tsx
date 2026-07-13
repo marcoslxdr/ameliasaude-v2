@@ -3,10 +3,13 @@ import { LegalPageLayout } from "@/components/legal/LegalPageLayout";
 
 export const metadata: Metadata = {
   title: "Política de Privacidade — Amélia Saúde",
-  description:
-    "Saiba como a Amélia Saúde coleta, protege e utiliza seus dados pessoais. Transparência e segurança em cada etapa.",
+  description: "Saiba como a Amélia Saúde coleta, protege e utiliza seus dados pessoais. Transparência e segurança em cada etapa.",
   robots: "index, follow",
+  alternates: {
+    canonical: "https://www.ameliasaude.com.br/privacidade",
+  },
 };
+
 
 const SUMMARY = [
   "Coletamos apenas os dados necessários para operar seu plano de saúde e prestar atendimento.",

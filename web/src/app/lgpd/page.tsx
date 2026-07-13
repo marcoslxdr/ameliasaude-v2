@@ -3,10 +3,13 @@ import { LegalPageLayout } from "@/components/legal/LegalPageLayout";
 
 export const metadata: Metadata = {
   title: "LGPD — Amélia Saúde",
-  description:
-    "Conheça seus direitos sob a Lei Geral de Proteção de Dados (LGPD) e entenda como a Amélia Saúde os garante.",
+  description: "Política de privacidade e proteção de dados da Amélia Saúde em conformidade com a Lei Geral de Proteção de Dados (LGPD).",
   robots: "index, follow",
+  alternates: {
+    canonical: "https://www.ameliasaude.com.br/lgpd",
+  },
 };
+
 
 const SUMMARY = [
   "A LGPD protege seus dados pessoais no Brasil e garante direitos como acesso, correção e exclusão.",

@@ -3,10 +3,13 @@ import { LegalPageLayout } from "@/components/legal/LegalPageLayout";
 
 export const metadata: Metadata = {
   title: "Política de Cookies — Amélia Saúde",
-  description:
-    "Entenda como usamos cookies para melhorar sua experiência, garantir a segurança e personalizar nossos serviços.",
+  description: "Saiba como a Amélia Saúde utiliza cookies e tecnologias similares para melhorar sua experiência no site.",
   robots: "index, follow",
+  alternates: {
+    canonical: "https://www.ameliasaude.com.br/cookies",
+  },
 };
+
 
 const SUMMARY = [
   "Cookies são pequenos arquivos que ajudam o site a funcionar melhor e de forma mais segura.",

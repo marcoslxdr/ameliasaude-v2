@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, DM_Sans } from "next/font/google";
 import { GoogleTag } from "@/components/GoogleTag";
+import { OrganizationSchema, WebSiteSchema, LocalBusinessSchema } from "@/components/StructuredData";
 import "./globals.css";
 
 const instrumentSerif = Instrument_Serif({
@@ -77,7 +78,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
+    <>
+      <OrganizationSchema />
+      <WebSiteSchema />
+      <LocalBusinessSchema />
+      <html
       lang="pt-BR"
       className={`${instrumentSerif.variable} ${dmSans.variable} h-full`}
     >
@@ -86,5 +91,6 @@ export default function RootLayout({
         {children}
       </body>
     </html>
+    </>
   );
 }
