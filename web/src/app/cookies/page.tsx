@@ -75,7 +75,7 @@ export default function CookiesPage() {
         Utilizamos serviços de terceiros que podem definir cookies em seu dispositivo quando você visita nosso site. Esses cookies são gerenciados pelos respectivos provedores e estão sujeitos às suas próprias políticas de privacidade.
       </p>
       <ul>
-        <li><strong>Google Analytics:</strong> utilizado para análise de tráfego e comportamento de navegação. Os dados são processados de forma agregada e anonimizada. Para mais informações, consulte a <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidade do Google</a>.</li>
+        <li><strong>PostHog:</strong> utilizado para análise de tráfego, comportamento de navegação e mensuração de campanhas (ex.: Google Ads). Os dados são processados de forma agregada para melhorar o site e a experiência. Para mais informações, consulte a <a href="https://posthog.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidade do PostHog</a>.</li>
       </ul>
 
       <h2>4. Gerenciamento de preferências</h2>
@@ -86,7 +86,7 @@ export default function CookiesPage() {
         <li><strong>Central de preferências:</strong> quando disponível em nosso site, utilize o painel de gerenciamento de cookies para aceitar ou recusar categorias específicas.</li>
         <li><strong>Configurações do navegador:</strong> a maioria dos navegadores permite que você visualize, exclua ou bloqueie cookies. Acesse as configurações de privacidade do seu navegador para mais detalhes.
         </li>
-        <li><strong>Ferramentas de opt-out:</strong> para cookies de análise do Google, você pode instalar o <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer">Google Analytics Opt-out Browser Add-on</a>.</li>
+        <li><strong>Ferramentas de opt-out:</strong> você pode bloquear cookies de análise nas configurações do navegador. Para mais detalhes sobre dados processados pelo PostHog, veja <a href="https://posthog.com/privacy" target="_blank" rel="noopener noreferrer">posthog.com/privacy</a>.</li>
       </ul>
       <p>
         <strong>Importante:</strong> a desativação de cookies necessários pode comprometer o funcionamento correto do site e inviabilizar o acesso a algumas funcionalidades.

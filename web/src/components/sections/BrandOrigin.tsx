@@ -13,7 +13,7 @@ export function BrandOrigin() {
     <section
       id="origem"
       aria-labelledby="origem-heading"
-      className="relative flex min-h-[max(800px,100vh)] min-h-[max(800px,100dvh)] items-center justify-center overflow-x-clip px-[clamp(1.5rem,5vw,5rem)] py-12 md:py-16"
+      className="relative flex min-h-[max(800px,100vh)] min-h-[max(800px,100dvh)] items-center justify-center px-[clamp(1.5rem,5vw,5rem)] py-12 md:py-16"
     >
       <HeroBackground variant="origin" />
       <div className="relative z-10 mx-auto flex w-full max-w-[1240px] items-center justify-center">

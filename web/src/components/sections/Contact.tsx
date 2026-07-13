@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { staggerContainer, fadeUp, viewportConfig } from "@/lib/motion";
 import { HeroBackground } from "@/components/ui/HeroBackground";
+import { trackContactClick, trackGoogleAdsConversion } from "@/lib/analytics";
 
 function IconWhatsApp({ className }: { className?: string }) {
   return (
@@ -146,6 +147,10 @@ export function Contact() {
               <a
                 href={href}
                 {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                onClick={() => {
+                  trackContactClick(title, href);
+                  if (title === "WhatsApp") trackGoogleAdsConversion();
+                }}
                 className="group flex h-full flex-col rounded-2xl border border-[var(--amelia-line)] bg-white/80 px-5 py-6 shadow-[0_1px_0_rgba(26,26,26,0.04)] backdrop-blur-[2px] transition-[border-color,box-shadow,transform] duration-200 hover:border-[rgba(123,109,178,0.35)] hover:shadow-[0_18px_40px_rgba(94,73,133,0.08)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--amelia-purple)]"
               >
                 <span
