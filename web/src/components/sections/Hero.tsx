@@ -12,6 +12,7 @@ import {
 } from "@/lib/motion";
 import { Button } from "@/components/ui/Button";
 import { HeroBackground } from "@/components/ui/HeroBackground";
+import { trackCtaClick } from "@/lib/analytics";
 
 export function Hero() {
   const containerRef = useRef<HTMLElement>(null);
@@ -198,12 +199,22 @@ export function Hero() {
             variants={fadeUp}
             className="flex flex-col items-center self-start gap-3 lg:flex-row lg:flex-wrap lg:items-center lg:gap-5"
           >
-            <Button href="#experiencia-planos" variant="primary" size="sm">
+            <Button
+              href="#experiencia-planos"
+              variant="primary"
+              size="sm"
+              onClick={() => trackCtaClick("quero_meu_plano", "#experiencia-planos")}
+            >
               Quero meu plano
               <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 stroke-[2.5]" />
             </Button>
 
-            <Button href="#origem" variant="ghost-link" size="sm">
+            <Button
+              href="#origem"
+              variant="ghost-link"
+              size="sm"
+              onClick={() => trackCtaClick("conheca_a_amelia", "#origem")}
+            >
               Conheça a Amélia
               <ArrowRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 stroke-[1.75]" />
             </Button>
