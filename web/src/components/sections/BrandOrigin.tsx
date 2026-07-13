@@ -31,7 +31,7 @@ export function BrandOrigin() {
                 boxShadow:
                   "0 32px 88px -40px color-mix(in srgb, var(--amelia-deep) 44%, transparent)",
                 // Poster as CSS fallback (background behind the <video>, visible while loading)
-                backgroundImage: "url('/amelia-video-poster.jpg')",
+                backgroundImage: "url('https://videos.insightfy.com.br/amelia-video-poster.jpg')",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
               }}
@@ -40,8 +40,8 @@ export function BrandOrigin() {
                 className="absolute inset-0 h-full w-full object-cover"
                 width={1080}
                 height={1920}
-                src="/amelia-video.mp4"
-                poster="/amelia-video-poster.jpg"
+                src="https://videos.insightfy.com.br/amelia-video.mp4"
+                poster="https://videos.insightfy.com.br/amelia-video-poster.jpg"
                 playsInline
                 preload="metadata"
                 muted
