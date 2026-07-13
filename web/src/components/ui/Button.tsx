@@ -20,6 +20,7 @@ interface ButtonProps {
   className?: string;
   "aria-label"?: string;
   type?: "button" | "submit" | "reset";
+  disabled?: boolean;
 }
 
 const motionByVariant: Partial<
@@ -59,23 +60,34 @@ export function Button({
   className = "",
   "aria-label": ariaLabel,
   type = "button",
+  disabled = false,
 }: ButtonProps) {
-  const classes = getButtonClassName(variant, size, className);
-  const motionProps = {
-    ...(motionByVariant[variant] ?? {
-      whileHover: { scale: 1.02 },
-      whileTap: { scale: 0.97 },
-    }),
-    transition: buttonMotionTransition,
-  };
+  const classes = [
+    getButtonClassName(variant, size, className),
+    disabled ? "pointer-events-none opacity-50" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const motionProps = disabled
+    ? {}
+    : {
+        ...(motionByVariant[variant] ?? {
+          whileHover: { scale: 1.02 },
+          whileTap: { scale: 0.97 },
+        }),
+        transition: buttonMotionTransition,
+      };
 
   if (href) {
     return (
       <motion.a
-        href={href}
-        onClick={onClick}
+        href={disabled ? undefined : href}
+        onClick={disabled ? undefined : onClick}
         className={classes}
         aria-label={ariaLabel}
+        aria-disabled={disabled || undefined}
+        tabIndex={disabled ? -1 : undefined}
         {...motionProps}
       >
         {children}
@@ -86,9 +98,10 @@ export function Button({
   return (
     <motion.button
       type={type}
-      onClick={onClick}
+      onClick={disabled ? undefined : onClick}
       className={classes}
       aria-label={ariaLabel}
+      disabled={disabled}
       {...motionProps}
     >
       {children}
