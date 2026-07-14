@@ -138,7 +138,7 @@ export function Hero({
           width={imageWidth}
           height={imageHeight}
           priority
-          quality={100}
+          quality={90}
           className="h-full w-auto object-contain object-[72%_bottom] select-none"
           sizes="(max-width: 1024px) 0px, 600px"
           draggable={false}
