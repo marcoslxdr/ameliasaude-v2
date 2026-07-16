@@ -121,7 +121,7 @@ export function Hero() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-        className="absolute bottom-0 right-[-26vw] block lg:hidden pointer-events-none z-10 w-[148vw] h-[75vh] [@media(min-height:720px)]:h-[70vh]"
+        className="absolute bottom-0 right-[-26vw] block lg:hidden pointer-events-none z-10 w-[148vw] h-[75svh] [@media(min-height:720px)]:h-[70svh]"
         aria-hidden
       >
         <Image
