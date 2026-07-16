@@ -20,7 +20,7 @@ const items = [
     body: "O melhor custo benefício do mercado, com preços que cabem no seu orçamento.",
   },
   {
-    image: "/atendimento-agil.jpeg",
+    image: "/doctor-patient-consultation.jpg",
     title: "Atendimento ágil",
     body: "Eficiente, resolutivo e sem burocracias, com foco total na sua saúde.",
   },
