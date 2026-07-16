@@ -10,7 +10,7 @@ import { HeroBackground } from "@/components/ui/HeroBackground";
 
 const items = [
   {
-    image: "https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=400&h=300&fit=crop",
+    image: "/ampla-cobertura.jpeg",
     title: "Ampla cobertura",
     body: "Planos com cobertura total para consultas, exames, internações e cirurgias.",
   },
@@ -20,7 +20,7 @@ const items = [
     body: "O melhor custo benefício do mercado, com preços que cabem no seu orçamento.",
   },
   {
-    image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=300&fit=crop",
+    image: "/atendimento-agil.jpeg",
     title: "Atendimento ágil",
     body: "Eficiente, resolutivo e sem burocracias, com foco total na sua saúde.",
   },

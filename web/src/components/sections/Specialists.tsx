@@ -20,20 +20,17 @@ const specialties: {
   {
     name: "Pediatra",
     variant: "compact",
-    photo:
-      "https://images.unsplash.com/photo-1632052999447-e542d08d4f7d?w=400&h=480&fit=crop&crop=faces",
+    photo: "/pediatra.jpeg",
   },
   {
     name: "Cardiologista",
     variant: "hero",
-    photo:
-      "https://images.unsplash.com/photo-1460672985063-6764ac8b9c74?w=800&h=560&fit=crop&crop=faces",
+    photo: "/cardiologista.jpeg",
   },
   {
     name: "Gastroenterologista",
     variant: "compact",
-    photo:
-      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=480&fit=crop&crop=faces",
+    photo: "/gastroenterologista.jpeg",
   },
   {
     name: "Ginecologista",
@@ -44,8 +41,7 @@ const specialties: {
   {
     name: "Otorrinolaringologista",
     variant: "hero",
-    photo:
-      "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=800&h=560&fit=crop&crop=faces",
+    photo: "/otorrino.jpeg",
   },
   {
     name: "Urologista",
@@ -55,8 +51,7 @@ const specialties: {
   {
     name: "Ortopedista",
     variant: "hero",
-    photo:
-      "https://images.unsplash.com/photo-1597764690472-ec054f1c8637?w=800&h=560&fit=crop&crop=faces",
+    photo: "/ortopedista.jpeg",
   },
 ];
 
