@@ -25,7 +25,7 @@ export function BrandOrigin() {
                Solution: border-radius directly on <video>, shadow + poster on wrapper. */}
           <div className="order-2 flex min-w-0 justify-center lg:order-1">
             <div
-              className="relative aspect-[9/16] h-[min(72vh,42rem)] w-auto max-w-[min(100%,24rem)] shrink-0 bg-[var(--amelia-purple-faint)] supports-[height:100dvh]:h-[min(72dvh,42rem)] md:h-[min(78vh,46rem)] md:max-w-[min(100%,26rem)] md:supports-[height:100dvh]:h-[min(78dvh,46rem)]"
+              className="relative w-[min(100%,24rem)] md:w-[min(100%,26rem)] aspect-[9/16] shrink-0 bg-[var(--amelia-purple-faint)]"
               style={{
                 borderRadius: "1.5rem",
                 boxShadow:
