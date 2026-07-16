@@ -110,13 +110,21 @@ export function Hero() {
         />
       </motion.div>
 
-      {/* Person image — mobile: oversized to compensate for transparent PNG canvas */}
+      {/* Person image — mobile: oversized to compensate for transparent PNG canvas
+          Responsive positioning by screen proportion (width × height):
+          • Short phones (<720px tall, e.g. iPhone SE 375×667):
+              h-[75vh] + object-[88%_bottom] → char at ~42%
+          • Narrow+tall (360-389px wide, 720px+ tall, e.g. Galaxy A14):
+              h-[70vh] + object-[95%_bottom] → char at ~38%
+          • Standard+tall (390px+ wide, 720px+ tall, e.g. iPhone 14, S22):
+              h-[70vh] + object-[right_bottom] → char at ~41%
+          • Large+tall (430px+ wide, 900px+ tall, e.g. iPhone Plus):
+              h-[70vh] + right-[-28vw] + object-[right_bottom] → char at ~43% */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-        className="absolute bottom-0 right-[-26vw] block lg:hidden pointer-events-none z-10"
-        style={{ width: "148vw", height: "70vh" }}
+        className="absolute bottom-0 block lg:hidden pointer-events-none z-10 w-[148vw] right-[-26vw] min-[390px]:right-[-28vw] h-[75vh] [@media(min-height:720px)]:h-[70vh]"
         aria-hidden
       >
         <Image
@@ -125,8 +133,8 @@ export function Hero() {
           alt=""
           priority
           quality={90}
-          className="object-contain object-[right_bottom] select-none"
-          sizes="148vw"
+          className="object-contain select-none object-[88%_bottom] [@media(min-height:720px)]:object-[95%_bottom] [@media(min-height:720px)_and_(min-width:390px)]:object-[right_bottom]"
+          sizes="100vw"
           draggable={false}
         />
       </motion.div>
