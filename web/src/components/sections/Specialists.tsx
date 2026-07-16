@@ -35,8 +35,7 @@ const specialties: {
   {
     name: "Ginecologista",
     variant: "compact",
-    photo:
-      "https://images.unsplash.com/photo-1637059824899-a441006a6875?w=400&h=480&fit=crop&crop=faces",
+    photo: "/ginecologista.jpeg",
   },
   {
     name: "Otorrinolaringologista",
