@@ -23,7 +23,7 @@ const specialties: {
     variant: "compact",
     photo: "/pediatra.jpeg",
     imageClass:
-      "object-cover object-[50%_38%] scale-[0.82] transition-transform duration-500 ease-out group-hover:scale-[0.86]",
+      "object-cover object-[50%_30%] transition-transform duration-500 ease-out group-hover:scale-[1.03]",
   },
   {
     name: "Cardiologista",
