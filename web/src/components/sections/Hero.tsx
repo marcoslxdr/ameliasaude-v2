@@ -115,7 +115,7 @@ export function Hero() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-        className="absolute bottom-0 right-[-26vw] block lg:hidden pointer-events-none z-10"
+        className="absolute bottom-0 right-[-30vw] block lg:hidden pointer-events-none z-10"
         style={{ width: "148vw", height: "70vh" }}
         aria-hidden
       >
@@ -125,7 +125,7 @@ export function Hero() {
           alt=""
           priority
           quality={90}
-          className="object-contain object-[76%_bottom] select-none"
+          className="object-contain object-[right_bottom] select-none"
           sizes="148vw"
           draggable={false}
         />
