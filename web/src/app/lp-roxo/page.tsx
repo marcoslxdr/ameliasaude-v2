@@ -30,6 +30,11 @@ export default function LpRoxo() {
           imageSrc="/maria-padilha-look-roxo.webp"
           imageWidth={878}
           imageHeight={1792}
+          /* Foto no aspect exato (sem cortar a pessoa); sangra só pela direita. */
+          mobilePhotoTop="11rem"
+          mobilePhotoRight="-26vw"
+          mobileCopyPad="47vw"
+          headlineClassName="mb-3 w-full tracking-tight lg:mb-7"
         />
         <BrandOrigin />
         <HealthExperience />
