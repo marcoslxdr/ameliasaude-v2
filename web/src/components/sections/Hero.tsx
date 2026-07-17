@@ -14,7 +14,24 @@ import { Button } from "@/components/ui/Button";
 import { HeroBackground } from "@/components/ui/HeroBackground";
 import { trackCtaClick } from "@/lib/analytics";
 
-export function Hero() {
+type HeroProps = {
+  /** Hero person image (default: look atual em produção). */
+  imageSrc?: string;
+  imageWidth?: number;
+  imageHeight?: number;
+};
+
+const DEFAULT_HERO_IMAGE = {
+  src: "/maria-padilha-hero.png",
+  width: 941,
+  height: 1672,
+} as const;
+
+export function Hero({
+  imageSrc = DEFAULT_HERO_IMAGE.src,
+  imageWidth = DEFAULT_HERO_IMAGE.width,
+  imageHeight = DEFAULT_HERO_IMAGE.height,
+}: HeroProps = {}) {
   const containerRef = useRef<HTMLElement>(null);
 
   return (
@@ -98,10 +115,10 @@ export function Hero() {
         aria-hidden
       >
         <Image
-          src="/maria-padilha-hero.png"
+          src={imageSrc}
           alt=""
-          width={941}
-          height={1672}
+          width={imageWidth}
+          height={imageHeight}
           priority
           quality={100}
           className="h-full w-auto object-contain object-[72%_bottom] select-none"
@@ -127,7 +144,7 @@ export function Hero() {
         {/* scale no filho — evita conflito com transform do motion */}
         <div className="relative h-full w-full origin-bottom scale-[1.14]">
           <Image
-            src="/maria-padilha-hero.png"
+            src={imageSrc}
             fill
             alt=""
             priority
