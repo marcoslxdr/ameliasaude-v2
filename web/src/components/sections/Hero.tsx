@@ -116,7 +116,7 @@ export function Hero() {
               h-[75svh] + object-[74%_bottom]
           • Tall phones (720px+ tall — iPhone 12mini/14/Plus, all Android):
               h-[70svh] + object-[84%_bottom]
-          Width: right-[-22vw] + w-[148vw] for 360-430px range. */}
+          Width: right-[-22vw] + w-[148vw]; zoom via scale origin-bottom. */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -124,16 +124,19 @@ export function Hero() {
         className="absolute bottom-0 right-[-22vw] block lg:hidden pointer-events-none z-10 w-[148vw] h-[75svh] [@media(min-height:720px)]:h-[70svh]"
         aria-hidden
       >
-        <Image
-          src="/maria-padilha-hero.png"
-          fill
-          alt=""
-          priority
-          quality={90}
-          className="object-contain select-none object-[74%_bottom] [@media(min-height:720px)]:object-[84%_bottom]"
-          sizes="100vw"
-          draggable={false}
-        />
+        {/* scale no filho — evita conflito com transform do motion */}
+        <div className="relative h-full w-full origin-bottom scale-[1.14]">
+          <Image
+            src="/maria-padilha-hero.png"
+            fill
+            alt=""
+            priority
+            quality={90}
+            className="object-contain select-none object-[74%_bottom] [@media(min-height:720px)]:object-[84%_bottom]"
+            sizes="100vw"
+            draggable={false}
+          />
+        </div>
       </motion.div>
 
       {/* Bottom fade — integra foto e próxima seção */}
