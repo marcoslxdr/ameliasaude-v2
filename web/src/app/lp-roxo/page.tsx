@@ -32,8 +32,8 @@ export default function LpRoxo() {
           imageHeight={1792}
           /* Foto no aspect exato (sem cortar a pessoa); sangra só pela direita. */
           mobilePhotoTop="11rem"
-          mobilePhotoRight="-26vw"
-          mobileCopyPad="47vw"
+          mobilePhotoRight="-24vw"
+          mobileCopyPad="45vw"
           headlineClassName="mb-3 w-full tracking-tight lg:mb-7"
         />
         <BrandOrigin />

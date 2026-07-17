@@ -22,7 +22,7 @@ type HeroProps = {
   /** Mobile: distância do topo até a caixa da foto (ancora a cabeça perto do
    *  headline; px/rem → acompanha o título em qualquer altura de tela). */
   mobilePhotoTop?: string;
-  /** Mobile: quanto a foto sangra pra fora da borda direita (ex. "-30vw"). */
+  /** Mobile: quanto a foto sangra pra fora da borda direita (ex. "-24vw"). */
   mobilePhotoRight?: string;
   /** Mobile: padding-right reservado no copy p/ texto não colidir com a foto. */
   mobileCopyPad?: string;
@@ -48,7 +48,7 @@ export function Hero({
   imageWidth = DEFAULT_HERO_IMAGE.width,
   imageHeight = DEFAULT_HERO_IMAGE.height,
   mobilePhotoTop = "11rem",
-  mobilePhotoRight = "-28vw",
+  mobilePhotoRight = "-18vw",
   mobileCopyPad = "44vw",
   contentClassName = DEFAULT_CONTENT,
   headlineClassName = DEFAULT_HEADLINE,
@@ -145,10 +145,12 @@ export function Hero({
         />
       </motion.div>
 
-      {/* Person — mobile: absolute à section, aspect exato da imagem (PNG
-          transparente → sem borda de caixa). Sangra pra fora à direita; o
-          único corte (braço no limite da tela) é suavizado por um fade (mask)
-          → sem linha dura. Top ancora a cabeça perto do headline. */}
+      {/* Person — mobile: absolute à section. Caixa com largura própria
+          (mobilePhotoWidth) e object-contain ancorado à direita: a pessoa
+          nunca é cortada nem distorcida, e a sobra (se houver) vira buffer
+          à ESQUERDA, longe do texto — nunca sobrepõe. Sangra um pouco pra
+          fora à direita; esse único limite é suavizado por fade (mask) →
+          sem linha dura. Top ancora a cabeça com folga do headline. */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
