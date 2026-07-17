@@ -12,10 +12,11 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ## Gotchas & Convenções
 
-- **Deploy Vercel**: projeto linkado `insightfy/amelia-saude-v2`, `rootDirectory: web`. Prod: `vercel deploy --prod --yes` na raiz. Domínio: https://www.ameliasaude.com.br
+- **Deploy Vercel**: **dois projetos** no time `insightfy` — `ameliasaude-v2` (prod **www.ameliasaude.com.br**) e `amelia-saude-v2` (só `*.vercel.app`). `vercel link --project ameliasaude-v2` antes do deploy prod. `rootDirectory: web`. Comando: `vercel deploy --prod --yes --scope insightfy` na raiz.
 - **Limite 100MB no upload CLI**: assets grandes na raiz (ex. `amelia video.mp4` 133MB) quebram deploy. Manter exclusões em `.vercelignore` (só raiz — **não** ignorar `web/public/*.mp4` usados no site).
 - **Vídeos / Mídia**: Arquivos em `web/public/` devem ser comprimidos (abaixo de 100MB GitHub + load web). Originais grandes → `backups/videos/` (gitignored).
   - Institucional (`BrandOrigin`): `web/public/amelia-video.mp4` — **sem espaço no nome**, 720×1280 H.264 **Main@L4.0** CRF28 AAC faststart (~3.6MB). iPhone: não usar High@L5.0 nem `h`+`aspect-ratio`+`w-auto` (width vira 0 no Safari). Capa: `web/public/amelia-video-poster.jpg` via `poster` no `<video>`.
+  - Layout vídeo: grid track do player = largura **definida em rem** (`lg:grid-cols-[24rem_…]`, não `minmax(0,24rem)`). `w-[min(100%,…)]` + `min-w-0` na coluna → largura cíclica → caixa **0×0** (MP4 200 OK, `<video>` some).
   - Exemplo: `ffmpeg -i input.mp4 -vf "scale='min(720,iw)':-2" -c:v libx264 -profile:v main -level 4.0 -crf 28 -preset medium -pix_fmt yuv420p -c:a aac -b:a 128k -movflags +faststart amelia-video.mp4`
   - Backup original com espaço: `web/public/amelia video.mp4` (High@L5.0, ~17MB) — não referenciar no código. Extrair capa: `ffmpeg -ss 2 -i input.mp4 -frames:v 1 -q:v 2 poster.jpg`
 - **Hero mobile (`Hero.tsx`)**: foto LCP = `maria-padilha-hero.webp` (não PNG 1.7MB). Canvas transparente largo → mobile `width: 148vw`, `right-[-26vw]`, `object-[76%_bottom]`. Texto `max-lg:pr-[44vw]` (sm `40vw` / md `36vw`). **Nunca** `initial={{ opacity: 0 }}` na foto hero — atrasa LCP no Lighthouse mobile. `sizes` mobile ≈ `100vw` (não `148vw`) pra não baixar imagem gigante.

@@ -17,15 +17,17 @@ export function BrandOrigin() {
     >
       <HeroBackground variant="origin" />
       <div className="relative z-10 mx-auto flex w-full max-w-[1240px] items-center justify-center">
-        {/* Plain grid — no motion transforms on this tree for the video column */}
-        <div className="grid w-full max-w-5xl grid-cols-1 place-items-center items-center justify-items-center gap-14 md:gap-20 lg:max-w-none lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] lg:justify-items-center lg:gap-24 xl:gap-28">
+        {/* Plain grid — no motion transforms on this tree for the video column.
+            Track 1 MUST be a definite rem width (not minmax(0,…)): percentage
+            widths on the video box + min-w-0 collapse the column to 0×0. */}
+        <div className="grid w-full max-w-5xl grid-cols-1 place-items-center items-center justify-items-center gap-14 md:gap-20 lg:max-w-none lg:grid-cols-[24rem_minmax(0,1fr)] lg:justify-items-center lg:gap-24 xl:grid-cols-[26rem_minmax(0,1fr)] xl:gap-28">
           {/* Video: static wrapper — no overflow-hidden, no mask-image, no transform.
                iOS Safari refuses to paint <video> inside a compositing context
                (mask-image, overflow:hidden+border-radius, transform, filter, will-change).
                Solution: border-radius directly on <video>, shadow + poster on wrapper. */}
-          <div className="order-2 flex min-w-0 justify-center lg:order-1">
+          <div className="order-2 flex w-full max-w-[24rem] justify-center justify-self-center md:max-w-[26rem] lg:order-1 lg:w-full lg:max-w-none">
             <div
-              className="relative w-[min(100%,24rem)] md:w-[min(100%,26rem)] aspect-[9/16] shrink-0 bg-[var(--amelia-purple-faint)]"
+              className="relative aspect-[9/16] w-full shrink-0 bg-[var(--amelia-purple-faint)]"
               style={{
                 borderRadius: "1.5rem",
                 boxShadow:
@@ -38,8 +40,8 @@ export function BrandOrigin() {
             >
               <video
                 className="absolute inset-0 h-full w-full object-cover"
-                width={1080}
-                height={1920}
+                width={720}
+                height={1280}
                 src="/amelia-video.mp4"
                 poster="/amelia-video-poster.jpg"
                 playsInline
