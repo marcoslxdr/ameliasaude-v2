@@ -111,17 +111,17 @@ export function Hero() {
       </motion.div>
 
       {/* Person image — mobile: oversized to compensate for transparent PNG canvas
-          Responsive positioning by screen height (character further right, less text overlap):
+          Responsive positioning by screen height (nudged toward center vs far-right):
           • Short phones (<720px tall, e.g. iPhone SE 375×667, SE2/3):
-              h-[75svh] + object-[82%_bottom]
+              h-[75svh] + object-[74%_bottom]
           • Tall phones (720px+ tall — iPhone 12mini/14/Plus, all Android):
-              h-[70svh] + object-[92%_bottom]
-          Width: right-[-34vw] + w-[148vw] for 360-430px range. */}
+              h-[70svh] + object-[84%_bottom]
+          Width: right-[-22vw] + w-[148vw] for 360-430px range. */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-        className="absolute bottom-0 right-[-34vw] block lg:hidden pointer-events-none z-10 w-[148vw] h-[75svh] [@media(min-height:720px)]:h-[70svh]"
+        className="absolute bottom-0 right-[-22vw] block lg:hidden pointer-events-none z-10 w-[148vw] h-[75svh] [@media(min-height:720px)]:h-[70svh]"
         aria-hidden
       >
         <Image
@@ -130,7 +130,7 @@ export function Hero() {
           alt=""
           priority
           quality={90}
-          className="object-contain select-none object-[82%_bottom] [@media(min-height:720px)]:object-[92%_bottom]"
+          className="object-contain select-none object-[74%_bottom] [@media(min-height:720px)]:object-[84%_bottom]"
           sizes="100vw"
           draggable={false}
         />
@@ -147,7 +147,7 @@ export function Hero() {
       />
 
       {/* Content */}
-      <div className="relative z-30 flex flex-col flex-1 w-full max-w-[1440px] mx-auto px-[clamp(1.5rem,6vw,7rem)] pt-24 sm:pt-28 lg:pt-36 pb-6 lg:pb-28 max-lg:pr-[44vw] sm:max-lg:pr-[40vw] md:max-lg:pr-[36vw]">
+      <div className="relative z-30 flex flex-col flex-1 w-full max-w-[1440px] mx-auto px-[clamp(1.5rem,6vw,7rem)] pt-24 sm:pt-28 lg:pt-36 pb-6 lg:pb-28 max-lg:pr-[28vw] sm:max-lg:pr-[24vw] md:max-lg:pr-[20vw]">
         <motion.div
           variants={staggerContainer(0.13, 0.08)}
           initial="hidden"
@@ -155,16 +155,16 @@ export function Hero() {
           viewport={viewportConfig}
           className="flex flex-1 flex-col lg:my-auto lg:flex-none w-full lg:max-w-[48%]"
         >
-          {/* Headline */}
-          <motion.h1 variants={fadeUp} className="mb-5 lg:mb-7 tracking-tight">
+          {/* Headline — mobile: largura quase full viewport */}
+          <motion.h1 variants={fadeUp} className="mb-5 lg:mb-7 tracking-tight max-lg:w-[calc(100vw-3rem)]">
             <span
-              className="block font-sans font-normal text-[var(--amelia-deep)] leading-[1.15] mb-4 lg:mb-5"
+              className="mb-4 block w-full max-w-none font-sans font-normal leading-[1.15] text-[var(--amelia-deep)] lg:mb-5 lg:max-w-[520px]"
               style={{
                 fontSize: "clamp(1.35rem, 2.6vw, 2.1rem)",
-                maxWidth: "min(100%, 520px)",
               }}
             >
-              O Plano de saúde com gestão moderna, tecnologia inteligente e cuidado humanizado.
+              O Plano de saúde com gestão moderna, tecnologia inteligente e
+              cuidado humanizado.
             </span>
             <span
               className="block font-display font-normal text-[var(--amelia-purple)] leading-[1.04] italic text-[1.65rem] min-[360px]:text-[1.75rem] min-[390px]:text-[1.85rem] sm:text-[2.25rem] lg:text-[clamp(2.85rem,5.6vw,4.9rem)]"
