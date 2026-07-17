@@ -111,17 +111,17 @@ export function Hero() {
       </motion.div>
 
       {/* Person image — mobile: oversized to compensate for transparent PNG canvas
-          Responsive positioning by screen height (character at ~47-48% from left):
+          Responsive positioning by screen height (character further right, less text overlap):
           • Short phones (<720px tall, e.g. iPhone SE 375×667, SE2/3):
-              h-[75vh] + object-[75%_bottom] → char at ~48%
+              h-[75svh] + object-[82%_bottom]
           • Tall phones (720px+ tall — iPhone 12mini/14/Plus, all Android):
-              h-[70vh] + object-[85%_bottom] → char at 47-48%
-          Width is naturally consistent: right-[-26vw] works for 360-430px range. */}
+              h-[70svh] + object-[92%_bottom]
+          Width: right-[-34vw] + w-[148vw] for 360-430px range. */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
-        className="absolute bottom-0 right-[-26vw] block lg:hidden pointer-events-none z-10 w-[148vw] h-[75svh] [@media(min-height:720px)]:h-[70svh]"
+        className="absolute bottom-0 right-[-34vw] block lg:hidden pointer-events-none z-10 w-[148vw] h-[75svh] [@media(min-height:720px)]:h-[70svh]"
         aria-hidden
       >
         <Image
@@ -130,7 +130,7 @@ export function Hero() {
           alt=""
           priority
           quality={90}
-          className="object-contain select-none object-[75%_bottom] [@media(min-height:720px)]:object-[85%_bottom]"
+          className="object-contain select-none object-[82%_bottom] [@media(min-height:720px)]:object-[92%_bottom]"
           sizes="100vw"
           draggable={false}
         />
