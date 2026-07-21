@@ -21,11 +21,11 @@ export function Pagination({ currentPage, totalPages }: PaginationProps) {
   };
 
   return (
-    <div className="mt-10 flex items-center justify-center gap-2">
+    <div className="mt-10 flex items-center justify-center gap-2 rounded-full border border-[var(--amelia-line)] bg-white/90 px-4 py-2">
       {currentPage > 1 && (
         <Link
           href={buildUrl(currentPage - 1)}
-          className={getButtonClassName("pagination")}
+          className={`${getButtonClassName("pagination")} rounded-full`}
         >
           Anterior
         </Link>
@@ -37,6 +37,8 @@ export function Pagination({ currentPage, totalPages }: PaginationProps) {
           href={buildUrl(page)}
           className={getButtonClassName(
             page === currentPage ? "pagination-active" : "pagination",
+            "md",
+            `${page === currentPage ? "rounded-full" : "rounded-full hover:!bg-[var(--amelia-soft)] hover:!border-[var(--amelia-purple)]"}`
           )}
         >
           {page}
@@ -46,7 +48,7 @@ export function Pagination({ currentPage, totalPages }: PaginationProps) {
       {currentPage < totalPages && (
         <Link
           href={buildUrl(currentPage + 1)}
-          className={getButtonClassName("pagination")}
+          className={`${getButtonClassName("pagination")} rounded-full`}
         >
           Próxima
         </Link>

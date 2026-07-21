@@ -14,11 +14,15 @@ export function BlogSidebar({ activeCategory, onSearch, searchQuery }: BlogSideb
   const tags = getAllTags();
 
   return (
-    <aside className="space-y-8">
-      <SearchInput onSearch={onSearch} initialValue={searchQuery} />
-      <div className="h-px bg-[#e4dcf5]" />
+    <aside className="space-y-6 rounded-2xl border border-[var(--amelia-line)] bg-white p-5">
+      <div className="mb-2">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-[#7b6bb2]">
+          Explore
+        </p>
+        <SearchInput onSearch={onSearch} initialValue={searchQuery} />
+      </div>
+
       <CategoryFilter categories={categories} activeCategory={activeCategory} />
-      <div className="h-px bg-[#e4dcf5]" />
       <TagList tags={tags} />
     </aside>
   );

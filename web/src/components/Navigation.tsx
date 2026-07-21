@@ -38,6 +38,7 @@ export function Navigation() {
   })();
 
   const isBannerHero = isHomePage && !scrolled;
+  const useSolidHeader = isBlogPage || scrolled;
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 48);
@@ -74,15 +75,15 @@ export function Navigation() {
         style={{
           background: menuOpen
             ? "transparent"
-            : scrolled
+            : useSolidHeader
             ? "rgba(255,255,255,0.94)"
             : "transparent",
           backdropFilter:
-            !menuOpen && scrolled ? "blur(20px) saturate(180%)" : "none",
+            !menuOpen && useSolidHeader ? "blur(20px) saturate(180%)" : "none",
           WebkitBackdropFilter:
-            !menuOpen && scrolled ? "blur(20px) saturate(180%)" : "none",
+            !menuOpen && useSolidHeader ? "blur(20px) saturate(180%)" : "none",
           borderBottom:
-            !menuOpen && scrolled
+            !menuOpen && useSolidHeader
               ? "1px solid rgba(123,107,178,0.1)"
               : "1px solid transparent",
         }}
