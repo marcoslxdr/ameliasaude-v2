@@ -72,8 +72,7 @@ export function Telemedicine() {
               <motion.h2 variants={fadeUp}
                 className="font-display font-normal text-[var(--amelia-deep)] mb-4"
                 style={{ fontSize: "clamp(2rem, 4.5vw, 3.25rem)", lineHeight: 1.05, letterSpacing: "-0.02em" }}>
-                Tenha um especialista Amélia disponível{" "}
-                <em className="italic font-light text-[#7b6bb2]">a qualquer momento.</em>
+                Pronto atendimento digital 24h
               </motion.h2>
               <motion.p variants={fadeUp}
                 className="mb-8 font-sans font-light leading-relaxed text-[var(--amelia-body)]"
