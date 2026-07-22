@@ -28,17 +28,16 @@ const specialties: {
     imageClass: "object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.03]",
   },
   {
-    id: "medico-familia",
-    name: "Médico da Família",
+    id: "cardiologista",
+    name: "Cardiologista",
     variant: "hero",
-    photo: "/cardiologista.jpeg",
+    photo: "/gastroenterologista.jpeg",
   },
   {
-    id: "gastroenterologista",
-    name: "Gastroenterologista",
+    id: "medico-familia",
+    name: "Médico da Família",
     variant: "compact",
-    photo: "/gastroenterologista.jpeg",
-    imageClass: "object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.03]",
+    photo: "/cardiologista.jpeg",
   },
   {
     id: "ginecologista",
