@@ -73,14 +73,14 @@ export function HealthExperience() {
               letterSpacing: "-0.02em",
             }}
           >
-            Saúde de verdade sem burocracia
+            A MELHOR EXPERIÊNCIA EM PLANOS DE SAÚDE
           </motion.h2>
           <motion.p
             variants={fadeUp}
             className="mt-8 max-w-2xl font-sans font-light leading-relaxed text-[var(--amelia-body)]"
             style={{ fontSize: "clamp(1.1rem, 1.9vw, 1.35rem)" }}
           >
-            A melhor experiência em planos de saúde.
+            O cuidado que você quer está aqui.
           </motion.p>
         </motion.div>
 
