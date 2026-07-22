@@ -8,47 +8,58 @@ import { HeroBackground } from "@/components/ui/HeroBackground";
 type SpecialtyVariant = "hero" | "compact";
 
 const specialties: {
+  id: string;
   name: string;
   photo: string;
   variant: SpecialtyVariant;
   imageClass?: string;
 }[] = [
   {
+    id: "clinico-geral",
     name: "Clínico Geral",
     variant: "compact",
     photo: "/clinico geral.jpg",
   },
   {
+    id: "pediatra",
     name: "Pediatra",
     variant: "compact",
     photo: "/pediatra.jpeg",
+    imageClass: "object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.03]",
   },
   {
-    name: "Cardiologista",
+    id: "medico-familia",
+    name: "Médico da Família",
     variant: "hero",
     photo: "/cardiologista.jpeg",
   },
   {
+    id: "gastroenterologista",
     name: "Gastroenterologista",
     variant: "compact",
     photo: "/gastroenterologista.jpeg",
+    imageClass: "object-cover object-center transition-transform duration-500 ease-out group-hover:scale-[1.03]",
   },
   {
+    id: "ginecologista",
     name: "Ginecologista",
     variant: "compact",
     photo: "/ginecologista.jpeg",
   },
   {
+    id: "otorrinolaringologista",
     name: "Otorrinolaringologista",
     variant: "hero",
     photo: "/otorrino.jpeg",
   },
   {
+    id: "urologista",
     name: "Urologista",
     variant: "hero",
     photo: "/urologista.jpg",
   },
   {
+    id: "ortopedista",
     name: "Ortopedista",
     variant: "hero",
     photo: "/ortopedista.jpeg",
@@ -70,26 +81,31 @@ export function Specialists() {
       <HeroBackground variant="veil" />
 
       <div className="relative z-10 mx-auto w-full max-w-[1320px] px-6">
+        <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={viewportConfig} className="mb-10 max-w-3xl">
+          <p className="mb-4 font-sans text-[11px] font-normal tracking-[0.1em] text-[var(--amelia-purple)]">Especialidades</p>
+          <h2 className="font-display text-4xl font-normal leading-tight text-[var(--amelia-deep)] sm:text-5xl">Profissionais especializados</h2>
+          <p className="mt-4 max-w-2xl font-sans text-lg font-light leading-relaxed text-[var(--amelia-body)]">Profissionais especializados com agendamento digital para realização de Teleconsulta em até 7 dias.</p>
+        </motion.div>
         {/* Bento: 12 colunas — destaques em faixa dupla */}
         <motion.div
           variants={staggerContainer(0.09, 0.08)}
           initial="hidden"
           whileInView="visible"
           viewport={viewportConfig}
-          className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-12 lg:gap-5"
+          className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6"
         >
           {specialties.map((sp) => {
             const isHero = sp.variant === "hero";
-            const colClass = isHero ? "lg:col-span-6" : "lg:col-span-3";
+            const colClass = isHero ? "lg:col-span-2" : "lg:col-span-1";
 
             return (
-              <motion.article
-                key={sp.name}
+                <motion.article
+                key={sp.id}
                 variants={fadeUp}
                 className={`group relative flex min-h-0 ${colClass} ${
                   isHero
-                    ? "flex-col overflow-hidden lg:min-h-[280px] lg:flex-row"
-                    : "flex-col overflow-hidden lg:min-h-[320px]"
+                    ? "flex-col overflow-hidden lg:min-h-[376px] lg:flex-row"
+                    : "flex-col overflow-hidden lg:min-h-[376px]"
                 } ${glassCard} hover:border-white/75 hover:bg-white/30 hover:shadow-[0_16px_56px_rgba(123,107,178,0.12)]`}
                 whileHover={
                   reduceMotion
@@ -103,8 +119,8 @@ export function Specialists() {
                 <div
                   className={`relative shrink-0 overflow-hidden bg-[var(--amelia-surface)] ${
                     isHero
-                      ? "h-52 sm:h-60 lg:h-auto lg:w-1/2 lg:min-h-[240px]"
-                      : "h-52 sm:h-56"
+                      ? "h-52 sm:h-60 lg:h-auto lg:w-1/2"
+                      : "h-52 sm:h-56 lg:h-[248px]"
                   }`}
                 >
                   <Image

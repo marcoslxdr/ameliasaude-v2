@@ -169,23 +169,27 @@ function applyOrbitPolarTweaks(nodes: OrbitNode[]): OrbitNode[] {
   });
 }
 
-/** Niterói no anel externo, alinhada ao ângulo de São Gonçalo (anel interno). */
+/** Niterói no mesmo anel de Magé, parte superior. Duque espelha Niterói por par vertical. */
 function placeNiteroiBesideSaoGoncalo(nodes: OrbitNode[]): OrbitNode[] {
-  const sg = nodes.find((n) => n.city.name === "São Gonçalo");
+  const mage = nodes.find((n) => n.city.name === "Magé");
   const niteroi = nodes.find((n) => n.city.name === "Niterói");
-  if (!sg || !niteroi) return nodes;
+  if (!mage || !niteroi) return nodes;
 
-  const angSG = Math.atan2(sg.top - 50, sg.left - 50);
-  const r = Math.hypot(niteroi.left - 50, niteroi.top - 50);
-  const offsetRad = (8 * Math.PI) / 180;
+  const mageRadius = Math.hypot(mage.left - 50, mage.top - 50);
+  const targetTop = 50 - mageRadius * 0.75;
+  const verticalOffset = targetTop - 50;
+  const horizontalOffset = Math.sqrt(
+    Math.max(mageRadius * mageRadius - verticalOffset * verticalOffset, 0)
+  );
+  const zIndex = niteroi.zIndex + 4;
 
   return nodes.map((node) =>
     node.city.name === "Niterói"
       ? {
           ...node,
-          left: 50 + r * Math.cos(angSG + offsetRad),
-          top: 50 + r * Math.sin(angSG + offsetRad),
-          zIndex: node.zIndex + 2,
+          left: 50 - horizontalOffset,
+          top: targetTop,
+          zIndex,
         }
       : node
   );
@@ -229,8 +233,8 @@ function placeMesquitaMirrorOfRio(nodes: OrbitNode[]): OrbitNode[] {
     node.city.name === "Mesquita"
       ? {
           ...node,
-          left: rio.left,
-          top: 100 - rio.top,
+          left: 50,
+          top: 50 + ORBIT_OUTER_RADIUS,
         }
       : node
   );

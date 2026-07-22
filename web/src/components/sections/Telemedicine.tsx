@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { staggerContainer, fadeUp, viewportConfig } from "@/lib/motion";
 import telemedicinaPhone from "@/assets/telemedicina-1.webp";
 import { HeroBackground } from "@/components/ui/HeroBackground";
+import { Button } from "@/components/ui/Button";
 
 function Phone() {
   return (
@@ -26,23 +27,22 @@ function Phone() {
         animate={{ y: [0, -7, 0] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
         className="absolute right-[-0.35rem] sm:right-[-0.75rem] top-[14%] font-sans text-xs sm:text-[13px] font-normal px-3 py-1.5 rounded-full z-10"
-        style={{ background: "white", color: "#5e4985", border: "1px solid rgba(123,107,178,0.15)", boxShadow: "0 6px 20px rgba(94,73,133,0.12)", whiteSpace: "nowrap" }}>
-        Disponível 24h
+        style={{ background: "#7b6bb2", color: "white", border: "1px solid #7b6bb2", boxShadow: "0 6px 20px rgba(94,73,133,0.3)", whiteSpace: "nowrap" }}>
+        Clínico Geral 24h
       </motion.div>
       <motion.div
         animate={{ y: [0, 7, 0] }}
         transition={{ duration: 3.6, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
         className="absolute left-[-0.25rem] sm:left-[-0.65rem] bottom-[22%] font-sans text-xs sm:text-[13px] font-normal px-3 py-1.5 rounded-full z-10"
         style={{ background: "#7b6bb2", color: "white", boxShadow: "0 6px 20px rgba(123,107,178,0.3)", whiteSpace: "nowrap" }}>
-        +30 especialidades
+        Pediatra 24h
       </motion.div>
     </div>
   );
 }
 
 const bullets = [
-  { title: "Pronto atendimento digital 24 horas", desc: "comodidade e segurança em qualquer horário do seu dia." },
-  { title: "80% resolutividade na 1ª consulta", desc: "A maioria dos casos resolvidos já no primeiro atendimento." },
+  { title: "94% de resolutividade na primeira consulta", desc: "A maioria dos casos resolvidos já no primeiro atendimento." },
   { title: "Prescrição eletrônica completa", desc: "Medicamentos, exames e atestados emitidos digitalmente." },
 ];
 
@@ -78,9 +78,11 @@ export function Telemedicine() {
               <motion.p variants={fadeUp}
                 className="mb-8 font-sans font-light leading-relaxed text-[var(--amelia-body)]"
                 style={{ fontSize: "clamp(1.1rem, 1.9vw, 1.35rem)" }}>
-                Mais de 30 especialidades disponíveis por telemedicina, com praticidade
-                e comodidade sem sair de casa.
+                Seja atendido em até 7 minutos através da teleconsulta com praticidade e comodidade, sem necessidade de deslocamentos.
               </motion.p>
+              <motion.div variants={fadeUp} className="flex flex-wrap gap-3">
+                <Button href="#plataforma" variant="purple">Acessar plataforma</Button>
+              </motion.div>
             </motion.div>
           </div>
 
@@ -117,12 +119,12 @@ export function Telemedicine() {
                     >
                       {b.title}
                     </p>
-                    <p
+                    {b.desc && <p
                       className="font-sans font-light text-[#8a8a8a] leading-relaxed mt-1.5"
                       style={{ fontSize: "clamp(0.95rem, 1.2vw, 1.1rem)" }}
                     >
                       {b.desc}
-                    </p>
+                    </p>}
                   </div>
                 </motion.li>
               ))}
