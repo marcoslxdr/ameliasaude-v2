@@ -16,7 +16,7 @@ const specialties: {
 }[] = [
   {
     id: "clinico-geral",
-    name: "Clínico Geral",
+    name: "Médico de Família",
     variant: "compact",
     photo: "/clinico geral.jpg",
   },
@@ -35,7 +35,7 @@ const specialties: {
   },
   {
     id: "medico-familia",
-    name: "Médico da Família",
+    name: "Dermatologista",
     variant: "compact",
     photo: "/cardiologista.jpeg",
   },

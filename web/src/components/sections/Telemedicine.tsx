@@ -42,6 +42,7 @@ function Phone() {
 }
 
 const bullets = [
+  { title: "Pronto atendimento digital 24h", desc: "Atendimento médico digital imediato, sem burocracias." },
   { title: "94% de resolutividade na primeira consulta", desc: "A maioria dos casos resolvidos já no primeiro atendimento." },
   { title: "Prescrição eletrônica completa", desc: "Medicamentos, exames e atestados emitidos digitalmente." },
 ];
@@ -72,12 +73,13 @@ export function Telemedicine() {
               <motion.h2 variants={fadeUp}
                 className="font-display font-normal text-[var(--amelia-deep)] mb-4"
                 style={{ fontSize: "clamp(2rem, 4.5vw, 3.25rem)", lineHeight: 1.05, letterSpacing: "-0.02em" }}>
-                Pronto atendimento digital 24h
+                Tenha um especialista Amélia disponível{" "}
+                <em className="italic font-light text-[#7b6bb2]">a qualquer momento.</em>
               </motion.h2>
               <motion.p variants={fadeUp}
                 className="mb-8 font-sans font-light leading-relaxed text-[var(--amelia-body)]"
                 style={{ fontSize: "clamp(1.1rem, 1.9vw, 1.35rem)" }}>
-                Atendimento médico digital imediato, sem burocracias.
+                Seja atendido em até 7 minutos através da teleconsulta com praticidade e comodidade, sem necessidade de deslocamentos.
               </motion.p>
               <motion.div variants={fadeUp} className="flex flex-wrap gap-3">
                 <Button href="#plataforma" variant="purple">Acessar plataforma</Button>
