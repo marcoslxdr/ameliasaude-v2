@@ -155,7 +155,6 @@ const scheduledPosts: BlogPost[] = [
     title: "Plano de saúde empresarial: como funciona, carências e quem pode contratar",
     excerpt: "Entenda como funciona o plano de saúde coletivo empresarial, quem pode contratar, as regras de carência e quem paga a mensalidade. Guia prático para MEI, micro e pequenas empresas.",
     date: "01 Ago 2026",
-    publishAt: "2026-08-01T08:00:00-03:00",
     readTime: "8 min",
     image: image("photo-1454165804606-c3d57bc86b40"),
     content: [
@@ -245,8 +244,7 @@ const scheduledPosts: BlogPost[] = [
     title: "Plano de saúde empresarial no RJ: preços, reajuste e como comparar propostas",
     excerpt: "Saiba como o preço do plano empresarial é formado, como funciona o reajuste e quais os 8 critérios para comparar propostas no Rio de Janeiro e Grande Rio.",
     date: "01 Ago 2026",
-    publishAt: "2026-08-01T10:00:00-03:00",
-    readTime: "9 min",
+    readTime: "7 min",
     image: image("photo-1554224155-6726b3ff858f"),
     content: [
       "## Resposta direta",
@@ -330,9 +328,8 @@ const scheduledPosts: BlogPost[] = [
     title: "Plano empresarial ou coletivo por adesão: qual faz sentido para sua empresa?",
     excerpt: "Comparação prática entre plano de saúde empresarial e coletivo por adesão. Entenda as diferenças de contratação, carência, reajuste e descubra qual faz sentido para o seu negócio.",
     date: "03 Ago 2026",
-    publishAt: "2026-08-03T08:00:00-03:00",
-    readTime: "9 min",
-    image: image("photo-1554224155-6726b3ff858f"),
+    readTime: "8 min",
+    image: image("photo-1600880292203-757bb62b4baf"),
     content: [
       "## Resposta direta",
       "A escolha entre plano empresarial e coletivo por adesão depende do seu CNPJ. Se você tem empresa ativa com 2 ou mais vidas, o empresarial costuma ser o caminho mais direto — permite negociar carência, reajuste e subsídio da mensalidade. Se você é profissional autônomo sem CNPJ ou busca um custo mais previsível atrelado à sua categoria profissional, o plano por adesão pode ser a melhor alternativa. Abaixo, os critérios que decidem.",
