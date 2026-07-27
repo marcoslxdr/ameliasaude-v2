@@ -132,7 +132,7 @@ export function OrganizationSchema() {
     },
     sameAs: [
       SITE_URL,
-      // Add social media URLs when available
+      "https://www.instagram.com/ameliasauderj/",
     ],
   };
 

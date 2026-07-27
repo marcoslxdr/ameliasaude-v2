@@ -18,6 +18,7 @@ const CONTACT = {
   sacHref: "tel:08000210777",
   email: "atendimento@ameliasaude.com.br",
   site: "https://ameliasaude.com.br/",
+  instagram: "https://www.instagram.com/ameliasauderj/",
 } as const;
 
 const navLinks = [
@@ -141,11 +142,11 @@ export function Footer() {
             </p>
             <div className="flex items-center gap-3 pt-1">
               <a
-                href={CONTACT.site}
+                href={CONTACT.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`flex h-10 w-10 items-center justify-center rounded-full border border-[rgba(201,188,240,0.35)] text-[#d8cef7] transition-colors hover:border-[rgba(201,188,240,0.55)] hover:bg-[rgba(255,255,255,0.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(201,188,240,0.45)] ${ringFooter}`}
-                aria-label="Site oficial Amélia Saúde"
+                aria-label="Amélia Saúde no Instagram"
               >
                 <IconInstagram className="h-[18px] w-[18px]" />
               </a>

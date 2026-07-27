@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const navLinks = [
@@ -93,7 +94,7 @@ export function Navigation() {
           style={{ padding: "1.1rem clamp(1.5rem, 5vw, 5rem)" }}
         >
           {/* Logo — maior */}
-          <a
+          <Link
             href="/"
             aria-label="Amélia Saúde — início"
             onClick={closeMenu}
@@ -109,7 +110,7 @@ export function Navigation() {
                 menuOpen ? "scale-[1.15] origin-left" : "scale-100 origin-left"
               }`}
             />
-          </a>
+          </Link>
 
           {/* Desktop nav links */}
           <nav className="hidden lg:flex items-center gap-8" aria-label="Menu principal">

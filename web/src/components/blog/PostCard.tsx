@@ -1,47 +1,42 @@
 import Link from "next/link";
+import Image from "next/image";
 import { BlogPost } from "@/data/blog";
 
 interface PostCardProps {
   post: BlogPost;
-  featured?: boolean;
 }
 
-export function PostCard({ post, featured = false }: PostCardProps) {
+export function PostCard({ post }: PostCardProps) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="group block"
+      className="group flex gap-6 py-6 border-b border-gray-100 last:border-0"
     >
-      {/* Image */}
-      <div className="overflow-hidden rounded-[1.15rem] bg-[var(--amelia-soft)]">
-        <img
+      <div className="relative flex-shrink-0 w-32 h-24 md:w-48 md:h-32 rounded-xl overflow-hidden">
+        <Image
           src={post.image}
           alt={post.title}
-          className={`w-full object-cover transition-transform duration-500 group-hover:scale-[1.03] ${
-            featured ? "h-[220px] sm:h-[250px]" : "h-48 sm:h-52"
-          }`}
+          fill
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          sizes="(max-width: 768px) 8rem, 12rem"
         />
       </div>
 
       {/* Content */}
       <div className="flex-1 min-w-0">
-        <span className="mt-5 inline-flex items-center text-[10px] font-semibold uppercase tracking-[0.17em] text-[var(--amelia-purple)]">
+        <span className="text-[11px] font-semibold uppercase tracking-wider text-[#7b6bb2]">
           {post.category}
         </span>
 
-        <h3
-          className={`mt-3 font-semibold leading-tight tracking-[-0.02em] text-[var(--amelia-ink)] transition-colors duration-200 line-clamp-2 ${
-            featured ? "text-[1.4rem] font-display" : "font-display text-[1.55rem]"
-          }`}
-        >
+        <h3 className="mt-1 text-lg font-semibold text-[#1a1a1a] group-hover:text-[#5e4985] transition-colors line-clamp-2">
           {post.title}
         </h3>
 
-        <p className="mt-2 text-sm font-light leading-relaxed text-[var(--amelia-body)] line-clamp-2">
+        <p className="mt-2 text-sm text-gray-500 line-clamp-2 hidden md:block">
           {post.excerpt}
         </p>
 
-        <div className="mt-4 flex items-center gap-3 border-t border-[var(--amelia-line)] pt-3 text-[11px] text-[var(--amelia-muted)]">
+        <div className="mt-3 flex items-center gap-3 text-xs text-gray-400">
           <span>{post.date}</span>
           <span>·</span>
           <span>{post.readTime} de leitura</span>

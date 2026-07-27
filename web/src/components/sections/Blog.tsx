@@ -5,10 +5,10 @@ import { fadeUp, staggerContainer, viewportConfig } from "@/lib/motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import Image from "next/image";
-import { blogPosts } from "@/data/blog";
+import { getPublishedPosts } from "@/data/blog";
 import { HeroBackground } from "@/components/ui/HeroBackground";
 
-const visiblePosts = blogPosts.slice(0, 3);
+const visiblePosts = getPublishedPosts().slice(0, 3);
 
 export function Blog() {
   return (

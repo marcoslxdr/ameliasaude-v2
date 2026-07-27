@@ -128,7 +128,7 @@ export default function LgpdPage() {
         <li><strong>E-mail exclusivo:</strong>{" "}
           <a href="mailto:privacidade@ameliasaude.com.br">privacidade@ameliasaude.com.br</a>
         </li>
-        <li><strong>Assunto recomendado:</strong> inclua "LGPD — [seu nome] — [CPF]" para agilizar o atendimento.</li>
+        <li><strong>Assunto recomendado:</strong> inclua &quot;LGPD — [seu nome] — [CPF]&quot; para agilizar o atendimento.</li>
         <li><strong>Prazo de resposta:</strong> até 15 dias úteis, podendo ser prorrogado por igual período em casos complexos, mediante comunicação ao titular.</li>
       </ul>
     </LegalPageLayout>
