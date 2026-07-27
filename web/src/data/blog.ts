@@ -149,6 +149,263 @@ const scheduledPosts: BlogPost[] = [
     content: ["## Resposta direta", "A contratação depende do produto, da modalidade, da elegibilidade e das condições vigentes. Este FAQ ajuda a organizar perguntas, mas não substitui a proposta, o contrato, a consulta da rede ou a orientação oficial da Amélia Saúde e da ANS.", "## Quem pode contratar?", "Depende da modalidade. No coletivo por adesão, é necessário verificar o vínculo aceito com a entidade de classe ou categoria profissional. No empresarial, confira as regras para a empresa e os beneficiários. A resposta final deve vir do canal comercial oficial.", "## Como conferir a rede?", "Use o canal de consulta da operadora e filtre pelo produto e município. Confirme a informação antes de usar o serviço, pois rede, endereço e disponibilidade podem ser atualizados.", "## Como saber a cobertura?", "Leia a segmentação, o contrato e as condições do produto. Use a ANS como fonte regulatória e peça esclarecimentos sobre autorizações, carências e limitações antes da contratação.", "## A Amélia informa preço, carência e elegibilidade no blog?", "Não de forma universal. Esses dados dependem do produto e do perfil analisado. Publicar uma condição sem validação seria irresponsável; por isso, o blog explica critérios e direciona para o atendimento.", "## Próximo passo", "Conheça a Amélia Saúde e envie suas dúvidas para receber orientação sobre a opção adequada."],
     tags: ["Amélia Saúde", "FAQ", "contratação"], author: "Equipe Amélia Saúde", reviewer: "Validação comercial e regulatória pendente", updatedAt: "31 Jul 2026", sources: [amelia, ans], cta: { label: "Conheça a Amélia", href: "/#contato", event: "blog_cta_marca" },
   },
+  {
+    slug: "plano-saude-empresarial-como-funciona-carencias-quem-pode",
+    category: "Planos empresariais",
+    title: "Plano de saúde empresarial: como funciona, carências e quem pode contratar",
+    excerpt: "Entenda como funciona o plano de saúde coletivo empresarial, quem pode contratar, as regras de carência e quem paga a mensalidade. Guia prático para MEI, micro e pequenas empresas.",
+    date: "01 Ago 2026",
+    publishAt: "2026-08-01T08:00:00-03:00",
+    readTime: "8 min",
+    image: image("photo-1454165804606-c3d57bc86b40"),
+    content: [
+      "## Resposta direta",
+      "O plano de saúde coletivo empresarial é um benefício contratado por uma empresa com CNPJ ativo para sócios e funcionários. A operadora exige um número mínimo de vidas — normalmente duas ou três, variando por produto. A empresa pode subsidiar parte ou toda a mensalidade, e em contratações com 30 ou mais vidas a carência pode ser integralmente isenta, conforme previsto nas regras da ANS.",
+
+      "## O que é plano de saúde coletivo empresarial?",
+      "É a modalidade em que uma empresa — pessoa jurídica com CNPJ ativo — contrata o plano de saúde para um grupo de beneficiários vinculados a ela: sócios, administradores e funcionários com vínculo empregatício. A operadora firma contrato com a empresa, não com cada beneficiário individualmente. Por isso, as condições, a rede e o reajuste são negociados no contrato coletivo, e não seguem as mesmas regras do plano individual ou familiar.",
+
+      "## Quem pode contratar?",
+      "Qualquer empresa com CNPJ ativo pode contratar plano empresarial. As regras de elegibilidade variam conforme a operadora e o produto:",
+
+      "- **MEI (Microempreendedor Individual):** algumas operadoras aceitam a partir de 1 ou 2 vidas — o titular e, se houver, um dependente ou funcionário.",
+      "- **Micro e pequenas empresas:** a partir de 2 ou 3 vidas, com mixes entre sócios e colaboradores.",
+      "- **Médias e grandes empresas:** negociação ampla, com contratos customizados e pool de risco próprio.",
+
+      "O essencial é que a empresa exista formalmente e que os beneficiários tenham vínculo comprovado com o CNPJ contratante.",
+
+      "## Como funciona a contratação?",
+      "O processo segue etapas definidas pela operadora e pela ANS:",
+
+      "1. **Solicitação de proposta:** a empresa informa o perfil dos beneficiários (quantidade, faixa etária, tipo de cobertura desejada).",
+      "2. **Análise e precificação:** a operadora avalia o risco da carteira e apresenta as condições comerciais — mensalidade, coparticipação, rede e carências aplicáveis.",
+      "3. **Documentação da empresa:** contrato social, CNPJ, comprovante de endereço e, em alguns casos, comprovante de faturamento.",
+      "4. **Documentação dos beneficiários:** RG, CPF e comprovante de vínculo com a empresa (pró-labore, holerite ou declaração).",
+      "5. **Assinatura do contrato e início da vigência:** após aprovação da documentação e pagamento da primeira mensalidade.",
+
+      "Todo o processo deve ser documentado. Guarde proposta, contrato, comprovantes e protocolos de comunicação com a operadora.",
+
+      "## Plano empresarial tem carência?",
+      "Depende do tamanho do grupo contratante e das condições negociadas. A regra geral da ANS para planos novos prevê:",
+
+      "| Tipo de cobertura | Carência máxima |",
+      "|---|---|",
+      "| Urgência e emergência | 24 horas |",
+      "| Consultas e exames simples | 180 dias |",
+      "| Cirurgias e internações | 180 dias |",
+      "| Parto | 300 dias |",
+
+      "**Isenção possível:** se a empresa contratar com 30 ou mais beneficiários desde o início da vigência, a carência pode ser integralmente dispensada. Algumas operadoras estendem a isenção para grupos a partir de 10 vidas — é ponto de negociação contratual.",
+
+      "Importante: doença ou lesão preexistente declarada pode ter carência específica de até 24 meses, conforme avaliação da operadora e regras da ANS.",
+
+      "## Quem paga a mensalidade?",
+      "A empresa é a contratante e a responsável financeira perante a operadora. Como o custo chega a cada beneficiário depende da política interna:",
+
+      "- **Subsídio total:** a empresa paga 100% da mensalidade de todos os beneficiários.",
+      "- **Subsídio parcial:** a empresa paga uma parte e o beneficiário complementa (modelo mais comum).",
+      "- **Sem subsídio:** o beneficiário paga integralmente, mas o contrato segue em nome da empresa.",
+
+      "No caso do MEI, é comum o titular arcar com o custo integral, descontando do pró-labore.",
+
+      "## Checklist: documentos para contratar",
+      "Antes de abrir uma proposta, organize:",
+
+      "- CNPJ ativo e regular",
+      "- Contrato social (ou certificado MEI)",
+      "- Relação de beneficiários com nome, CPF e data de nascimento",
+      "- Comprovante de vínculo de cada beneficiário com a empresa",
+      "- Definição de quem será subsidiado e em qual proporção",
+      "- Orçamento mensal disponível para o benefício",
+
+      "## FAQ",
+      "**MEI pode contratar plano empresarial com uma vida só?** Depende da operadora. Algumas aceitam 1 vida (o titular), outras exigem 2 ou mais. Consulte a condição vigente.",
+
+      "**Tem carência para doença preexistente?** Sim. Doenças ou lesões declaradas no ato da contratação podem ter carência de até 24 meses, conforme avaliação da operadora.",
+
+      "**Funcionário demitido perde o plano?** O ex-empregado tem direito de manter o plano por um período proporcional ao tempo de contribuição (Lei 9.656/98, art. 30 e 31), arcando com o custo integral.",
+
+      "**Dá para incluir dependente no plano empresarial?** Sim. Cônjuge, filhos, enteados e, em alguns planos, pais. As regras e o custo adicional dependem do contrato.",
+
+      "**Quanto tempo até começar a usar?** Após a assinatura e pagamento, a vigência começa na data contratada. As carências passam a contar da data de início da vigência.",
+
+      "## Próximo passo",
+      "Conheça as condições do plano empresarial da Amélia Saúde para o seu negócio."
+    ],
+    tags: ["plano empresarial", "carência", "MEI", "PME", "contratação"],
+    author: "Equipe Amélia Saúde",
+    reviewer: "Validação comercial e regulatória pendente",
+    updatedAt: "01 Ago 2026",
+    sources: [ans, amelia],
+    cta: { label: "Fale com a Amélia", href: "/#contato", event: "blog_cta_empresarial" },
+  },
+  {
+    slug: "plano-saude-empresarial-rj-precos-reajuste-comparar",
+    category: "Planos empresariais",
+    title: "Plano de saúde empresarial no RJ: preços, reajuste e como comparar propostas",
+    excerpt: "Saiba como o preço do plano empresarial é formado, como funciona o reajuste e quais os 8 critérios para comparar propostas no Rio de Janeiro e Grande Rio.",
+    date: "01 Ago 2026",
+    publishAt: "2026-08-01T10:00:00-03:00",
+    readTime: "9 min",
+    image: image("photo-1554224155-6726b3ff858f"),
+    content: [
+      "## Resposta direta",
+      "O preço do plano empresarial no Rio de Janeiro depende de quatro fatores: número de vidas, faixa etária dos beneficiários, segmentação contratada (ambulatorial, hospitalar com ou sem obstetrícia) e rede credenciada. O reajuste anual é negociado entre a operadora e a empresa contratante — não segue o teto da ANS aplicável aos planos individuais. Comparar propostas exige olhar além da mensalidade e considerar carência, coparticipação, rede disponível e metodologia de reajuste.",
+
+      "## Como o preço de um plano empresarial é formado?",
+      "A precificação do plano empresarial segue a lógica de mutualismo: o risco é calculado sobre o grupo de beneficiários como um todo, não por pessoa. Os componentes principais são:",
+
+      "- **Número de vidas:** quanto maior o grupo, mais o risco se dilui — o preço por vida tende a cair.",
+      "- **Faixa etária:** a distribuição de idades do grupo impacta diretamente a sinistralidade esperada.",
+      "- **Segmentação:** ambulatorial (consultas e exames), hospitalar sem obstetrícia e hospitalar com obstetrícia têm custos progressivos.",
+      "- **Rede credenciada:** hospitais, clínicas e laboratórios incluídos — quanto mais abrangente, maior o custo.",
+      "- **Coparticipação:** fator de desconto sobre a mensalidade em troca de pagamento por evento utilizado.",
+
+      "A operadora cruza essas variáveis com a sinistralidade histórica da carteira para chegar ao valor final.",
+
+      "## Quantas vidas mudam o preço?",
+      "O número de vidas é o fator que mais altera o preço por beneficiário. Em termos práticos:",
+
+      "| Faixa de vidas | Comportamento do preço |",
+      "|---|---|",
+      "| 2 a 9 vidas | Preço por vida mais alto. Risco concentrado. |",
+      "| 10 a 29 vidas | Redução sensível. Diluição começa a operar. |",
+      "| 30 a 99 vidas | Possibilidade de isenção de carência e desconto maior. |",
+      "| 100+ vidas | Negociação corporativa. Contrato customizado. |",
+
+      "A diferença entre uma empresa de 3 vidas e uma de 30 pode representar redução significativa no custo por beneficiário — é por isso que PMEs em crescimento renegociam o contrato quando a equipe aumenta.",
+
+      "## Como funciona o reajuste no plano empresarial?",
+      "Ao contrário do plano individual (cujo reajuste anual tem teto definido pela ANS), o plano empresarial tem reajuste negociado entre empresa e operadora. A metodologia padrão considera:",
+
+      "- **Sinistralidade:** relação entre o valor pago em mensalidades e o custo dos serviços utilizados pelo grupo no período.",
+      "- **Inflação médica (VCMH):** variação do custo dos procedimentos, materiais e serviços de saúde — historicamente acima da inflação geral.",
+      "- **Faixa etária:** mudanças na pirâmide etária do grupo impactam o risco e o reajuste.",
+
+      "O contrato deve especificar a metodologia de cálculo, a periodicidade e o índice de referência. Empresas com mais vidas têm mais poder de barganha para negociar tetos e condições de reajuste.",
+
+      "## Coparticipação: reduz a mensalidade, mas exige atenção",
+      "A coparticipação é um mecanismo em que o beneficiário paga um valor fixo ou um percentual por cada evento utilizado (consulta, exame, internação). Em troca, a mensalidade é reduzida.",
+
+      "Exemplo conceitual: um plano com mensalidade de R$ 400 sem coparticipação pode custar R$ 280 com coparticipação de R$ 40 por consulta. Se o beneficiário faz 2 consultas/mês, o custo total sobe para R$ 360 — ainda abaixo do plano sem coparticipação. Mas se faz 5 consultas, o custo efetivo sobe para R$ 480.",
+
+      "Antes de optar pela coparticipação, projete o uso esperado: quantas consultas, exames e procedimentos o grupo utiliza por mês?",
+
+      "## Como comparar propostas de plano empresarial no RJ: 8 critérios",
+      "Use este checklist ao avaliar propostas de operadoras diferentes:",
+
+      "1. **Vidas mínimas:** qual o número exigido e ele se mantém? Se um funcionário sair e o grupo cair abaixo do mínimo, o contrato pode ser rescindido?",
+      "2. **Carência:** há isenção? Em qual condição? Se não houver isenção, quais os prazos exatos?",
+      "3. **Coparticipação:** valor fixo ou percentual? Há teto mensal ou anual de coparticipação?",
+      "4. **Reajuste:** qual a metodologia? Há teto? O índice é composto (sinistralidade + VCMH) ou simples?",
+      "5. **Rede no RJ e Grande Rio:** quantos hospitais, clínicas e laboratórios? Em quais bairros e municípios? A rede cobre deslocamentos rotineiros?",
+      "6. **Segmentação:** ambulatorial, hospitalar sem obstetrícia ou hospitalar com obstetrícia? Qual atende o perfil do grupo?",
+      "7. **Dependentes:** cônjuge, filhos, enteados e pais são aceitos? Qual o custo adicional por dependente?",
+      "8. **Rescisão:** qual o prazo de aviso? Há multa? O contrato prevê portabilidade para os beneficiários?",
+
+      "Compare as propostas lado a lado usando esses 8 critérios — a mensalidade é o ponto de partida, não o critério único.",
+
+      "## FAQ",
+      "**Plano empresarial é sempre mais barato que individual?** Não necessariamente. Grupos pequenos (2-3 vidas) podem ter custo próximo ao individual. A vantagem de preço aparece com 10+ vidas e na possibilidade de isenção de carência.",
+
+      "**Dá para trocar de plano empresarial depois de contratar?** Sim, respeitando o prazo de aviso contratual. A portabilidade de carências pode ser exercida se os requisitos da ANS forem atendidos.",
+
+      "**O que acontece com o preço se um funcionário sair?** A saída de um beneficiário reduz a receita do contrato, podendo impactar o reajuste no ciclo seguinte. Se o grupo cair abaixo do mínimo contratual, a operadora pode rescindir o contrato — verifique essa cláusula.",
+
+      "**Reajuste por sinistralidade pode ser contestado?** Sim. A empresa tem direito de solicitar o demonstrativo de sinistralidade e auditar os números apresentados pela operadora.",
+
+      "## Próximo passo",
+      "Conheça as condições do plano empresarial da Amélia Saúde para o seu negócio no Rio de Janeiro."
+    ],
+    tags: ["plano empresarial", "preços", "reajuste", "Rio de Janeiro", "PME"],
+    author: "Equipe Amélia Saúde",
+    reviewer: "Validação comercial e regulatória pendente",
+    updatedAt: "01 Ago 2026",
+    sources: [ans, amelia],
+    cta: { label: "Peça uma análise", href: "/#contato", event: "blog_cta_empresarial_precos" },
+  },
+  {
+    slug: "plano-empresarial-ou-adesao-qual-escolher",
+    category: "Planos empresariais",
+    title: "Plano empresarial ou coletivo por adesão: qual faz sentido para sua empresa?",
+    excerpt: "Comparação prática entre plano de saúde empresarial e coletivo por adesão. Entenda as diferenças de contratação, carência, reajuste e descubra qual faz sentido para o seu negócio.",
+    date: "03 Ago 2026",
+    publishAt: "2026-08-03T08:00:00-03:00",
+    readTime: "9 min",
+    image: image("photo-1554224155-6726b3ff858f"),
+    content: [
+      "## Resposta direta",
+      "A escolha entre plano empresarial e coletivo por adesão depende do seu CNPJ. Se você tem empresa ativa com 2 ou mais vidas, o empresarial costuma ser o caminho mais direto — permite negociar carência, reajuste e subsídio da mensalidade. Se você é profissional autônomo sem CNPJ ou busca um custo mais previsível atrelado à sua categoria profissional, o plano por adesão pode ser a melhor alternativa. Abaixo, os critérios que decidem.",
+
+      "## Tabela comparativa: empresarial x adesão",
+      "| Critério | Empresarial | Coletivo por adesão |",
+      "|---|---|---|",
+      "| Quem contrata? | Pessoa jurídica (CNPJ ativo) | Pessoa física vinculada a entidade de classe |",
+      "| Vínculo exigido | Trabalhista ou societário com a empresa | Associativo com sindicato, conselho ou associação |",
+      "| Vidas mínimas | 2 a 3 (varia por operadora) | Normalmente 1 (o titular) |",
+      "| Carência | Pode ser isenta com 30+ vidas | Segue regras padrão da ANS |",
+      "| Reajuste | Negociado entre empresa e operadora | Regulado pela ANS (teto anual) |",
+      "| Quem paga? | Empresa pode subsidiar parcial ou total | Beneficiário paga integralmente |",
+      "| Portabilidade | Sim, respeitando prazos contratuais | Sim, com regras ANS facilitadas |",
+      "| Coparticipação | Comum e negociável | Presente na maioria dos produtos |",
+      "| Rede | Definida no contrato empresarial | Definida no contrato da entidade |",
+
+      "## Quando o plano empresarial faz mais sentido",
+      "O plano empresarial é vantajoso em cenários específicos:",
+
+      "- **Retenção de talentos:** oferecer plano de saúde como benefício melhora a atratividade da empresa no mercado de trabalho.",
+      "- **Subsídio flexível:** a empresa decide se paga 100%, 50% ou 0% da mensalidade de cada beneficiário — e pode variar por cargo ou tempo de casa.",
+      "- **Isenção de carência:** com 30 ou mais vidas, a carência padrão pode ser dispensada — o grupo começa a usar o plano de imediato.",
+      "- **Negociação direta:** reajuste, rede e coparticipação são negociados com a operadora, o que dá mais controle à empresa, especialmente a partir de 100 vidas.",
+      "- **CNPJ ativo com 2+ pessoas:** se você já tem empresa com sócios ou funcionários, o empresarial é o encaixe natural.",
+
+      "## Quando o coletivo por adesão é melhor",
+      "O plano por adesão resolve situações que o empresarial não alcança:",
+
+      "- **Autônomo sem CNPJ:** advogados, médicos, engenheiros e outros profissionais liberais que atuam como pessoa física podem contratar via OAB, CRM, CREA e outras entidades.",
+      "- **Previsibilidade de reajuste:** o reajuste anual segue as regras da ANS, com teto regulado — previsível, sem surpresas de sinistralidade.",
+      "- **Sem burocracia empresarial:** não exige contrato social, comprovante de faturamento ou vínculo trabalhista — basta ser associado à entidade.",
+      "- **Portabilidade simplificada:** as regras de portabilidade para planos por adesão tendem a ser mais simples e com prazos mais curtos.",
+      "- **Custo estável:** sem a variação de sinistralidade que impacta contratos empresariais pequenos, o custo tende a ser mais estável ano a ano.",
+
+      "## MEI: pode escolher qualquer um?",
+      "O MEI ocupa uma posição híbrida interessante. Por ter CNPJ, pode contratar o plano empresarial. Mas se tiver apenas 1 vida (o titular), nem toda operadora aceita. Nesse caso, o plano por adesão da categoria profissional é uma alternativa a considerar.",
+
+      "A decisão do MEI passa por três perguntas:",
+      "1. A operadora aceita MEI com 1 ou 2 vidas no empresarial?",
+      "2. Minha categoria profissional tem entidade com plano por adesão vigente?",
+      "3. Prefiro negociar reajuste direto com a operadora (empresarial) ou ter teto ANS (adesão)?",
+
+      "## 5 perguntas para decidir",
+      "Responda antes de abrir propostas:",
+
+      "1. **Tenho CNPJ ativo e quantos beneficiários?** Se 2+ e todos têm vínculo comprovado, empresarial é a rota principal.",
+      "2. **Quero subsidiar o custo para a equipe?** Se sim, empresarial. No plano por adesão, cada beneficiário paga o seu.",
+      "3. **Minha categoria profissional tem entidade com plano vigente?** Se sim, peça a tabela e compare com o empresarial.",
+      "4. **Prefiro negociar reajuste ou ter teto ANS?** Empresarial = negociação. Adesão = teto regulado.",
+      "5. **A rede que me interessa está disponível em qual modalidade?** Confira a rede de cada produto antes de decidir — o hospital ou clínica que você prefere pode estar em um e não no outro.",
+
+      "## FAQ",
+      "**Posso migrar do empresarial para adesão depois?** Sim. A portabilidade de carências permite a migração entre modalidades, desde que atendidos os requisitos da ANS (prazo mínimo no plano atual, compatibilidade de segmentação e prazo de solicitação).",
+
+      "**Qual costuma ter rede maior?** Não há regra fixa. A rede depende da operadora e do produto. Um plano empresarial premium pode ter rede maior que um plano por adesão básico, e vice-versa. Consulte a rede de cada proposta.",
+
+      "**Empresarial sem carência é sempre possível?** Não. A isenção de carência exige 30+ vidas (regra ANS) ou condição negociada com a operadora. Grupos menores enfrentam as carências padrão.",
+
+      "**Coparticipação existe nos dois?** Sim. Tanto planos empresariais quanto por adesão podem ter coparticipação. O percentual ou valor fixo depende do produto e da negociação.",
+
+      "**Qual é mais barato?** Depende. Um empresarial de 2-3 vidas pode custar próximo de um plano por adesão. A diferença de preço aparece na escala: empresarial com 30+ vidas tende a ser mais barato por beneficiário, e o subsídio da empresa reduz o custo percebido por cada um.",
+
+      "## Próximo passo",
+      "Fale com a Amélia Saúde. Explique o perfil do seu negócio ou da sua categoria profissional e receba orientação sobre a modalidade mais adequada."
+    ],
+    tags: ["plano empresarial", "plano por adesão", "comparação", "MEI", "PME", "adesão"],
+    author: "Equipe Amélia Saúde",
+    reviewer: "Validação comercial e regulatória pendente",
+    updatedAt: "03 Ago 2026",
+    sources: [ans, amelia],
+    cta: { label: "Fale com a Amélia", href: "/#contato", event: "blog_cta_empresarial_adesao" },
+  },
 ];
 
 export const blogPosts: BlogPost[] = [...legacyPosts, ...scheduledPosts];
