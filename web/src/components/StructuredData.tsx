@@ -117,7 +117,7 @@ export function OrganizationSchema() {
     url: SITE_URL,
     logo: `${SITE_URL}/logo-amelia-site.png`,
     description:
-      "Operadora de planos de saúde por coletivo por adesão no Rio de Janeiro.",
+      "Operadora de planos de saúde empresariais e por adesão no Rio de Janeiro. Planos para MEI, PMEs, sindicatos, conselhos e associações profissionais.",
     address: {
       streetAddress: "Av. Rio Branco, 185 — Sala 1201",
       addressLocality: "Rio de Janeiro",
@@ -154,7 +154,7 @@ export function WebSiteSchema() {
           url: SITE_URL,
           name: "Amélia Saúde",
           description:
-            "Operadora de planos de saúde com contratação em coletivo por adesão no Rio de Janeiro.",
+            "Operadora de planos de saúde empresariais e por adesão no Rio de Janeiro. Planos para MEI, PMEs, sindicatos, conselhos e associações profissionais.",
           inLanguage: "pt-BR",
           potentialAction: {
             "@type": "SearchAction",
@@ -182,7 +182,7 @@ export function LocalBusinessSchema() {
           "@id": `${SITE_URL}/#localbusiness`,
           name: "Amélia Saúde",
           description:
-            "Operadora de planos de saúde por coletivo por adesão no Rio de Janeiro. Planos para sindicatos, conselhos e associações profissionais.",
+            "Operadora de planos de saúde empresariais e por adesão no Rio de Janeiro. Planos para MEI, PMEs, sindicatos, conselhos e associações profissionais.",
           url: SITE_URL,
           telephone: "+55-21-xxxx-xxxx",
           address: {

@@ -24,11 +24,11 @@ const SITE_URL = "https://www.ameliasaude.com.br";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Amélia Saúde — Planos de saúde por adesão",
+    default: "Amélia Saúde — Planos empresariais e por adesão",
     template: "%s | Amélia Saúde",
   },
   description:
-    "Operadora de planos de saúde com contratação em coletivo por adesão no Rio de Janeiro. Acesso via sindicatos, conselhos e associações profissionais.",
+    "Operadora de planos de saúde empresariais e por adesão no Rio de Janeiro. Planos para MEI, pequenas e médias empresas, sindicatos, conselhos e associações profissionais.",
   keywords: [
     "planos de saúde",
     "Rio de Janeiro",
@@ -56,9 +56,9 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "Amélia Saúde — Planos de saúde por adesão",
+    title: "Amélia Saúde — Planos empresariais e por adesão",
     description:
-      "Coletivo por adesão no Rio de Janeiro: rede credenciada e atendimento sem burocracia, com contratação via entidades de classe.",
+      "Planos empresariais e por adesão no Rio de Janeiro: rede credenciada e atendimento sem burocracia, com contratação via entidades de classe.",
     url: SITE_URL,
     siteName: "Amélia Saúde",
     locale: "pt_BR",
@@ -66,9 +66,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Amélia Saúde — Planos de saúde por adesão",
+    title: "Amélia Saúde — Planos empresariais e por adesão",
     description:
-      "Coletivo por adesão no Rio de Janeiro: rede credenciada e atendimento sem burocracia.",
+      "Planos empresariais e por adesão no Rio de Janeiro: rede credenciada e atendimento sem burocracia.",
   },
 };
 
