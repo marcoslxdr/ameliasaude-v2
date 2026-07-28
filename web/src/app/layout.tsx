@@ -31,6 +31,7 @@ export const metadata: Metadata = {
     "Operadora de planos de saúde empresariais e por adesão no Rio de Janeiro. Planos para MEI, pequenas e médias empresas, sindicatos, conselhos e associações profissionais.",
   keywords: [
     "planos de saúde",
+    "planos empresariais",
     "Rio de Janeiro",
     "telemedicina",
     "rede credenciada",

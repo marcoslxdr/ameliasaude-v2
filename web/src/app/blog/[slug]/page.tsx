@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { BlogCta } from "@/components/blog/BlogCta";
@@ -183,42 +185,44 @@ export default async function BlogPostPage({ params }: Props) {
 
           <div className="my-10 h-px w-16 bg-[#e4dcf5]" />
 
-          <div className="font-sans text-[1.125rem] font-light leading-[1.85] text-[#3a3450]">
-            {post.content.map((paragraph, i) => {
-              if (paragraph.startsWith("## ")) {
-                return (
-                  <h2
-                    key={i}
-                    className="mt-10 mb-4 font-display text-2xl font-normal leading-tight text-[#7b6bb2]"
-                  >
-                    {paragraph.slice(3)}
+          <div className="font-sans text-[1.125rem] font-light leading-[1.85] text-[#3a3450] [&>p:first-of-type]:mt-0">
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                h2: ({ children }) => (
+                  <h2 className="mt-10 mb-4 font-display text-2xl font-normal leading-tight text-[#7b6bb2]">
+                    {children}
                   </h2>
-                );
-              }
-              if (paragraph.startsWith("- ")) {
-                return (
-                  <ul key={i} className="mt-6 list-disc space-y-2 pl-6">
-                    {paragraph.split("\n").map((item) => (
-                      <li key={item}>{item.slice(2)}</li>
-                    ))}
-                  </ul>
-                );
-              }
-              if (/^\d+\. /.test(paragraph)) {
-                return (
-                  <ol key={i} className="mt-6 list-decimal space-y-2 pl-6">
-                    {paragraph.split("\n").map((item) => (
-                      <li key={item}>{item.replace(/^\d+\. /, "")}</li>
-                    ))}
-                  </ol>
-                );
-              }
-              return (
-                <p key={i} className={i > 0 ? "mt-6" : ""}>
-                  {paragraph}
-                </p>
-              );
-            })}
+                ),
+                p: ({ children }) => <p className="mt-6">{children}</p>,
+                ul: ({ children }) => (
+                  <ul className="mt-6 list-disc space-y-2 pl-6">{children}</ul>
+                ),
+                ol: ({ children }) => (
+                  <ol className="mt-6 list-decimal space-y-2 pl-6">{children}</ol>
+                ),
+                a: ({ href, children }) => {
+                  const isExternal =
+                    href?.startsWith("http://") || href?.startsWith("https://");
+                  return (
+                    <a
+                      href={href}
+                      className="underline decoration-[#c8bde6] underline-offset-2 transition-colors hover:text-[#5e4985]"
+                      {...(isExternal
+                        ? { target: "_blank", rel: "noopener noreferrer" }
+                        : {})}
+                    >
+                      {children}
+                    </a>
+                  );
+                },
+                strong: ({ children }) => (
+                  <strong className="font-medium">{children}</strong>
+                ),
+              }}
+            >
+              {post.content.join("\n\n")}
+            </ReactMarkdown>
           </div>
 
           {post.sources && (
