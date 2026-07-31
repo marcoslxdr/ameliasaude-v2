@@ -112,13 +112,14 @@ export function StructuredData({ type, data }: Props) {
 
 /** Pre-built Organization schema for Amélia Saúde — use in root layout */
 export function OrganizationSchema() {
-  const orgData: OrganizationData = {
+  const orgData = {
     name: "Amélia Saúde",
     url: SITE_URL,
     logo: `${SITE_URL}/logo-amelia-site.png`,
     description:
       "Operadora de planos de saúde empresariais e por adesão no Rio de Janeiro. Planos para MEI, PMEs, sindicatos, conselhos e associações profissionais.",
     address: {
+      "@type": "PostalAddress",
       streetAddress: "Av. Rio Branco, 185 — Sala 1201",
       addressLocality: "Rio de Janeiro",
       addressRegion: "RJ",
@@ -126,6 +127,7 @@ export function OrganizationSchema() {
       addressCountry: "BR",
     },
     contactPoint: {
+      "@type": "ContactPoint",
       telephone: "+55-21-xxxx-xxxx",
       contactType: "customer service",
       email: "contato@ameliasaude.com.br",
@@ -133,6 +135,30 @@ export function OrganizationSchema() {
     sameAs: [
       SITE_URL,
       "https://www.instagram.com/ameliasauderj/",
+    ],
+    makesOffer: [
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Plano de Saúde Empresarial",
+          description:
+            "Planos coletivos empresariais para empresas no Rio de Janeiro",
+          url: `${SITE_URL}/planos/empresarial`,
+          areaServed: { "@type": "City", name: "Rio de Janeiro" },
+        },
+      },
+      {
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: "Plano de Saúde Coletivo por Adesão",
+          description:
+            "Planos coletivos por adesão via entidades de classe no Rio de Janeiro",
+          url: `${SITE_URL}/planos/adesao`,
+          areaServed: { "@type": "City", name: "Rio de Janeiro" },
+        },
+      },
     ],
   };
 

@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 
 const navLinks = [
   { label: "Sobre nós", href: "#origem" },
-  { label: "Planos", href: "#experiencia-planos" },
+  { label: "Planos", href: "/planos" },
   { label: "Rede", href: "#rede" },
   { label: "Telemedicina", href: "#telemedicina" },
   { label: "Fale conosco", href: "#contato" },
@@ -22,6 +22,8 @@ export function Navigation() {
 
   const isHomePage = pathname === "/";
   const isBlogPage = pathname?.startsWith("/blog") ?? false;
+  const isPlanosPage = pathname?.startsWith("/planos") ?? false;
+  const isInteriorPage = !isHomePage;
 
   const visibleLinks = (() => {
     let links = navLinks.map((link) =>
@@ -30,8 +32,11 @@ export function Navigation() {
         : link
     );
 
-    if (isBlogPage) {
+    if (isBlogPage || isPlanosPage) {
       links = links.filter((link) => link.href !== "/blog");
+      if (isBlogPage) {
+        links = links.filter((link) => link.href !== "/planos");
+      }
       links = [{ label: "Início", href: "/" }, ...links];
     }
 
@@ -39,7 +44,7 @@ export function Navigation() {
   })();
 
   const isBannerHero = isHomePage && !scrolled;
-  const useSolidHeader = isBlogPage || scrolled;
+  const useSolidHeader = isInteriorPage || scrolled;
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 48);

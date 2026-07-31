@@ -22,11 +22,11 @@ const CONTACT = {
 } as const;
 
 const navLinks = [
-  { label: "Sobre nós", href: "#origem" },
-  { label: "Planos", href: "#experiencia-planos" },
-  { label: "Rede", href: "#rede" },
-  { label: "Telemedicina", href: "#telemedicina" },
-  { label: "Fale conosco", href: "#contato" },
+  { label: "Sobre nós", href: "/#origem" },
+  { label: "Planos", href: "/planos" },
+  { label: "Rede", href: "/#rede" },
+  { label: "Telemedicina", href: "/#telemedicina" },
+  { label: "Fale conosco", href: "/#contato" },
   { label: "Saúde e bem estar", href: "/blog" },
 ] as const;
 
