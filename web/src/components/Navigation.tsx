@@ -32,9 +32,12 @@ export function Navigation() {
         : link
     );
 
-    if (isBlogPage || isPlanosPage) {
-      links = links.filter((link) => link.href !== "/blog");
+    // Interior pages: show "Início"; hide self-link on the current section.
+    if (isInteriorPage) {
       if (isBlogPage) {
+        links = links.filter((link) => link.href !== "/blog");
+      }
+      if (isPlanosPage) {
         links = links.filter((link) => link.href !== "/planos");
       }
       links = [{ label: "Início", href: "/" }, ...links];
