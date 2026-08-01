@@ -9,6 +9,7 @@ import { Footer } from "@/components/Footer";
 import { BlogCta } from "@/components/blog/BlogCta";
 import { StructuredData } from "@/components/StructuredData";
 import { getPostBySlug, getPublishedPosts, getPostIsoDate } from "@/data/blog";
+import { planosLinksForCategory } from "@/lib/planos-schema";
 
 const SITE_URL = "https://www.ameliasaude.com.br";
 
@@ -249,6 +250,28 @@ export default async function BlogPostPage({ params }: Props) {
           )}
 
           <div className="my-10 h-px w-16 bg-[#e4dcf5]" />
+
+          {/* AEO: internal links blog → product hubs */}
+          <nav
+            aria-label="Planos relacionados"
+            className="mb-10 rounded-2xl border border-[#e4dcf5] bg-[#f8f7ff] p-6"
+          >
+            <p className="font-sans text-xs font-semibold uppercase tracking-[0.12em] text-[#7b6bb2]">
+              Planos relacionados
+            </p>
+            <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
+              {planosLinksForCategory(post.category).map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="font-sans text-sm font-medium text-[var(--amelia-deep)] underline-offset-4 hover:underline"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
 
           <div className="text-center">
             <p className="mb-6 font-display text-xl tracking-[-0.01em] text-[#1a1a1a]">

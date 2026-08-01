@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { PlanosContent } from "@/components/planos/PlanosContent";
+import { planosItemListSchema, SITE_URL } from "@/lib/planos-schema";
 
-const SITE_URL = "https://www.ameliasaude.com.br";
 const PAGE_URL = `${SITE_URL}/planos`;
 
 export const metadata: Metadata = {
@@ -26,62 +26,7 @@ export const metadata: Metadata = {
   },
 };
 
-const itemListSchema = {
-  "@context": "https://schema.org",
-  "@type": "ItemList",
-  name: "Planos de saúde Amélia Saúde",
-  description:
-    "Planos de saúde empresariais e coletivos por adesão no Rio de Janeiro.",
-  numberOfItems: 2,
-  itemListElement: [
-    {
-      "@type": "ListItem",
-      position: 1,
-      item: {
-        "@type": "Product",
-        "@id": `${SITE_URL}/planos/empresarial#product`,
-        name: "Plano Empresarial Amélia Saúde",
-        description:
-          "Plano de saúde coletivo empresarial para empresas com 2 ou mais vidas no Rio de Janeiro.",
-        category: "Plano de saúde empresarial",
-        brand: {
-          "@type": "Brand",
-          name: "Amélia Saúde",
-        },
-        url: `${SITE_URL}/planos/empresarial`,
-        offers: {
-          "@type": "Offer",
-          availability: "https://schema.org/InStock",
-          url: `${SITE_URL}/planos/empresarial`,
-          areaServed: { "@type": "City", name: "Rio de Janeiro" },
-        },
-      },
-    },
-    {
-      "@type": "ListItem",
-      position: 2,
-      item: {
-        "@type": "Product",
-        "@id": `${SITE_URL}/planos/adesao#product`,
-        name: "Plano Coletivo por Adesão Amélia Saúde",
-        description:
-          "Plano de saúde coletivo por adesão via entidades de classe e categorias profissionais no Rio de Janeiro.",
-        category: "Plano de saúde coletivo por adesão",
-        brand: {
-          "@type": "Brand",
-          name: "Amélia Saúde",
-        },
-        url: `${SITE_URL}/planos/adesao`,
-        offers: {
-          "@type": "Offer",
-          availability: "https://schema.org/InStock",
-          url: `${SITE_URL}/planos/adesao`,
-          areaServed: { "@type": "City", name: "Rio de Janeiro" },
-        },
-      },
-    },
-  ],
-};
+const itemListSchema = planosItemListSchema();
 
 const breadcrumbSchema = {
   "@context": "https://schema.org",
@@ -112,8 +57,8 @@ const webPageSchema = {
     "Amélia Saúde oferece planos de saúde empresariais para empresas de todos os portes e planos coletivos por adesão via entidades de classe no Rio de Janeiro e Grande Rio.",
   isPartOf: { "@id": `${SITE_URL}/#website` },
   about: [
-    { "@id": `${SITE_URL}/planos/empresarial#product` },
-    { "@id": `${SITE_URL}/planos/adesao#product` },
+    { "@id": `${SITE_URL}/planos/empresarial#service` },
+    { "@id": `${SITE_URL}/planos/adesao#service` },
   ],
   inLanguage: "pt-BR",
 };

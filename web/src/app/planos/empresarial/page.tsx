@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ProductHubContent } from "@/components/planos/ProductHubContent";
+import { serviceSchema, SITE_URL } from "@/lib/planos-schema";
 
-const SITE_URL = "https://www.ameliasaude.com.br";
 const PAGE_URL = `${SITE_URL}/planos/empresarial`;
 
 export const metadata: Metadata = {
@@ -18,23 +18,7 @@ export const metadata: Metadata = {
   },
 };
 
-const productSchema = {
-  "@context": "https://schema.org",
-  "@type": "Product",
-  "@id": `${PAGE_URL}#product`,
-  name: "Plano Empresarial Amélia Saúde",
-  description:
-    "Plano de saúde coletivo empresarial para empresas com 2 ou mais vidas no Rio de Janeiro.",
-  category: "Plano de saúde empresarial",
-  brand: { "@type": "Brand", name: "Amélia Saúde" },
-  url: PAGE_URL,
-  offers: {
-    "@type": "Offer",
-    availability: "https://schema.org/InStock",
-    url: PAGE_URL,
-    areaServed: { "@type": "City", name: "Rio de Janeiro" },
-  },
-};
+const serviceJsonLd = serviceSchema("empresarial");
 
 const breadcrumbSchema = {
   "@context": "https://schema.org",
@@ -82,7 +66,7 @@ export default function PlanosEmpresarialPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
       />
       <script
         type="application/ld+json"

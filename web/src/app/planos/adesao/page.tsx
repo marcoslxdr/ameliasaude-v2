@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ProductHubContent } from "@/components/planos/ProductHubContent";
+import { serviceSchema, SITE_URL } from "@/lib/planos-schema";
 
-const SITE_URL = "https://www.ameliasaude.com.br";
 const PAGE_URL = `${SITE_URL}/planos/adesao`;
 
 export const metadata: Metadata = {
@@ -18,23 +18,7 @@ export const metadata: Metadata = {
   },
 };
 
-const productSchema = {
-  "@context": "https://schema.org",
-  "@type": "Product",
-  "@id": `${PAGE_URL}#product`,
-  name: "Plano Coletivo por Adesão Amélia Saúde",
-  description:
-    "Plano de saúde coletivo por adesão via entidades de classe e categorias profissionais no Rio de Janeiro.",
-  category: "Plano de saúde coletivo por adesão",
-  brand: { "@type": "Brand", name: "Amélia Saúde" },
-  url: PAGE_URL,
-  offers: {
-    "@type": "Offer",
-    availability: "https://schema.org/InStock",
-    url: PAGE_URL,
-    areaServed: { "@type": "City", name: "Rio de Janeiro" },
-  },
-};
+const serviceJsonLd = serviceSchema("adesao");
 
 const breadcrumbSchema = {
   "@context": "https://schema.org",
@@ -82,7 +66,7 @@ export default function PlanosAdesaoPage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
       />
       <script
         type="application/ld+json"
