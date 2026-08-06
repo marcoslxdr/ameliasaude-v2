@@ -285,11 +285,28 @@ export function Footer() {
           <motion.div variants={fadeUp} className="flex flex-col gap-4 sm:col-span-2 lg:col-span-1">
             <p className={headingClass}>Certificações</p>
             <ul className="flex flex-col gap-3">
-              <li className="rounded-lg border border-[rgba(255,255,255,0.14)] bg-[rgba(255,255,255,0.06)] px-4 py-3 backdrop-blur-[2px]">
-                <span className={`inline-block rounded px-2 py-0.5 font-sans text-[10px] font-semibold uppercase tracking-wider ${accent} ring-1 ring-[rgba(201,188,240,0.35)]`}>
-                  ANS
-                </span>
-                <p className="mt-2 font-sans text-sm text-white/75">Registro 424277</p>
+              <li className="flex items-stretch gap-3">
+                <Image
+                  src="/faixa-registro-ans.png"
+                  alt="Registro ANS da Amélia Saúde"
+                  width={240}
+                  height={71}
+                  sizes="240px"
+                  className="w-auto max-w-[180px] shrink-0 rounded-lg object-contain sm:max-w-[220px]"
+                />
+                <div className="flex items-center justify-center rounded-lg bg-black px-4 py-3 text-center">
+                  <p className="font-sans text-sm font-semibold leading-snug text-white">
+                    Registro 424277
+                  </p>
+                </div>
+              </li>
+              <li>
+                <a
+                  href="/privacidade"
+                  className="block rounded-lg bg-black px-4 py-3 text-center font-sans text-sm text-white transition-opacity hover:opacity-85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(255,255,255,0.5)]"
+                >
+                  Política de Privacidade
+                </a>
               </li>
               <li className="rounded-lg border border-[rgba(255,255,255,0.14)] bg-[rgba(255,255,255,0.06)] px-4 py-3 backdrop-blur-[2px]">
                 <span className={`inline-block rounded px-2 py-0.5 font-sans text-[10px] font-semibold uppercase tracking-wider ${accent} ring-1 ring-[rgba(201,188,240,0.35)]`}>
