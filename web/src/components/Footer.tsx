@@ -294,7 +294,7 @@ export function Footer() {
                   sizes="300px"
                   className="w-auto max-w-[170px] shrink-0 object-contain shadow-[0_4px_16px_rgba(0,0,0,0.25)] sm:max-w-[200px]"
                 />
-                <div className="flex min-w-0 flex-1 flex-col justify-center gap-3">
+                <div className="flex w-fit min-w-0 flex-col justify-center gap-3">
                   <div className="flex items-center justify-center border border-white bg-black px-4 py-2 text-center">
                     <p className="whitespace-nowrap font-sans text-[13px] font-semibold leading-snug tracking-wide text-white">
                       ANS Nº 424277
