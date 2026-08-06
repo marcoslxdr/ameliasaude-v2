@@ -116,7 +116,7 @@ export function Footer() {
           initial="hidden"
           whileInView="visible"
           viewport={viewportConfig}
-          className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-5 lg:gap-x-8 xl:gap-x-12"
+          className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-6 lg:gap-x-8 xl:gap-x-12"
         >
           {/* Coluna institucional */}
           <motion.div variants={fadeUp} className="flex flex-col gap-5 sm:col-span-2 lg:col-span-1">
@@ -282,7 +282,7 @@ export function Footer() {
           </motion.div>
 
           {/* Certificações */}
-          <motion.div variants={fadeUp} className="flex flex-col gap-4 sm:col-span-2 lg:col-span-1">
+          <motion.div variants={fadeUp} className="flex flex-col gap-4 sm:col-span-2 lg:col-span-2">
             <p className={headingClass}>Certificações</p>
             <ul className="flex flex-col gap-3">
               <li className="flex items-stretch gap-3">
@@ -291,24 +291,24 @@ export function Footer() {
                   alt="Registro ANS da Amélia Saúde"
                   width={240}
                   height={71}
-                  sizes="240px"
-                  className="w-auto max-w-[180px] shrink-0 rounded-lg object-contain sm:max-w-[220px]"
+                  sizes="300px"
+                  className="w-auto max-w-[200px] shrink-0 self-center rounded-lg object-contain shadow-[0_4px_16px_rgba(0,0,0,0.25)] sm:max-w-[250px]"
                 />
-                <div className="flex flex-1 flex-col gap-3">
-                  <div className="flex flex-1 items-center justify-center rounded-lg bg-black px-4 py-3 text-center">
-                    <p className="font-sans text-sm font-semibold leading-snug text-white">
+                <div className="flex min-w-0 flex-1 flex-col gap-3">
+                  <div className="flex flex-1 items-center justify-center rounded-xl bg-black px-5 py-3.5 text-center shadow-[0_2px_12px_rgba(0,0,0,0.4)]">
+                    <p className="font-sans text-sm font-semibold leading-snug tracking-wide text-white">
                       Registro 424277
                     </p>
                   </div>
                   <a
                     href="/privacidade"
-                    className="flex flex-1 items-center justify-center rounded-lg bg-black px-4 py-3 text-center font-sans text-sm text-white transition-opacity hover:opacity-85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(255,255,255,0.5)]"
+                    className="flex flex-1 items-center justify-center rounded-xl bg-black px-5 py-3.5 text-center font-sans text-sm leading-snug text-white transition-colors duration-300 hover:bg-[#262626] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(255,255,255,0.5)]"
                   >
                     Política de Privacidade
                   </a>
                 </div>
               </li>
-              <li className="rounded-lg border border-[rgba(255,255,255,0.14)] bg-[rgba(255,255,255,0.06)] px-4 py-3 backdrop-blur-[2px]">
+              <li className="flex items-center gap-4 rounded-xl border border-[rgba(255,255,255,0.14)] bg-[rgba(255,255,255,0.06)] px-4 py-3 backdrop-blur-[2px]">
                 <span className={`inline-block rounded px-2 py-0.5 font-sans text-[10px] font-semibold uppercase tracking-wider ${accent} ring-1 ring-[rgba(201,188,240,0.35)]`}>
                   Reclame Aqui
                 </span>
@@ -317,8 +317,8 @@ export function Footer() {
                   alt="Amélia Saúde no Reclame Aqui"
                   width={320}
                   height={313}
-                  sizes="120px"
-                  className="mt-3 h-auto w-28 object-contain"
+                  sizes="110px"
+                  className="ml-auto h-auto w-[92px] shrink-0 object-contain"
                 />
               </li>
             </ul>
