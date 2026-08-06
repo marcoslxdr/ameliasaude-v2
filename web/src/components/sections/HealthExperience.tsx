@@ -28,12 +28,12 @@ const items = [
     image:
       "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=400&h=300&fit=crop",
     title: "Planos coletivo por adesão",
-    body: "Planos para você e sua família através de entidades de classe com diversas categorias profissionais.",
+    body: "Planos para você e sua família por meio de entidades de classe de diversas categorias profissionais.",
   },
   {
     image: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=400&h=300&fit=crop",
     title: "Planos empresariais",
-    body: "Planos para micro e pequenas empresas a partir de 2 beneficiários.",
+    body: "Planos empresariais para micro e pequenas empresas, a partir de 2 beneficiários.",
   },
   {
     image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=300&fit=crop",

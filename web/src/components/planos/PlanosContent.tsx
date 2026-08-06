@@ -18,7 +18,7 @@ const products = [
     title: "Plano empresarial",
     subtitle: "Para sua empresa",
     description:
-      "Planos empresariais para micro e pequenas empresas, a partir de 2 beneficiários.",
+      "Plano de saúde coletivo empresarial para empresas com 2 ou mais vidas no Rio de Janeiro e Grande Rio. Ideal para MEI, micro, pequenas e médias empresas que querem oferecer benefício de saúde com contratação via CNPJ.",
     who: [
       "Empresas com CNPJ ativo",
       "A partir de 2 beneficiários",
@@ -44,7 +44,7 @@ const products = [
     title: "Plano coletivo por adesão",
     subtitle: "Pela sua categoria",
     description:
-      "Planos para você e sua família por meio de entidades de classe de diversas categorias profissionais.",
+      "Plano de saúde coletivo por adesão via entidades de classe e categorias profissionais no Rio de Janeiro. Para quem tem vínculo com sindicato, conselho, associação ou entidade homologada.",
     who: [
       "Profissionais com vínculo de classe",
       "Sindicatos, conselhos e associações",
