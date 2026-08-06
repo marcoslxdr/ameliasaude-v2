@@ -77,17 +77,16 @@ export function BrandOrigin() {
                 letterSpacing: "-0.028em",
               }}
             >
-              A Amélia Saúde nasceu para transformar o cuidado com a saúde no{" "}
-              <em className="font-light italic text-[var(--amelia-purple)]">Rio de Janeiro</em>
+              A Amélia Saúde nasceu para transformar o jeito de cuidar da saúde no{" "}
+              <em className="font-light italic text-[var(--amelia-purple)]">Rio de Janeiro.</em>
             </h2>
             <p
               className="mx-auto mt-7 max-w-xl font-sans font-light leading-relaxed text-[var(--amelia-body)] md:mt-8"
               style={{ fontSize: "clamp(1.1rem, 1.9vw, 1.35rem)" }}
             >
-              Operadora carioca com gestão moderna, rede perto de você e um time dedicado a cuidar de
-              pessoas.
-              <br />
-              Atendimento humanizado que faz diferença para o seu cuidado!
+              Operadora carioca com gestão moderna, ampla rede credenciada e um time dedicado ao
+              cuidado das pessoas. Oferecemos um atendimento humanizado que faz a diferença para a
+              sua saúde.
             </p>
           </motion.div>
         </div>

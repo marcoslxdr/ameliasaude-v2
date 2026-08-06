@@ -83,7 +83,7 @@ export function Specialists() {
         <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={viewportConfig} className="mb-10 max-w-3xl">
           <p className="mb-4 font-sans text-[11px] font-normal tracking-[0.1em] text-[var(--amelia-purple)]">Especialidades</p>
           <h2 className="font-display text-4xl font-normal leading-tight text-[var(--amelia-deep)] sm:text-5xl">Profissionais especializados</h2>
-          <p className="mt-4 max-w-2xl font-sans text-lg font-light leading-relaxed text-[var(--amelia-body)]">Profissionais especializados com agendamento digital para realização de Teleconsulta em até 7 dias.</p>
+          <p className="mt-4 max-w-2xl font-sans text-lg font-light leading-relaxed text-[var(--amelia-body)]">Conte com profissionais especializados e agende sua teleconsulta de forma digital, com disponibilidade em até 7 dias.</p>
         </motion.div>
         {/* Bento: 12 colunas — destaques em faixa dupla */}
         <motion.div

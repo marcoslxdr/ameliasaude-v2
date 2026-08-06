@@ -47,7 +47,7 @@ export function Network() {
                 className="mb-8 max-w-md font-sans font-light leading-relaxed text-[var(--amelia-body)]"
                 style={{ fontSize: "clamp(1.1rem, 1.9vw, 1.35rem)" }}
               >
-                Rede eficiente, presente em mais de 10 municípios com diversos hospitais no Rio e Grande Rio.
+                Contamos com uma ampla rede credenciada, presente em mais de 10 municípios, com diversos hospitais no Rio e Grande Rio.
               </motion.p>
               <motion.div variants={fadeUpFast}>
                 <Button

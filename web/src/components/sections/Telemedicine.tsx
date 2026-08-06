@@ -79,7 +79,7 @@ export function Telemedicine() {
               <motion.p variants={fadeUp}
                 className="mb-8 font-sans font-light leading-relaxed text-[var(--amelia-body)]"
                 style={{ fontSize: "clamp(1.1rem, 1.9vw, 1.35rem)" }}>
-                Seja atendido em até 7 minutos através da teleconsulta com praticidade e comodidade, sem necessidade de deslocamentos.
+                Seja atendido em até 7 minutos por teleconsulta, com praticidade e comodidade, sem necessidade de deslocamentos.
               </motion.p>
               <motion.div variants={fadeUp} className="flex flex-wrap gap-3">
                 <Button href="#plataforma" variant="purple">Acessar plataforma</Button>

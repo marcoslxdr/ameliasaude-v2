@@ -194,7 +194,7 @@ export function Hero({
                 fontSize: "clamp(1.35rem, 2.6vw, 2.1rem)",
               }}
             >
-              O Plano de saúde com gestão moderna, tecnologia inteligente e
+              O plano de Saúde com gestão moderna, tecnologia inteligente e
               cuidado humanizado.
             </span>
             {/* Desktop no h1; mobile: sr-only (visual na coluna ao lado da foto). */}
@@ -231,11 +231,11 @@ export function Hero({
               }}
             >
               <span className="lg:hidden">
-                <span className="block whitespace-nowrap">Planos que cuidam</span>
+                <span className="block whitespace-nowrap">Planos feitos para cuidar</span>
                 <span className="block whitespace-nowrap">de você de verdade.</span>
               </span>
               <span className="hidden lg:inline">
-                Planos que cuidam de você de verdade.
+                Planos feitos para cuidar de você de verdade.
               </span>
             </motion.p>
 

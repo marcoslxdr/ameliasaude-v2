@@ -126,7 +126,7 @@ export function Navigation() {
               <a
                 key={link.href}
                 href={link.href}
-                className={`text-sm font-medium tracking-wide transition-colors duration-300 ${
+                className={`text-sm font-medium uppercase tracking-[0.08em] transition-colors duration-300 ${
                   isBannerHero
                     ? "text-black hover:text-[#7b6bb2]"
                     : "text-gray-700 hover:text-[#7b6bb2]"
@@ -241,7 +241,7 @@ export function Navigation() {
                     delay: 0.1 + i * 0.07,
                     ease: [0.16, 1, 0.3, 1],
                   }}
-                  className="font-display text-[clamp(1.75rem,5vw,3.5rem)] font-light text-white/90 hover:text-white tracking-wider leading-[1.15] transition-colors duration-300 focus-visible:outline-none"
+                  className="font-display text-[clamp(1.75rem,5vw,3.5rem)] font-light uppercase tracking-wider text-white/90 hover:text-white leading-[1.15] transition-colors duration-300 focus-visible:outline-none"
                 >
                   {link.label}
                 </motion.a>

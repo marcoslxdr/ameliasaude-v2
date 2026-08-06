@@ -27,7 +27,7 @@ const items = [
   {
     image:
       "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=400&h=300&fit=crop",
-    title: "Planos coletivo por adesão",
+    title: "Planos coletivos por adesão",
     body: "Planos para você e sua família por meio de entidades de classe de diversas categorias profissionais.",
   },
   {
@@ -38,7 +38,7 @@ const items = [
   {
     image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=300&fit=crop",
     title: "Planos corporativos",
-    body: "Planos para empresas de médio e grande porte em condições diferenciadas a partir de 100 beneficiários.",
+    body: "Planos corporativos para empresas de médio e grande porte, com condições especiais para contratos a partir de 100 beneficiários.",
   },
 ];
 
