@@ -294,19 +294,19 @@ export function Footer() {
                   sizes="240px"
                   className="w-auto max-w-[180px] shrink-0 rounded-lg object-contain sm:max-w-[220px]"
                 />
-                <div className="flex items-center justify-center rounded-lg bg-black px-4 py-3 text-center">
-                  <p className="font-sans text-sm font-semibold leading-snug text-white">
-                    Registro 424277
-                  </p>
+                <div className="flex flex-1 flex-col gap-3">
+                  <div className="flex flex-1 items-center justify-center rounded-lg bg-black px-4 py-3 text-center">
+                    <p className="font-sans text-sm font-semibold leading-snug text-white">
+                      Registro 424277
+                    </p>
+                  </div>
+                  <a
+                    href="/privacidade"
+                    className="flex flex-1 items-center justify-center rounded-lg bg-black px-4 py-3 text-center font-sans text-sm text-white transition-opacity hover:opacity-85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(255,255,255,0.5)]"
+                  >
+                    Política de Privacidade
+                  </a>
                 </div>
-              </li>
-              <li>
-                <a
-                  href="/privacidade"
-                  className="block rounded-lg bg-black px-4 py-3 text-center font-sans text-sm text-white transition-opacity hover:opacity-85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(255,255,255,0.5)]"
-                >
-                  Política de Privacidade
-                </a>
               </li>
               <li className="rounded-lg border border-[rgba(255,255,255,0.14)] bg-[rgba(255,255,255,0.06)] px-4 py-3 backdrop-blur-[2px]">
                 <span className={`inline-block rounded px-2 py-0.5 font-sans text-[10px] font-semibold uppercase tracking-wider ${accent} ring-1 ring-[rgba(201,188,240,0.35)]`}>
