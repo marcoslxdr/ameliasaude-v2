@@ -321,18 +321,6 @@ export function Footer() {
                   className="mt-3 h-auto w-28 object-contain"
                 />
               </li>
-              <li className="rounded-lg border border-[rgba(255,255,255,0.14)] bg-[rgba(255,255,255,0.06)] px-4 py-3 backdrop-blur-[2px]">
-                <span className={`inline-block rounded px-2 py-0.5 font-sans text-[10px] font-semibold uppercase tracking-wider ${accent} ring-1 ring-[rgba(201,188,240,0.35)]`}>
-                  SSL
-                </span>
-                <p className="mt-2 font-sans text-sm text-white/75">Conexão segura</p>
-              </li>
-              <li className="rounded-lg border border-[rgba(255,255,255,0.14)] bg-[rgba(255,255,255,0.06)] px-4 py-3 backdrop-blur-[2px]">
-                <span className={`inline-block rounded px-2 py-0.5 font-sans text-[10px] font-semibold uppercase tracking-wider ${accent} ring-1 ring-[rgba(201,188,240,0.35)]`}>
-                  LGPD
-                </span>
-                <p className="mt-2 font-sans text-sm text-white/75">Compromisso com a proteção de dados</p>
-              </li>
             </ul>
           </motion.div>
         </motion.div>
