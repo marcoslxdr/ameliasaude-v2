@@ -285,16 +285,16 @@ export function Footer() {
           <motion.div variants={fadeUp} className="flex flex-col gap-4 sm:col-span-2 lg:col-span-2">
             <p className={headingClass}>Certificações</p>
             <ul className="flex flex-col gap-3">
-              <li className="flex flex-wrap items-center justify-center gap-x-4 gap-y-3">
+              <li className="flex items-center gap-3">
                 <Image
                   src="/faixa-registro-ans.png"
                   alt="Registro ANS da Amélia Saúde"
                   width={240}
                   height={71}
                   sizes="340px"
-                  className="w-auto max-w-[min(100%,240px)] object-contain shadow-[0_4px_16px_rgba(0,0,0,0.25)] sm:max-w-[min(100%,340px)]"
+                  className="w-auto max-w-[52%] shrink-0 object-contain shadow-[0_4px_16px_rgba(0,0,0,0.25)]"
                 />
-                <div className="flex w-fit min-w-0 flex-col justify-center gap-3">
+                <div className="flex min-w-0 flex-1 flex-col justify-center gap-2">
                   <div className="flex items-center justify-center border border-white bg-black px-4 py-2 text-center">
                     <p className="whitespace-nowrap font-sans text-[13px] font-semibold leading-snug tracking-wide text-white">
                       ANS Nº 424277
@@ -304,7 +304,7 @@ export function Footer() {
                     href="/privacidade"
                     className="flex items-center justify-center border border-white bg-black px-4 py-2 text-center font-sans text-[13px] leading-snug text-white transition-colors duration-300 hover:bg-[#262626] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(255,255,255,0.5)]"
                   >
-                    <span className="whitespace-nowrap">Política de Privacidade</span>
+                    Política de Privacidade
                   </a>
                 </div>
               </li>
