@@ -194,7 +194,7 @@ export function Hero({
                 fontSize: "clamp(1.35rem, 2.6vw, 2.1rem)",
               }}
             >
-              O plano de Saúde com gestão moderna, tecnologia inteligente e
+              O plano de saúde com gestão moderna, tecnologia inteligente e
               cuidado humanizado.
             </span>
             {/* Desktop no h1; mobile: sr-only (visual na coluna ao lado da foto). */}
