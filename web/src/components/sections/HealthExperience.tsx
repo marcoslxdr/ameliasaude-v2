@@ -12,17 +12,17 @@ const items = [
   {
     image: "/ampla-cobertura.jpeg",
     title: "Ampla cobertura",
-    body: "Planos com cobertura total para consultas, exames, internações e cirurgias.",
+    body: "Planos com cobertura completa para consultas, exames, internações e cirurgias",
   },
   {
     image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=300&fit=crop",
-    title: "Preços competitivos",
-    body: "O melhor custo benefício do mercado, com preços que cabem no seu orçamento.",
+    title: "Planos competitivos",
+    body: "O melhor custo-benefício para cuidar da sua saúde, com preços que cabem no seu orçamento",
   },
   {
     image: "/doctor-patient-consultation.jpg",
     title: "Atendimento ágil",
-    body: "Eficiente, resolutivo e sem burocracias, com foco total na sua saúde.",
+    body: "Eficiente, resolutivo e sem burocracia, para cuidar da sua saúde com excelência.",
   },
   {
     image:
