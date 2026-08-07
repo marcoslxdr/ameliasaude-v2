@@ -240,6 +240,25 @@ function placeMesquitaMirrorOfRio(nodes: OrbitNode[]): OrbitNode[] {
   );
 }
 
+/**
+ * Subir levemente os marcadores marcados com pontos verdes no slide do
+ * cliente (áudio WhatsApp 00: "Sobe só um pouquinho, até onde está o ponto").
+ * dy negativo = para cima no espaço de coordenadas % (left/top).
+ */
+const ORBIT_LIFT: Record<string, number> = {
+  "Magé": -3.5,
+  "São João de Meriti": -3.5,
+  "Mesquita": -3.5,
+};
+
+function applyOrbitLift(nodes: OrbitNode[]): OrbitNode[] {
+  return nodes.map((node) => {
+    const lift = ORBIT_LIFT[node.city.name];
+    if (!lift) return node;
+    return { ...node, top: node.top + lift };
+  });
+}
+
 const SONAR_WAVES = 3;
 const SONAR_DURATION = 3.2;
 const SPIRAL_TURNS = 2.35;
@@ -255,8 +274,10 @@ export function CoverageOrbital() {
     const base = applyOrbitPolarTweaks(
       buildDoubleOrbit(ORBIT_INNER_RADIUS, ORBIT_OUTER_RADIUS)
     );
-    return applyOrbitVerticalMirror(
-      placeNiteroiBesideSaoGoncalo(placeMesquitaMirrorOfRio(base))
+    return applyOrbitLift(
+      applyOrbitVerticalMirror(
+        placeNiteroiBesideSaoGoncalo(placeMesquitaMirrorOfRio(base))
+      )
     );
   }, []);
 

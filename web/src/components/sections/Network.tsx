@@ -51,8 +51,9 @@ export function Network() {
               </motion.p>
               <motion.div variants={fadeUpFast}>
                 <Button
-                  variant="outline"
-                  aria-label="Conheça nossa rede (em breve: lista de hospitais)"
+                  href="/planos"
+                  variant="primary"
+                  aria-label="Conheça nossa rede"
                 >
                   Conheça nossa rede
                 </Button>
