@@ -20,12 +20,12 @@ export function BrandOrigin() {
         {/* Plain grid — no motion transforms on this tree for the video column.
             Track 1 MUST be a definite rem width (not minmax(0,…)): percentage
             widths on the video box + min-w-0 collapse the column to 0×0. */}
-        <div className="grid w-full max-w-5xl grid-cols-1 place-items-center items-center justify-items-center gap-14 md:gap-20 lg:max-w-none lg:grid-cols-[24rem_minmax(0,1fr)] lg:justify-items-center lg:gap-24 xl:grid-cols-[26rem_minmax(0,1fr)] xl:gap-28">
+        <div className="grid w-full max-w-5xl grid-cols-1 place-items-center items-center justify-items-center gap-14 md:gap-16 lg:max-w-none lg:grid-cols-[20rem_minmax(0,1fr)] lg:justify-items-center lg:gap-16 xl:grid-cols-[22rem_minmax(0,1fr)] xl:gap-20">
           {/* Video: static wrapper — no overflow-hidden, no mask-image, no transform.
                iOS Safari refuses to paint <video> inside a compositing context
                (mask-image, overflow:hidden+border-radius, transform, filter, will-change).
                Solution: border-radius directly on <video>, shadow + poster on wrapper. */}
-          <div className="order-2 flex w-full max-w-[24rem] justify-center justify-self-center md:max-w-[26rem] lg:order-1 lg:w-full lg:max-w-none">
+          <div className="order-2 flex w-full max-w-[19rem] justify-center justify-self-center md:max-w-[21rem] lg:order-1 lg:w-full lg:max-w-none">
             <div
               className="relative aspect-[9/16] w-full shrink-0 bg-[var(--amelia-purple-faint)]"
               style={{
