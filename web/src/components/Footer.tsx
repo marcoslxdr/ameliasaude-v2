@@ -297,7 +297,7 @@ export function Footer() {
                 <div className="flex min-w-0 flex-1 flex-col justify-center gap-2">
                   <div className="flex items-center justify-center border border-white bg-black px-4 py-2 text-center">
                     <p className="whitespace-nowrap font-sans text-[13px] font-semibold leading-snug tracking-wide text-white">
-                      ANS Nº 424277
+                      ANS - nº 42427-7
                     </p>
                   </div>
                   <a
