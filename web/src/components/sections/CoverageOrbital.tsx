@@ -10,6 +10,9 @@ const ORBIT_RING_STROKE_OUTER = "rgba(123,107,178,0.18)";
 
 const GOLDEN_ANGLE = 137.508; // 360 / φ²
 
+/** Pedido do cliente: órbitas 1/3 menores (fator 2/3). Todos os raios derivam daqui. */
+const ORBIT_SCALE = 2 / 3;
+
 function archimedeanSpiralD(opts: {
   turns: number;
   maxR: number;
@@ -89,7 +92,7 @@ const ORBIT_POLAR_TWEAKS: Record<
   { dAngleDeg?: number; dRadius?: number; dz?: number }
 > = {
   // Magé: leve afino no anel; Niterói / Nilópolis / Mesquita são reposicionadas depois
-  "Magé": { dAngleDeg: -5, dRadius: 0.85 },
+  "Magé": { dAngleDeg: -5, dRadius: 0.85 * ORBIT_SCALE },
 };
 
 /**
@@ -246,9 +249,9 @@ function placeMesquitaMirrorOfRio(nodes: OrbitNode[]): OrbitNode[] {
  * dy negativo = para cima no espaço de coordenadas % (left/top).
  */
 const ORBIT_LIFT: Record<string, number> = {
-  "Magé": -3.5,
-  "São João de Meriti": -3.5,
-  "Mesquita": -3.5,
+  "Magé": -3.5 * ORBIT_SCALE,
+  "São João de Meriti": -3.5 * ORBIT_SCALE,
+  "Mesquita": -3.5 * ORBIT_SCALE,
 };
 
 function applyOrbitLift(nodes: OrbitNode[]): OrbitNode[] {
@@ -262,10 +265,10 @@ function applyOrbitLift(nodes: OrbitNode[]): OrbitNode[] {
 const SONAR_WAVES = 3;
 const SONAR_DURATION = 3.2;
 const SPIRAL_TURNS = 2.35;
-const SPIRAL_MAX_R = 40;
+const SPIRAL_MAX_R = 40 * ORBIT_SCALE; // ≈26.67 (era 40)
 
-const ORBIT_INNER_RADIUS = 28;
-const ORBIT_OUTER_RADIUS = 43;
+const ORBIT_INNER_RADIUS = 28 * ORBIT_SCALE; // ≈18.67 (era 28)
+const ORBIT_OUTER_RADIUS = 43 * ORBIT_SCALE; // ≈28.67 (era 43)
 
 export function CoverageOrbital() {
   const reduceMotion = useReducedMotion();
@@ -324,7 +327,7 @@ export function CoverageOrbital() {
           }
         />
         {/* Órbitas onde as cidades ficam posicionadas */}
-        {[0.56, 0.86].map((scale, i) => (
+        {[0.56 * ORBIT_SCALE, 0.86 * ORBIT_SCALE].map((scale, i) => (
           <div
             key={i}
             className="absolute rounded-full"
