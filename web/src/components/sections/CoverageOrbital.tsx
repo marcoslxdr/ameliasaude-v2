@@ -412,7 +412,7 @@ export function CoverageOrbital() {
         const labelClass = [
           "absolute left-1/2 top-full mt-1.5 -translate-x-1/2 text-center font-sans text-[9px] font-normal leading-tight tracking-wide text-[var(--amelia-deep)] sm:text-[11px] md:text-xs",
           stackedLabel
-            ? "max-w-[min(14cqi,4.75rem)] whitespace-normal sm:leading-tight"
+            ? "max-w-[min(20cqi,6.5rem)] whitespace-normal sm:leading-tight"
             : "sm:leading-none whitespace-normal sm:whitespace-nowrap",
           compact
             ? "max-w-[min(11cqi,3.25rem)] text-balance sm:max-w-[min(13cqi,4.25rem)]"
@@ -478,7 +478,7 @@ export function CoverageOrbital() {
                   <span className={labelClass}>
                     {stackedLabel
                       ? labelLines.map((line) => (
-                          <span key={line} className="block">
+                          <span key={line} className="block whitespace-nowrap">
                             {line}
                           </span>
                         ))
