@@ -16,7 +16,7 @@ const items = [
   },
   {
     image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=300&fit=crop",
-    title: "Planos competitivos",
+    title: "Preços competitivos",
     body: "O melhor custo-benefício para cuidar da sua saúde, com preços que cabem no seu orçamento",
   },
   {
