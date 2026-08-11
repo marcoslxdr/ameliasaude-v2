@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { staggerContainer, fadeUp, viewportConfig } from "@/lib/motion";
 import { HeroBackground } from "@/components/ui/HeroBackground";
+import { getButtonClassName } from "@/lib/button-styles";
 import { trackContactClick, trackGoogleAdsConversion } from "@/lib/analytics";
 
 function IconWhatsApp({ className }: { className?: string }) {
@@ -77,8 +78,10 @@ const channels = [
     title: "Prestador",
     description: "Canal exclusivo para rede credenciada e prestadores de serviço.",
     action: "Acessar portal",
-    href: "#prestador",
-    external: false,
+    // Portal de prestadores ainda não existe — apontar para o WhatsApp da
+    // operadora até a Amélia fornecer a URL oficial do portal.
+    href: "https://wa.me/5521971724757",
+    external: true,
     Icon: IconLayers,
   },
   {
@@ -164,7 +167,7 @@ export function Contact() {
                   {description}
                 </span>
                 <span
-                  className="mt-5 inline-flex items-center gap-1 font-sans text-[13px] font-normal text-[var(--amelia-deep)] transition-colors group-hover:text-[var(--amelia-purple)]"
+                  className={`${getButtonClassName("primary", "sm")} mt-5 w-full sm:w-fit`}
                 >
                   {action}
                   <span className="translate-x-0 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden>
