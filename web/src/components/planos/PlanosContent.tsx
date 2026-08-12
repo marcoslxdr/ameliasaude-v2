@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/Button";
 import { HeroBackground } from "@/components/ui/HeroBackground";
 import { fadeUp, staggerContainer, viewportConfig } from "@/lib/motion";
 
-const WA_BASE = "https://wa.me/5521971724757";
+const CENTRAL_HREF = "tel:+552126400777";
 
 const products = [
   {
@@ -32,9 +32,7 @@ const products = [
       "Suporte comercial para o RH",
     ],
     ctaLabel: "Falar sobre plano empresarial",
-    ctaHref: `${WA_BASE}?text=${encodeURIComponent(
-      "Olá! Quero informações sobre o plano de saúde empresarial da Amélia Saúde."
-    )}`,
+    ctaHref: CENTRAL_HREF,
     icon: Building2,
     href: "/planos/empresarial",
   },
@@ -58,9 +56,7 @@ const products = [
       "Orientação sobre documentos e portabilidade",
     ],
     ctaLabel: "Falar sobre plano por adesão",
-    ctaHref: `${WA_BASE}?text=${encodeURIComponent(
-      "Olá! Quero informações sobre o plano coletivo por adesão da Amélia Saúde."
-    )}`,
+    ctaHref: CENTRAL_HREF,
     icon: Users,
     href: "/planos/adesao",
   },
@@ -342,13 +338,8 @@ export function PlanosContent() {
               formal.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Button
-                href={`${WA_BASE}?text=${encodeURIComponent(
-                  "Olá! Quero ajuda para escolher entre plano empresarial e por adesão."
-                )}`}
-                variant="primary"
-              >
-                WhatsApp comercial
+              <Button href={CENTRAL_HREF} variant="primary">
+                Central de Atendimento
               </Button>
               <Button href="/#contato" variant="outline">
                 Outros canais

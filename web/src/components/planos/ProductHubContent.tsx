@@ -11,7 +11,7 @@ import { fadeUp, staggerContainer, viewportConfig } from "@/lib/motion";
 
 export type ProductHubVariant = "empresarial" | "adesao";
 
-const WA_BASE = "https://wa.me/5521971724757";
+const CENTRAL_HREF = "tel:+552126400777";
 
 const copy: Record<
   ProductHubVariant,
@@ -61,9 +61,7 @@ const copy: Record<
       },
     ],
     ctaLabel: "Falar sobre plano empresarial",
-    ctaHref: `${WA_BASE}?text=${encodeURIComponent(
-      "Olá! Quero informações sobre o plano de saúde empresarial da Amélia Saúde."
-    )}`,
+    ctaHref: CENTRAL_HREF,
     otherLabel: "Ver plano por adesão",
     otherHref: "/planos/adesao",
   },
@@ -99,9 +97,7 @@ const copy: Record<
       },
     ],
     ctaLabel: "Falar sobre plano por adesão",
-    ctaHref: `${WA_BASE}?text=${encodeURIComponent(
-      "Olá! Quero informações sobre o plano coletivo por adesão da Amélia Saúde."
-    )}`,
+    ctaHref: CENTRAL_HREF,
     otherLabel: "Ver plano empresarial",
     otherHref: "/planos/empresarial",
   },
