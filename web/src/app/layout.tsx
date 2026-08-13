@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Instrument_Serif, DM_Sans } from "next/font/google";
 import { GoogleTag } from "@/components/GoogleTag";
 import { OrganizationSchema, WebSiteSchema, LocalBusinessSchema } from "@/components/StructuredData";
+import { CotacaoModalProvider } from "@/components/CotacaoModal";
 import "./globals.css";
 
 const instrumentSerif = Instrument_Serif({
@@ -89,7 +90,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col antialiased">
         <GoogleTag />
-        {children}
+        <CotacaoModalProvider>{children}</CotacaoModalProvider>
       </body>
     </html>
     </>

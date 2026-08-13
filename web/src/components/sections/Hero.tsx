@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/Button";
 import { HeroBackground } from "@/components/ui/HeroBackground";
 import { trackCtaClick } from "@/lib/analytics";
+import { useCotacao } from "@/components/CotacaoModal";
 
 type HeroProps = {
   /** Hero person image (default: look atual em produção). */
@@ -54,6 +55,7 @@ export function Hero({
   headlineClassName = DEFAULT_HEADLINE,
 }: HeroProps = {}) {
   const containerRef = useRef<HTMLElement>(null);
+  const { open } = useCotacao();
 
   return (
     <section
@@ -247,9 +249,11 @@ export function Hero({
                 href="/cotacao"
                 variant="primary"
                 size="sm"
-                onClick={() =>
-                  trackCtaClick("quero_meu_plano", "/cotacao")
-                }
+                onClick={(e) => {
+                  e.preventDefault();
+                  trackCtaClick("quero_meu_plano", "/cotacao");
+                  open();
+                }}
               >
                 Quero meu plano
                 <ArrowRight className="h-3 w-3 stroke-[2.5] sm:h-3.5 sm:w-3.5" />

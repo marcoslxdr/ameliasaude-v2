@@ -8,6 +8,7 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/Button";
 import { HeroBackground } from "@/components/ui/HeroBackground";
 import { fadeUp, staggerContainer, viewportConfig } from "@/lib/motion";
+import { useCotacao } from "@/components/CotacaoModal";
 
 export type ProductHubVariant = "empresarial" | "adesao";
 
@@ -106,6 +107,7 @@ const copy: Record<
 
 export function ProductHubContent({ variant }: { variant: ProductHubVariant }) {
   const c = copy[variant];
+  const { open } = useCotacao();
 
   return (
     <div className="flex min-h-screen flex-col bg-white">
@@ -160,7 +162,14 @@ export function ProductHubContent({ variant }: { variant: ProductHubVariant }) {
                 {c.lead}
               </motion.p>
               <motion.div variants={fadeUp} className="mt-8">
-                <Button href={c.ctaHref} variant="primary">
+                <Button
+                  href={c.ctaHref}
+                  variant="primary"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    open();
+                  }}
+                >
                   {c.ctaLabel}
                 </Button>
               </motion.div>

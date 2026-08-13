@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, type TargetAndTransition } from "framer-motion";
-import type { ReactNode } from "react";
+import type { MouseEvent, ReactNode } from "react";
 import {
   getButtonClassName,
   buttonMotionHover,
@@ -16,7 +16,7 @@ interface ButtonProps {
   variant?: ButtonVariant;
   size?: ButtonSize;
   href?: string;
-  onClick?: () => void;
+  onClick?: (e: MouseEvent<HTMLElement>) => void;
   className?: string;
   "aria-label"?: string;
   type?: "button" | "submit" | "reset";

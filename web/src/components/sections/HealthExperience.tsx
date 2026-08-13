@@ -7,6 +7,7 @@ import { staggerContainer, fadeUp, viewportConfig } from "@/lib/motion";
 import { Shield, Wallet, Zap, Users, Building, Landmark } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { HeroBackground } from "@/components/ui/HeroBackground";
+import { useCotacao } from "@/components/CotacaoModal";
 
 const items = [
   {
@@ -43,6 +44,7 @@ const items = [
 ];
 
 export function HealthExperience() {
+  const { open } = useCotacao();
   return (
     <section
       id="experiencia-planos"
@@ -124,7 +126,14 @@ export function HealthExperience() {
           viewport={viewportConfig}
           className="mt-14 flex justify-center"
         >
-          <Button href="/cotacao" variant="primary">
+          <Button
+            href="/cotacao"
+            variant="primary"
+            onClick={(e) => {
+              e.preventDefault();
+              open();
+            }}
+          >
             Conhecer os planos
           </Button>
         </motion.div>

@@ -8,6 +8,7 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/Button";
 import { HeroBackground } from "@/components/ui/HeroBackground";
 import { fadeUp, staggerContainer, viewportConfig } from "@/lib/motion";
+import { useCotacao } from "@/components/CotacaoModal";
 
 /** Pedido 12/08 (reunião com Marcelo): botões de conversão apontam pro formulário de cotação. */
 const COTACAO_HREF = "/cotacao";
@@ -87,6 +88,7 @@ const compareRows = [
 ] as const;
 
 export function PlanosContent() {
+  const { open } = useCotacao();
   return (
     <div className="flex min-h-screen flex-col bg-white">
       <Navigation />
@@ -227,7 +229,14 @@ export function PlanosContent() {
                       </div>
 
                       <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-                        <Button href={product.ctaHref} variant="primary">
+                        <Button
+                          href={product.ctaHref}
+                          variant="primary"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            open();
+                          }}
+                        >
                           {product.ctaLabel}
                         </Button>
                         <Link
