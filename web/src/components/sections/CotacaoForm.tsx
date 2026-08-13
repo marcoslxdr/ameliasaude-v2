@@ -29,7 +29,8 @@ export function CotacaoForm() {
   const [vidas, setVidas] = useState<number>(1);
   const [idades, setIdades] = useState<number[]>([]);
   const [nome, setNome] = useState("");
-  const [telefone, setTelefone] = useState("");
+  const [cidade, setCidade] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
   const [email, setEmail] = useState("");
 
   const idadesAtuais = useMemo(() => {
@@ -63,8 +64,9 @@ export function CotacaoForm() {
       ),
       "",
       `Nome: ${nome}`,
-      `Telefone/WhatsApp: ${telefone}`,
+      `Cidade: ${cidade}`,
       `E-mail: ${email}`,
+      `WhatsApp: ${whatsapp}`,
     ].join("\n");
 
   const enviar = (e: React.FormEvent) => {
@@ -207,13 +209,39 @@ export function CotacaoForm() {
                 </label>
                 <label className="flex flex-col gap-1.5">
                   <span className="font-sans text-xs font-medium uppercase tracking-[0.08em] text-[#6b6b6b]">
-                    Telefone / WhatsApp
+                    Cidade
+                  </span>
+                  <input
+                    required
+                    type="text"
+                    value={cidade}
+                    onChange={(e) => setCidade(e.target.value)}
+                    placeholder="Sua cidade"
+                    className={inputClass}
+                  />
+                </label>
+                <label className="flex flex-col gap-1.5">
+                  <span className="font-sans text-xs font-medium uppercase tracking-[0.08em] text-[#6b6b6b]">
+                    E-mail
+                  </span>
+                  <input
+                    required
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="voce@email.com"
+                    className={inputClass}
+                  />
+                </label>
+                <label className="flex flex-col gap-1.5">
+                  <span className="font-sans text-xs font-medium uppercase tracking-[0.08em] text-[#6b6b6b]">
+                    WhatsApp
                   </span>
                   <input
                     required
                     type="tel"
-                    value={telefone}
-                    onChange={(e) => setTelefone(e.target.value)}
+                    value={whatsapp}
+                    onChange={(e) => setWhatsapp(e.target.value)}
                     placeholder="(21) 99999-9999"
                     className={inputClass}
                   />
@@ -222,7 +250,9 @@ export function CotacaoForm() {
 
               <button
                 type="submit"
-                disabled={!idadesPreenchidas || !nome || !telefone}
+                disabled={
+                  !idadesPreenchidas || !nome || !cidade || !email || !whatsapp
+                }
                 className={`${getButtonClassName("primary", "md")} mt-6 w-full disabled:cursor-not-allowed disabled:opacity-50`}
               >
                 Enviar solicitação de cotação
