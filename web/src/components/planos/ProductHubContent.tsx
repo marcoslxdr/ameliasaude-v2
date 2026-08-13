@@ -11,7 +11,8 @@ import { fadeUp, staggerContainer, viewportConfig } from "@/lib/motion";
 
 export type ProductHubVariant = "empresarial" | "adesao";
 
-const CENTRAL_HREF = "tel:+552126400777";
+/** Pedido 12/08 (reunião com Marcelo): CTA principal aponta pro formulário de cotação. */
+const COTACAO_HREF = "/cotacao";
 
 const copy: Record<
   ProductHubVariant,
@@ -61,7 +62,7 @@ const copy: Record<
       },
     ],
     ctaLabel: "Falar sobre plano empresarial",
-    ctaHref: CENTRAL_HREF,
+    ctaHref: COTACAO_HREF,
     otherLabel: "Ver plano por adesão",
     otherHref: "/planos/adesao",
   },
@@ -97,7 +98,7 @@ const copy: Record<
       },
     ],
     ctaLabel: "Falar sobre plano por adesão",
-    ctaHref: CENTRAL_HREF,
+    ctaHref: COTACAO_HREF,
     otherLabel: "Ver plano empresarial",
     otherHref: "/planos/empresarial",
   },

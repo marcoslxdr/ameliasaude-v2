@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import { staggerContainer, fadeUpFast } from "@/lib/motion";
 import { CoverageOrbital } from "@/components/sections/CoverageOrbital";
-import { Button } from "@/components/ui/Button";
 import { HeroBackground } from "@/components/ui/HeroBackground";
 
 export function Network() {
@@ -49,15 +48,7 @@ export function Network() {
               >
                 Contamos com uma ampla rede credenciada, presente em mais de 10 municípios, com diversos hospitais no Rio e Grande Rio.
               </motion.p>
-              <motion.div variants={fadeUpFast}>
-                <Button
-                  href="/planos"
-                  variant="primary"
-                  aria-label="Conheça nossa rede"
-                >
-                  Conheça nossa rede
-                </Button>
-              </motion.div>
+              {/* Botão "Conheça nossa rede" removido a pedido do cliente (12/08): rede ainda em finalização; botão sugeria rede ativa sem funcionar. */}
             </motion.div>
           </div>
 

@@ -37,7 +37,8 @@ const channels = [
     title: "Central de Atendimento",
     description: "Agendamentos, autorizações e suporte ao beneficiário.",
     action: "Ligar agora",
-    href: "tel:+552126400777",
+    // Pedido 12/08: central é o 0800 (SAC). O 2640-0777 é o telefone administrativo.
+    href: "tel:08000210777",
     external: false,
     Icon: IconHeadset,
   },

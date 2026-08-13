@@ -244,11 +244,11 @@ export function Hero({
               className="flex w-fit flex-col items-stretch gap-3 self-start lg:flex-row lg:flex-wrap lg:items-center lg:gap-5"
             >
               <Button
-                href="#experiencia-planos"
+                href="/cotacao"
                 variant="primary"
                 size="sm"
                 onClick={() =>
-                  trackCtaClick("quero_meu_plano", "#experiencia-planos")
+                  trackCtaClick("quero_meu_plano", "/cotacao")
                 }
               >
                 Quero meu plano

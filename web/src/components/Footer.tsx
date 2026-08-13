@@ -192,27 +192,17 @@ export function Footer() {
             <ul className="flex flex-col gap-4">
               <li>
                 <a
-                  href={`mailto:${CONTACT.email}`}
+                  href={CONTACT.sacHref}
                   className={`group flex gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-[rgba(201,188,240,0.45)] ${ringFooter}`}
                 >
                   <span className={iconBox}>
-                    <IconMail className="h-[18px] w-[18px]" />
+                    <IconPhone className="h-[18px] w-[18px]" />
                   </span>
                   <span className="flex min-w-0 flex-col">
                     <span className={`font-sans text-[10px] font-semibold uppercase tracking-[0.12em] ${accent}`}>
-                      E-mail
+                      SAC
                     </span>
-                    <span className="font-sans text-sm text-white/85 group-hover:text-white">
-                      {CONTACT.email.includes("@") ? (
-                        <>
-                          {CONTACT.email.split("@")[0]}@
-                          <wbr />
-                          {CONTACT.email.split("@")[1]}
-                        </>
-                      ) : (
-                        CONTACT.email
-                      )}
-                    </span>
+                    <span className="font-sans text-sm text-white/85 group-hover:text-white">{CONTACT.sacDisplay}</span>
                   </span>
                 </a>
               </li>
@@ -234,17 +224,27 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href={CONTACT.sacHref}
+                  href={`mailto:${CONTACT.email}`}
                   className={`group flex gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-[rgba(201,188,240,0.45)] ${ringFooter}`}
                 >
                   <span className={iconBox}>
-                    <IconPhone className="h-[18px] w-[18px]" />
+                    <IconMail className="h-[18px] w-[18px]" />
                   </span>
                   <span className="flex min-w-0 flex-col">
                     <span className={`font-sans text-[10px] font-semibold uppercase tracking-[0.12em] ${accent}`}>
-                      SAC
+                      E-mail
                     </span>
-                    <span className="font-sans text-sm text-white/85 group-hover:text-white">{CONTACT.sacDisplay}</span>
+                    <span className="font-sans text-sm text-white/85 group-hover:text-white">
+                      {CONTACT.email.includes("@") ? (
+                        <>
+                          {CONTACT.email.split("@")[0]}@
+                          <wbr />
+                          {CONTACT.email.split("@")[1]}
+                        </>
+                      ) : (
+                        CONTACT.email
+                      )}
+                    </span>
                   </span>
                 </a>
               </li>

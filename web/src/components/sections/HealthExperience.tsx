@@ -124,7 +124,7 @@ export function HealthExperience() {
           viewport={viewportConfig}
           className="mt-14 flex justify-center"
         >
-          <Button href="/planos" variant="primary">
+          <Button href="/cotacao" variant="primary">
             Conhecer os planos
           </Button>
         </motion.div>

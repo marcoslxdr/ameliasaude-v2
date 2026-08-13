@@ -9,7 +9,8 @@ import { Button } from "@/components/ui/Button";
 import { HeroBackground } from "@/components/ui/HeroBackground";
 import { fadeUp, staggerContainer, viewportConfig } from "@/lib/motion";
 
-const CENTRAL_HREF = "tel:+552126400777";
+/** Pedido 12/08 (reunião com Marcelo): botões de conversão apontam pro formulário de cotação. */
+const COTACAO_HREF = "/cotacao";
 
 const products = [
   {
@@ -32,7 +33,7 @@ const products = [
       "Suporte comercial para o RH",
     ],
     ctaLabel: "Falar sobre plano empresarial",
-    ctaHref: CENTRAL_HREF,
+    ctaHref: COTACAO_HREF,
     icon: Building2,
     href: "/planos/empresarial",
   },
@@ -56,7 +57,7 @@ const products = [
       "Orientação sobre documentos e portabilidade",
     ],
     ctaLabel: "Falar sobre plano por adesão",
-    ctaHref: CENTRAL_HREF,
+    ctaHref: COTACAO_HREF,
     icon: Users,
     href: "/planos/adesao",
   },
@@ -338,7 +339,8 @@ export function PlanosContent() {
               formal.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Button href={CENTRAL_HREF} variant="primary">
+              {/* Pedido 12/08: Central de Atendimento = 0800 (SAC). 2640-0777 é administrativo. */}
+              <Button href="tel:08000210777" variant="primary">
                 Central de Atendimento
               </Button>
               <Button href="/#contato" variant="outline">

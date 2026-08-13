@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
 const PURPLE = "#7b6bb2";
@@ -10,8 +10,25 @@ const ORBIT_RING_STROKE_OUTER = "rgba(123,107,178,0.18)";
 
 const GOLDEN_ANGLE = 137.508; // 360 / φ²
 
-/** Pedido do cliente: órbitas 1/3 menores (fator 2/3). Todos os raios derivam daqui. */
-const ORBIT_SCALE = 2 / 3;
+/** Pedido do cliente (07/08): órbitas 1/3 menores (fator 2/3) no desktop.
+ *  Pedido 12/08: no MOBILE voltar ao tamanho original (fator 1.0).
+ *  Todos os raios derivam daqui — mobile usa 1, desktop usa 2/3. */
+const ORBIT_SCALE_DESKTOP = 2 / 3;
+const ORBIT_SCALE_MOBILE = 1;
+const MOBILE_QUERY = "(max-width: 639px)";
+
+/** True enquanto a viewport for mobile (< sm). Sem SSR flicker: começa false. */
+function useIsMobile(): boolean {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia(MOBILE_QUERY);
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+  return isMobile;
+}
 
 function archimedeanSpiralD(opts: {
   turns: number;
@@ -92,7 +109,7 @@ const ORBIT_POLAR_TWEAKS: Record<
   { dAngleDeg?: number; dRadius?: number; dz?: number }
 > = {
   // Magé: leve afino no anel; Niterói / Nilópolis / Mesquita são reposicionadas depois
-  "Magé": { dAngleDeg: -5, dRadius: 0.85 * ORBIT_SCALE },
+  "Magé": { dAngleDeg: -5, dRadius: 0.85 },
 };
 
 /**
@@ -151,7 +168,7 @@ function buildDoubleOrbit(
   return nodes.sort((a, b) => b.zIndex - a.zIndex);
 }
 
-function applyOrbitPolarTweaks(nodes: OrbitNode[]): OrbitNode[] {
+function applyOrbitPolarTweaks(nodes: OrbitNode[], scale: number): OrbitNode[] {
   return nodes.map((node) => {
     const tw = ORBIT_POLAR_TWEAKS[node.city.name];
     if (!tw) return node;
@@ -161,7 +178,7 @@ function applyOrbitPolarTweaks(nodes: OrbitNode[]): OrbitNode[] {
     let r = Math.hypot(dx, dy);
     let ang = Math.atan2(dy, dx);
     ang += ((tw.dAngleDeg ?? 0) * Math.PI) / 180;
-    r += tw.dRadius ?? 0;
+    r += (tw.dRadius ?? 0) * scale;
 
     return {
       ...node,
@@ -228,7 +245,7 @@ function applyOrbitVerticalMirror(nodes: OrbitNode[]): OrbitNode[] {
 }
 
 /** Mesquita espelha Rio no eixo vertical: mesmo raio/anel, 6h alinhado a 12h. */
-function placeMesquitaMirrorOfRio(nodes: OrbitNode[]): OrbitNode[] {
+function placeMesquitaMirrorOfRio(nodes: OrbitNode[], outerRadius: number): OrbitNode[] {
   const rio = nodes.find((n) => n.city.name === "Rio de Janeiro");
   if (!rio) return nodes;
 
@@ -237,7 +254,8 @@ function placeMesquitaMirrorOfRio(nodes: OrbitNode[]): OrbitNode[] {
       ? {
           ...node,
           left: 50,
-          top: 50 + ORBIT_OUTER_RADIUS,
+          top: 50 + outerRadius,
+          zIndex: Math.round(50 - outerRadius),
         }
       : node
   );
@@ -249,44 +267,52 @@ function placeMesquitaMirrorOfRio(nodes: OrbitNode[]): OrbitNode[] {
  * dy negativo = para cima no espaço de coordenadas % (left/top).
  */
 const ORBIT_LIFT: Record<string, number> = {
-  "Magé": -3.5 * ORBIT_SCALE,
-  "São João de Meriti": -3.5 * ORBIT_SCALE,
-  "Mesquita": -3.5 * ORBIT_SCALE,
+  "Magé": -3.5,
+  "São João de Meriti": -3.5,
+  "Mesquita": -3.5,
 };
 
-function applyOrbitLift(nodes: OrbitNode[]): OrbitNode[] {
+function applyOrbitLift(nodes: OrbitNode[], scale: number): OrbitNode[] {
   return nodes.map((node) => {
     const lift = ORBIT_LIFT[node.city.name];
     if (!lift) return node;
-    return { ...node, top: node.top + lift };
+    return { ...node, top: node.top + lift * scale };
   });
 }
 
 const SONAR_WAVES = 3;
 const SONAR_DURATION = 3.2;
 const SPIRAL_TURNS = 2.35;
-const SPIRAL_MAX_R = 40 * ORBIT_SCALE; // ≈26.67 (era 40)
+const SPIRAL_MAX_R_BASE = 40; // era 40; desktop usa 2/3, mobile usa 1
 
-const ORBIT_INNER_RADIUS = 28 * ORBIT_SCALE; // ≈18.67 (era 28)
-const ORBIT_OUTER_RADIUS = 43 * ORBIT_SCALE; // ≈28.67 (era 43)
+const ORBIT_INNER_RADIUS_BASE = 28; // era 28
+const ORBIT_OUTER_RADIUS_BASE = 43; // era 43
 
 export function CoverageOrbital() {
   const reduceMotion = useReducedMotion();
+  const isMobile = useIsMobile();
+  const scale = isMobile ? ORBIT_SCALE_MOBILE : ORBIT_SCALE_DESKTOP;
+
+  const spiralMaxR = SPIRAL_MAX_R_BASE * scale;
+  const innerRadius = ORBIT_INNER_RADIUS_BASE * scale;
+  const outerRadius = ORBIT_OUTER_RADIUS_BASE * scale;
 
   const nodes = useMemo(() => {
     const base = applyOrbitPolarTweaks(
-      buildDoubleOrbit(ORBIT_INNER_RADIUS, ORBIT_OUTER_RADIUS)
+      buildDoubleOrbit(innerRadius, outerRadius),
+      scale
     );
     return applyOrbitLift(
       applyOrbitVerticalMirror(
-        placeNiteroiBesideSaoGoncalo(placeMesquitaMirrorOfRio(base))
-      )
+        placeNiteroiBesideSaoGoncalo(placeMesquitaMirrorOfRio(base, outerRadius))
+      ),
+      scale
     );
-  }, []);
+  }, [innerRadius, outerRadius, scale]);
 
   const spiralD = useMemo(
-    () => archimedeanSpiralD({ turns: SPIRAL_TURNS, maxR: SPIRAL_MAX_R }),
-    []
+    () => archimedeanSpiralD({ turns: SPIRAL_TURNS, maxR: spiralMaxR }),
+    [spiralMaxR]
   );
 
   return (
@@ -327,13 +353,13 @@ export function CoverageOrbital() {
           }
         />
         {/* Órbitas onde as cidades ficam posicionadas */}
-        {[0.56 * ORBIT_SCALE, 0.86 * ORBIT_SCALE].map((scale, i) => (
+        {[0.56 * scale, 0.86 * scale].map((orbitScale, i) => (
           <div
             key={i}
             className="absolute rounded-full"
             style={{
-              width: `${scale * 100}%`,
-              height: `${scale * 100}%`,
+              width: `${orbitScale * 100}%`,
+              height: `${orbitScale * 100}%`,
               border: `1.5px solid ${i === 0 ? ORBIT_RING_STROKE : ORBIT_RING_STROKE_OUTER}`,
             }}
           />
@@ -433,7 +459,7 @@ export function CoverageOrbital() {
               height: 0,
             }}
           >
-            {/*
+            {/* 
               Translate no box com tamanho do avatar (não no pai width:0).
               Framer scale/opacity ficam no motion interno pra não sobrescrever o translate.
             */}
