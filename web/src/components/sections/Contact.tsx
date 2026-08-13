@@ -32,6 +32,15 @@ function IconMegaphone({ className }: { className?: string }) {
   );
 }
 
+function IconLayers({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M12.83 2.18a2 2 0 00-1.66 0L2.6 6.08a1 1 0 000 1.83l8.58 3.91a2 2 0 001.66 0l8.58-3.9a1 1 0 000-1.83l-8.59-3.91z" />
+      <path d="M2 12l10 4 10-4M2 17l10 4 10-4" />
+    </svg>
+  );
+}
+
 const channels = [
   {
     title: "Central de Atendimento",
@@ -49,6 +58,15 @@ const channels = [
     href: "mailto:ouvidoria@ameliasaude.com.br",
     external: false,
     Icon: IconMegaphone,
+  },
+  {
+    title: "Prestador",
+    description: "Canal exclusivo para rede credenciada e prestadores de serviço.",
+    action: "Acessar portal",
+    // Pedido 13/08 (Marcelo): URL oficial do portal de prestadores.
+    href: "https://auditoria.ameliasaude.com.br",
+    external: true,
+    Icon: IconLayers,
   },
   {
     title: "Assessoria de Imprensa",
@@ -108,7 +126,7 @@ export function Contact() {
           initial="hidden"
           whileInView="visible"
           viewport={viewportConfig}
-          className="mx-auto grid list-none grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          className="mx-auto grid list-none grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4"
           aria-label="Canais de atendimento"
         >
           {channels.map(({ title, description, action, href, external, Icon }) => (
