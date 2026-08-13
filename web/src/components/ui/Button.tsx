@@ -16,6 +16,8 @@ interface ButtonProps {
   variant?: ButtonVariant;
   size?: ButtonSize;
   href?: string;
+  target?: "_blank" | "_self" | "_parent" | "_top";
+  rel?: string;
   onClick?: (e: MouseEvent<HTMLElement>) => void;
   className?: string;
   "aria-label"?: string;
@@ -55,6 +57,8 @@ export function Button({
   variant = "primary",
   size = "md",
   href,
+  target,
+  rel,
   onClick,
   className = "",
   "aria-label": ariaLabel,
@@ -73,6 +77,8 @@ export function Button({
     return (
       <motion.a
         href={href}
+        target={target}
+        rel={rel}
         onClick={onClick}
         className={classes}
         aria-label={ariaLabel}

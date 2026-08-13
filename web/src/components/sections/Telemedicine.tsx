@@ -82,7 +82,15 @@ export function Telemedicine() {
                 Seja atendido em até 7 minutos por teleconsulta, com praticidade e comodidade, sem necessidade de deslocamentos.
               </motion.p>
               <motion.div variants={fadeUp} className="flex flex-wrap gap-3">
-                <Button href="#plataforma" variant="purple">Acessar plataforma</Button>
+                {/* Pedido 13/08 (Marcelo): link da plataforma de telemedicina Conexa. */}
+                <Button
+                  href="https://paciente.conexasaude.com.br/login/ameliasaude"
+                  variant="purple"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Acessar plataforma
+                </Button>
               </motion.div>
             </motion.div>
           </div>
