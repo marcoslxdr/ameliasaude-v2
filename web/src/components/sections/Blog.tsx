@@ -38,7 +38,7 @@ export function Blog() {
             className="mx-auto mt-6 max-w-[560px] font-sans font-light leading-relaxed text-[var(--amelia-body)]"
             style={{ fontSize: "clamp(1.1rem, 1.9vw, 1.35rem)" }}
           >
-            Dicas, novidades e orientações para você fazer as melhores escolhas em saúde.
+            Guias práticos para você comparar, contratar e tirar dúvidas sobre planos de saúde.
           </motion.p>
         </motion.div>
 
