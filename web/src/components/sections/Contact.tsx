@@ -64,7 +64,8 @@ const channels = [
     description: "Canal exclusivo para rede credenciada e prestadores de serviço.",
     action: "Acessar portal",
     // Pedido 13/08 (Marcelo): URL oficial do portal de prestadores.
-    href: "https://auditoria.ameliasaude.com.br",
+    // Pedido 14/08 (Marcelo): link correto é o Plano de Saúde (portal do prestador real).
+    href: "https://planodesaude.ameliasaude.com.br/PlanodeSaude/",
     external: true,
     Icon: IconLayers,
   },
