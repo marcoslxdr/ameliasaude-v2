@@ -31,7 +31,7 @@ export function Blog() {
             className="mx-auto max-w-[800px] font-display font-normal text-[var(--amelia-deep)]"
             style={{ fontSize: "clamp(2rem, 4.5vw, 3.25rem)", lineHeight: 1.05, letterSpacing: "-0.02em" }}
           >
-            Planos de saúde, sem mistério
+            Tudo sobre planos de saúde
           </motion.h2>
           <motion.p
             variants={fadeUp}
