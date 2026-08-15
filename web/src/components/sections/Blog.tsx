@@ -31,14 +31,14 @@ export function Blog() {
             className="mx-auto max-w-[800px] font-display font-normal text-[var(--amelia-deep)]"
             style={{ fontSize: "clamp(2rem, 4.5vw, 3.25rem)", lineHeight: 1.05, letterSpacing: "-0.02em" }}
           >
-            Tudo sobre os planos
+            Planos de saúde, sem mistério
           </motion.h2>
           <motion.p
             variants={fadeUp}
             className="mx-auto mt-6 max-w-[560px] font-sans font-light leading-relaxed text-[var(--amelia-body)]"
             style={{ fontSize: "clamp(1.1rem, 1.9vw, 1.35rem)" }}
           >
-            Guias práticos para você comparar, contratar e tirar dúvidas sobre planos de saúde.
+            Guias práticos para você entender as modalidades, comparar preços e contratar sem surpresas.
           </motion.p>
         </motion.div>
 
