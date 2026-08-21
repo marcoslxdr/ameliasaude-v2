@@ -58,7 +58,7 @@ export type CrmLeadPayload = {
   requestId: string;
   name: string;
   city: string;
-  email: string;
+  email: string | null;
   whatsapp: string;
   livesCount: number;
   ages: number[];
@@ -75,9 +75,7 @@ const optionalAttr = z.string().trim().min(1).max(200).optional();
 
 const sourceSchema = z.object({
   pageUrl: z.string().trim().url().max(2048),
-  referrer: z
-    .union([z.string().trim().url().max(2048), z.literal("")])
-    .optional(),
+  referrer: z.string().trim().max(2048).optional(),
   utmSource: optionalAttr,
   utmMedium: optionalAttr,
   utmCampaign: optionalAttr,
@@ -91,7 +89,12 @@ const inputSchema = z.object({
   requestId: z.string().uuid(),
   name: z.string().trim().min(2).max(120),
   city: z.string().trim().min(2).max(120),
-  email: z.string().trim().toLowerCase().email().max(255),
+  email: z
+    .union([
+      z.literal(""),
+      z.string().trim().toLowerCase().email().max(255),
+    ])
+    .optional(),
   whatsapp: z.string().min(1).max(40),
   livesCount: z.coerce.number().int().min(1).max(MAX_LIVES_COUNT),
   ages: z.array(z.coerce.number().int().min(MIN_AGE).max(MAX_AGE)),
@@ -116,7 +119,16 @@ export function extractAttribution(input: {
   const source: CotacaoSource = { pageUrl: input.pageUrl };
 
   const referrer = input.referrer?.trim();
-  if (referrer) source.referrer = referrer.slice(0, 2048);
+  if (referrer) {
+    try {
+      const parsed = new URL(referrer);
+      if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+        source.referrer = referrer.slice(0, 2048);
+      }
+    } catch {
+      // omit invalid referrer
+    }
+  }
 
   try {
     const url = new URL(input.pageUrl);
@@ -137,6 +149,18 @@ export function extractAttribution(input: {
   }
 
   return source;
+}
+
+export function formatWhatsappInput(raw: string): string {
+  const digits = raw.replace(/\D/g, "").slice(0, 13);
+  const local = digits.startsWith("55") ? digits.slice(2) : digits;
+  if (local.length === 0) return "";
+  if (local.length <= 2) return `(${local}`;
+  if (local.length <= 6) return `(${local.slice(0, 2)}) ${local.slice(2)}`;
+  if (local.length <= 10) {
+    return `(${local.slice(0, 2)}) ${local.slice(2, 6)}-${local.slice(6)}`;
+  }
+  return `(${local.slice(0, 2)}) ${local.slice(2, 7)}-${local.slice(7, 11)}`;
 }
 
 export function normalizeWhatsapp(raw: string): string | null {
@@ -227,7 +251,7 @@ export function validateAndNormalizeCotacao(input: unknown): CotacaoResult {
       requestId: parsed.data.requestId,
       name: parsed.data.name,
       city: parsed.data.city,
-      email: parsed.data.email,
+      email: parsed.data.email ? parsed.data.email : null,
       whatsapp,
       livesCount: parsed.data.livesCount,
       ages: parsed.data.ages,

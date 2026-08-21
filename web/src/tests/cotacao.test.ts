@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
   extractAttribution,
+  formatWhatsappInput,
   isHoneypotTriggered,
   normalizeWhatsapp,
   validateAndNormalizeCotacao,
@@ -88,18 +89,19 @@ describe("validateAndNormalizeCotacao — contrato do CRM", () => {
     if (!result.success) assert.equal(result.code, "invalid_email");
   });
 
-  it("rejeita referrer que não seja URL nem vazio", () => {
+  it("ignora referrer que não seja URL em vez de derrubar o lead", () => {
     const result = validateAndNormalizeCotacao(
       validInput({
         source: {
           pageUrl: "https://www.ameliasaude.com.br/cotacao",
-          referrer: "origem-invalida",
+          referrer: "android-app://com.google.android.googlequicksearchbox",
         },
       }),
     );
 
-    assert.equal(result.success, false);
-    if (!result.success) assert.equal(result.code, "invalid_source");
+    assert.equal(result.success, true);
+    if (!result.success) return;
+    assert.equal(result.data.source.referrer, undefined);
   });
 });
 
@@ -130,6 +132,13 @@ describe("validateAndNormalizeCotacao — email e telefone", () => {
     assert.equal(result.success, false);
     if (result.success) return;
     assert.equal(result.code, "invalid_email");
+  });
+
+  it("aceita e-mail vazio e normaliza para null", () => {
+    const result = validateAndNormalizeCotacao(validInput({ email: "" }));
+    assert.equal(result.success, true);
+    if (!result.success) return;
+    assert.equal(result.data.email, null);
   });
 
   it("normaliza email com trim e lowercase", () => {
@@ -164,6 +173,10 @@ describe("validateAndNormalizeCotacao — email e telefone", () => {
 });
 
 describe("normalizeWhatsapp", () => {
+  it("formata WhatsApp local com DDD", () => {
+    assert.equal(formatWhatsappInput("21999999999"), "(21) 99999-9999");
+  });
+
   it("aceita 11 dígitos locais e prefixa 55", () => {
     assert.equal(normalizeWhatsapp("(21) 99999-9999"), "5521999999999");
   });

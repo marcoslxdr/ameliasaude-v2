@@ -9,15 +9,15 @@ import { fadeUp, staggerContainer } from "@/lib/motion";
 import { getButtonClassName } from "@/lib/button-styles";
 import {
   extractAttribution,
+  formatWhatsappInput,
   validateAndNormalizeCotacao,
 } from "@/lib/cotacao";
 
 /**
  * Formulário de cotação — pedido do Marcelo (Amélia) em reunião 12/08:
  * 1) selecionar QUANTAS VIDAS (1..10 ou mais);
- * 2) definir a IDADE de cada vida (duas etapas).
- * Versão emergencial: campo de idade simples por vida (a versão com perfil
- * etário/faixas fica para atualização posterior).
+ * 2) definir a IDADE de cada vida;
+ * 3) contato (WhatsApp obrigatório; e-mail opcional).
  *
  * ENVIO: POST /api/cotacao → CRM (server-side). Sem mailto.
  */
@@ -27,13 +27,24 @@ const WHATSAPP_HREF = "https://wa.me/552126400777";
 const vidasOptions = Array.from({ length: MAX_VIDAS }, (_, i) => i + 1);
 
 type FormStatus = "idle" | "submitting" | "success" | "error";
+type Etapa = 1 | 2 | 3;
+type FieldErrors = Partial<
+  Record<"idades" | "nome" | "cidade" | "whatsapp" | "email" | "consent", string>
+>;
 
 function trackCotacao(
   event:
+    | "cotacao_step_vidas"
+    | "cotacao_step_idades"
     | "cotacao_submit_started"
     | "cotacao_submit_success"
     | "cotacao_submit_error",
-  properties: { livesCount: number; pathname: string; error?: string },
+  properties: {
+    livesCount: number;
+    pathname: string;
+    moreLives?: boolean;
+    error?: string;
+  },
 ) {
   try {
     posthog.capture(event, properties);
@@ -49,7 +60,7 @@ function clientErrorMessage(code: string): string {
     case "consent_required":
       return "É necessário aceitar a Política de Privacidade para enviar.";
     case "invalid_email":
-      return "Informe um e-mail válido.";
+      return "Se quiser deixar o e-mail, use um endereço válido.";
     case "invalid_whatsapp":
       return "Informe um WhatsApp válido com DDD.";
     case "rate_limited":
@@ -72,9 +83,14 @@ function safeErrorCode(status: number, body: unknown): string {
   return "server_error";
 }
 
-export function CotacaoForm() {
-  const [etapa, setEtapa] = useState<1 | 2>(1);
+function currentPathname() {
+  return typeof window !== "undefined" ? window.location.pathname : "/cotacao";
+}
+
+export function CotacaoForm({ compact = false }: { compact?: boolean }) {
+  const [etapa, setEtapa] = useState<Etapa>(1);
   const [vidas, setVidas] = useState<number>(1);
+  const [maisVidas, setMaisVidas] = useState(false);
   const [idades, setIdades] = useState<Array<number | undefined>>([]);
   const [nome, setNome] = useState("");
   const [cidade, setCidade] = useState("");
@@ -84,6 +100,7 @@ export function CotacaoForm() {
   const [website, setWebsite] = useState("");
   const [status, setStatus] = useState<FormStatus>("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const requestIdRef = useRef("");
   const submittingRef = useRef(false);
 
@@ -97,15 +114,21 @@ export function CotacaoForm() {
     const arr = [...idadesAtuais];
     arr[index] = idade;
     setIdades(arr);
+    setFieldErrors((prev) => ({ ...prev, idades: undefined }));
   };
 
-  const selecionarVidas = (n: number) => {
+  const selecionarVidas = (n: number, extra = false) => {
     setVidas(n);
+    setMaisVidas(extra);
     setIdades(Array(n).fill(undefined));
     setEtapa(2);
+    setFieldErrors({});
+    trackCotacao("cotacao_step_vidas", {
+      livesCount: n,
+      moreLives: extra,
+      pathname: currentPathname(),
+    });
   };
-
-  const voltar = () => setEtapa(1);
 
   const ensureRequestId = () => {
     if (!requestIdRef.current) {
@@ -119,6 +142,7 @@ export function CotacaoForm() {
     submittingRef.current = false;
     setEtapa(1);
     setVidas(1);
+    setMaisVidas(false);
     setIdades([]);
     setNome("");
     setCidade("");
@@ -128,6 +152,7 @@ export function CotacaoForm() {
     setWebsite("");
     setStatus("idle");
     setErrorMessage("");
+    setFieldErrors({});
   };
 
   const idadesPreenchidas =
@@ -140,19 +165,45 @@ export function CotacaoForm() {
         idade <= 120,
     );
 
-  const canSubmit =
-    idadesPreenchidas &&
-    nome.trim().length >= 2 &&
-    cidade.trim().length >= 2 &&
-    Boolean(email && whatsapp && consent) &&
-    status !== "submitting";
+  const avancarContato = () => {
+    if (!idadesPreenchidas) {
+      setFieldErrors({ idades: "Preencha a idade de cada vida (0 a 120)." });
+      return;
+    }
+    setFieldErrors({});
+    setEtapa(3);
+    trackCotacao("cotacao_step_idades", {
+      livesCount: vidas,
+      moreLives: maisVidas,
+      pathname: currentPathname(),
+    });
+  };
+
+  const collectFieldErrors = (): FieldErrors => {
+    const next: FieldErrors = {};
+    if (nome.trim().length < 2) next.nome = "Informe seu nome.";
+    if (cidade.trim().length < 2) next.cidade = "Informe sua cidade.";
+    if (!whatsapp.trim()) next.whatsapp = "Informe um WhatsApp com DDD.";
+    if (email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      next.email = "E-mail inválido. Pode deixar em branco.";
+    }
+    if (!consent) next.consent = "Marque a Política de Privacidade para enviar.";
+    return next;
+  };
 
   const enviar = async (e: React.FormEvent) => {
     e.preventDefault();
     if (submittingRef.current || status === "submitting") return;
 
-    const pathname =
-      typeof window !== "undefined" ? window.location.pathname : "/cotacao";
+    const localFields = collectFieldErrors();
+    if (Object.keys(localFields).length > 0) {
+      setFieldErrors(localFields);
+      setStatus("error");
+      setErrorMessage("Falta preencher alguns dados para enviar a cotação.");
+      return;
+    }
+
+    const pathname = currentPathname();
     const pageUrl =
       typeof window !== "undefined"
         ? window.location.href
@@ -164,7 +215,7 @@ export function CotacaoForm() {
       requestId: ensureRequestId(),
       name: nome,
       city: cidade,
-      email,
+      email: email.trim(),
       whatsapp,
       livesCount: vidas,
       ages: idadesAtuais.map((idade) => Number(idade)),
@@ -178,6 +229,12 @@ export function CotacaoForm() {
     if (!local.success) {
       setStatus("error");
       setErrorMessage(clientErrorMessage(local.code));
+      if (local.code === "invalid_whatsapp") {
+        setFieldErrors({ whatsapp: clientErrorMessage(local.code) });
+      }
+      if (local.code === "invalid_email") {
+        setFieldErrors({ email: clientErrorMessage(local.code) });
+      }
       trackCotacao("cotacao_submit_error", {
         livesCount: vidas,
         pathname,
@@ -234,44 +291,66 @@ export function CotacaoForm() {
 
   const inputClass =
     "w-full rounded-xl border border-[var(--amelia-line)] bg-white px-4 py-3 font-sans text-[15px] text-[var(--amelia-deep)] outline-none transition-colors focus:border-[var(--amelia-purple)] focus:ring-2 focus:ring-[rgba(123,107,178,0.25)]";
+  const inputErrorClass =
+    "border-[#d27a7a] focus:border-[#c45a5a] focus:ring-[rgba(196,90,90,0.2)]";
+
+  const titulo =
+    etapa === 1
+      ? "Quantas vidas você precisa?"
+      : etapa === 2
+        ? "Qual a idade de cada vida?"
+        : "Por onde te retornamos?";
+  const subtitulo =
+    etapa === 1
+      ? "Escolha a quantidade. Depois informamos a idade e o WhatsApp para enviar a proposta."
+      : etapa === 2
+        ? maisVidas
+          ? "Informe as 10 primeiras idades. O restante alinhamos no WhatsApp."
+          : "Isso define a faixa certa da proposta."
+        : "WhatsApp é o principal. E-mail é opcional.";
 
   return (
     <section
       id="cotacao"
       className="relative overflow-hidden"
       style={{
-        padding:
-          "clamp(4.5rem, 9vh, 6.5rem) clamp(1.5rem, 5vw, 5rem)",
+        padding: compact
+          ? "0"
+          : "clamp(4.5rem, 9vh, 6.5rem) clamp(1.5rem, 5vw, 5rem)",
       }}
     >
-      <HeroBackground variant="bloom" />
-      <div className="relative z-10 mx-auto w-full max-w-[760px]">
+      {compact ? null : <HeroBackground variant="bloom" />}
+      <div className={`relative z-10 mx-auto w-full ${compact ? "max-w-none" : "max-w-[760px]"}`}>
         <motion.div
           variants={staggerContainer(0.08, 0)}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-80px" }}
         >
-          <motion.div variants={fadeUp} className="mb-10 text-center">
-            <span className="mb-4 inline-flex rounded-full border border-[var(--amelia-line)] bg-[var(--amelia-soft)] px-4 py-2 font-sans text-[11px] font-normal tracking-[0.1em] text-[var(--amelia-deep)]">
-              Simule seu plano
-            </span>
+          <motion.div variants={fadeUp} className={compact ? "mb-6 text-left" : "mb-10 text-center"}>
+            {compact ? null : (
+              <span className="mb-4 inline-flex rounded-full border border-[var(--amelia-line)] bg-[var(--amelia-soft)] px-4 py-2 font-sans text-[11px] font-normal tracking-[0.1em] text-[var(--amelia-deep)]">
+                Simule seu plano
+              </span>
+            )}
             <h2
-              className="mt-3 font-display font-normal uppercase text-[var(--amelia-deep)]"
+              className={`font-display font-normal uppercase text-[var(--amelia-deep)] ${compact ? "" : "mt-3"}`}
               style={{
-                fontSize: "clamp(1.9rem, 4.2vw, 2.8rem)",
+                fontSize: compact ? "1.45rem" : "clamp(1.9rem, 4.2vw, 2.8rem)",
                 lineHeight: 1.08,
                 letterSpacing: "-0.02em",
               }}
             >
-              Quantas vidas você precisa?
+              {titulo}
             </h2>
             <p
-              className="mx-auto mt-4 max-w-[34rem] font-sans font-light leading-relaxed text-[var(--amelia-body)]"
-              style={{ fontSize: "clamp(1rem, 1.7vw, 1.15rem)" }}
+              className={`${compact ? "mt-2 max-w-none" : "mx-auto mt-4 max-w-[34rem]"} font-sans font-light leading-relaxed text-[var(--amelia-body)]`}
+              style={{ fontSize: compact ? "0.95rem" : "clamp(1rem, 1.7vw, 1.15rem)" }}
             >
-              Selecione a quantidade de vidas e informe a idade de cada uma —
-              assim enviamos a proposta certa para o seu perfil.
+              {subtitulo}
+            </p>
+            <p className="mt-3 font-sans text-xs uppercase tracking-[0.12em] text-[#8a8a8a]">
+              Etapa {etapa} de 3
             </p>
           </motion.div>
 
@@ -284,14 +363,23 @@ export function CotacaoForm() {
               aria-live="polite"
             >
               <p className="text-center font-sans text-[15px] leading-relaxed text-[var(--amelia-deep)]">
-                Recebemos sua solicitação. Nossa equipe entra em contato em breve.
+                Recebemos sua solicitação. Nossa equipe fala com você no WhatsApp
+                para montar a proposta.
               </p>
+              <a
+                href={WHATSAPP_HREF}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`${getButtonClassName("primary", "md")} mt-6 w-full`}
+              >
+                Abrir WhatsApp agora
+              </a>
               <button
                 type="button"
                 onClick={recomecar}
-                className={`${getButtonClassName("primary", "md")} mt-6 w-full`}
+                className="mt-4 w-full font-sans text-sm font-medium text-[var(--amelia-purple)] underline underline-offset-2"
               >
-                Recomeçar
+                Fazer outra cotação
               </button>
             </motion.div>
           ) : etapa === 1 ? (
@@ -317,18 +405,74 @@ export function CotacaoForm() {
               </div>
               <button
                 type="button"
-                onClick={() => selecionarVidas(11)}
+                onClick={() => selecionarVidas(10, true)}
                 className="mt-3 w-full rounded-xl border border-dashed border-[var(--amelia-purple)] bg-[var(--amelia-soft)]/60 py-3 font-sans text-[15px] font-medium text-[var(--amelia-purple)] transition-colors hover:bg-[var(--amelia-soft)]"
               >
                 10 ou mais vidas
               </button>
             </motion.div>
+          ) : etapa === 2 ? (
+            <motion.div
+              key="etapa2"
+              variants={fadeUp}
+              className="rounded-3xl border border-[var(--amelia-line)] bg-white/85 p-6 shadow-[0_18px_50px_-20px_rgba(36,24,53,0.14)] backdrop-blur-[2px] sm:p-8"
+            >
+              <div className="mb-6 flex items-center justify-between gap-3">
+                <button
+                  type="button"
+                  onClick={() => setEtapa(1)}
+                  className="font-sans text-sm font-medium text-[var(--amelia-purple)] hover:underline"
+                >
+                  ← Alterar quantidade
+                </button>
+                <span className="font-sans text-sm text-[#6b6b6b]">
+                  {maisVidas ? "10 ou mais vidas" : `${vidas} ${vidas === 1 ? "vida" : "vidas"}`}
+                </span>
+              </div>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                {idadesAtuais.map((idade, i) => (
+                  <label key={i} className="flex flex-col gap-1.5">
+                    <span className="font-sans text-xs font-medium uppercase tracking-[0.08em] text-[#6b6b6b]">
+                      Vida {i + 1}
+                    </span>
+                    <input
+                      type="number"
+                      min={0}
+                      max={120}
+                      inputMode="numeric"
+                      placeholder="Idade"
+                      value={idade ?? ""}
+                      onChange={(e) =>
+                        setVida(
+                          i,
+                          e.target.value === "" ? undefined : Number(e.target.value),
+                        )
+                      }
+                      className={`${inputClass} ${fieldErrors.idades ? inputErrorClass : ""}`}
+                    />
+                  </label>
+                ))}
+              </div>
+              {fieldErrors.idades ? (
+                <p role="alert" className="mt-3 font-sans text-sm text-[#b42318]">
+                  {fieldErrors.idades}
+                </p>
+              ) : null}
+              <button
+                type="button"
+                onClick={avancarContato}
+                className={`${getButtonClassName("primary", "md")} mt-6 w-full`}
+              >
+                Continuar
+              </button>
+            </motion.div>
           ) : (
             <motion.form
-              key="etapa2"
+              key="etapa3"
               variants={fadeUp}
               onSubmit={enviar}
               aria-busy={status === "submitting"}
+              noValidate
               className="relative rounded-3xl border border-[var(--amelia-line)] bg-white/85 p-6 shadow-[0_18px_50px_-20px_rgba(36,24,53,0.14)] backdrop-blur-[2px] sm:p-8"
             >
               <div
@@ -351,46 +495,17 @@ export function CotacaoForm() {
               <div className="mb-6 flex items-center justify-between gap-3">
                 <button
                   type="button"
-                  onClick={voltar}
+                  onClick={() => setEtapa(2)}
                   className="font-sans text-sm font-medium text-[var(--amelia-purple)] hover:underline"
                 >
-                  ← Alterar quantidade
+                  ← Voltar às idades
                 </button>
                 <span className="font-sans text-sm text-[#6b6b6b]">
-                  {vidas} {vidas === 1 ? "vida" : "vidas"}
+                  {maisVidas ? "10 ou mais vidas" : `${vidas} ${vidas === 1 ? "vida" : "vidas"}`}
                 </span>
               </div>
 
-              <p className="mb-4 font-sans text-sm font-medium text-[var(--amelia-deep)]">
-                Idade de cada vida
-              </p>
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                {idadesAtuais.map((idade, i) => (
-                  <label key={i} className="flex flex-col gap-1.5">
-                    <span className="font-sans text-xs font-medium uppercase tracking-[0.08em] text-[#6b6b6b]">
-                      Vida {i + 1}
-                    </span>
-                    <input
-                      type="number"
-                      min={0}
-                      max={120}
-                      inputMode="numeric"
-                      placeholder="Idade"
-                      value={idade ?? ""}
-                      onChange={(e) =>
-                        setVida(
-                          i,
-                          e.target.value === "" ? undefined : Number(e.target.value),
-                        )
-                      }
-                      className={inputClass}
-                      disabled={status === "submitting"}
-                    />
-                  </label>
-                ))}
-              </div>
-
-              <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <label className="flex flex-col gap-1.5">
                   <span className="font-sans text-xs font-medium uppercase tracking-[0.08em] text-[#6b6b6b]">
                     Nome
@@ -398,14 +513,23 @@ export function CotacaoForm() {
                   <input
                     required
                     type="text"
+                    name="name"
+                    autoComplete="name"
                     minLength={2}
                     maxLength={120}
                     value={nome}
-                    onChange={(e) => setNome(e.target.value)}
+                    onChange={(e) => {
+                      setNome(e.target.value);
+                      setFieldErrors((prev) => ({ ...prev, nome: undefined }));
+                    }}
                     placeholder="Seu nome"
-                    className={inputClass}
+                    className={`${inputClass} ${fieldErrors.nome ? inputErrorClass : ""}`}
                     disabled={status === "submitting"}
+                    aria-invalid={Boolean(fieldErrors.nome)}
                   />
+                  {fieldErrors.nome ? (
+                    <span className="font-sans text-xs text-[#b42318]">{fieldErrors.nome}</span>
+                  ) : null}
                 </label>
                 <label className="flex flex-col gap-1.5">
                   <span className="font-sans text-xs font-medium uppercase tracking-[0.08em] text-[#6b6b6b]">
@@ -414,29 +538,23 @@ export function CotacaoForm() {
                   <input
                     required
                     type="text"
+                    name="address-level2"
+                    autoComplete="address-level2"
                     minLength={2}
                     maxLength={120}
                     value={cidade}
-                    onChange={(e) => setCidade(e.target.value)}
+                    onChange={(e) => {
+                      setCidade(e.target.value);
+                      setFieldErrors((prev) => ({ ...prev, cidade: undefined }));
+                    }}
                     placeholder="Sua cidade"
-                    className={inputClass}
+                    className={`${inputClass} ${fieldErrors.cidade ? inputErrorClass : ""}`}
                     disabled={status === "submitting"}
+                    aria-invalid={Boolean(fieldErrors.cidade)}
                   />
-                </label>
-                <label className="flex flex-col gap-1.5">
-                  <span className="font-sans text-xs font-medium uppercase tracking-[0.08em] text-[#6b6b6b]">
-                    E-mail
-                  </span>
-                  <input
-                    required
-                    type="email"
-                    maxLength={255}
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="voce@email.com"
-                    className={inputClass}
-                    disabled={status === "submitting"}
-                  />
+                  {fieldErrors.cidade ? (
+                    <span className="font-sans text-xs text-[#b42318]">{fieldErrors.cidade}</span>
+                  ) : null}
                 </label>
                 <label className="flex flex-col gap-1.5">
                   <span className="font-sans text-xs font-medium uppercase tracking-[0.08em] text-[#6b6b6b]">
@@ -445,12 +563,49 @@ export function CotacaoForm() {
                   <input
                     required
                     type="tel"
+                    name="tel"
+                    autoComplete="tel"
+                    inputMode="tel"
                     value={whatsapp}
-                    onChange={(e) => setWhatsapp(e.target.value)}
+                    onChange={(e) => {
+                      setWhatsapp(formatWhatsappInput(e.target.value));
+                      setFieldErrors((prev) => ({ ...prev, whatsapp: undefined }));
+                    }}
                     placeholder="(21) 99999-9999"
-                    className={inputClass}
+                    className={`${inputClass} ${fieldErrors.whatsapp ? inputErrorClass : ""}`}
                     disabled={status === "submitting"}
+                    aria-invalid={Boolean(fieldErrors.whatsapp)}
                   />
+                  {fieldErrors.whatsapp ? (
+                    <span className="font-sans text-xs text-[#b42318]">{fieldErrors.whatsapp}</span>
+                  ) : (
+                    <span className="font-sans text-xs text-[#8a8a8a]">
+                      Canal principal do retorno
+                    </span>
+                  )}
+                </label>
+                <label className="flex flex-col gap-1.5">
+                  <span className="font-sans text-xs font-medium uppercase tracking-[0.08em] text-[#6b6b6b]">
+                    E-mail (opcional)
+                  </span>
+                  <input
+                    type="email"
+                    name="email"
+                    autoComplete="email"
+                    maxLength={255}
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      setFieldErrors((prev) => ({ ...prev, email: undefined }));
+                    }}
+                    placeholder="se quiser, voce@email.com"
+                    className={`${inputClass} ${fieldErrors.email ? inputErrorClass : ""}`}
+                    disabled={status === "submitting"}
+                    aria-invalid={Boolean(fieldErrors.email)}
+                  />
+                  {fieldErrors.email ? (
+                    <span className="font-sans text-xs text-[#b42318]">{fieldErrors.email}</span>
+                  ) : null}
                 </label>
               </div>
 
@@ -459,7 +614,10 @@ export function CotacaoForm() {
                   type="checkbox"
                   required
                   checked={consent}
-                  onChange={(e) => setConsent(e.target.checked)}
+                  onChange={(e) => {
+                    setConsent(e.target.checked);
+                    setFieldErrors((prev) => ({ ...prev, consent: undefined }));
+                  }}
                   disabled={status === "submitting"}
                   className="mt-1 h-4 w-4 shrink-0 accent-[var(--amelia-purple)]"
                 />
@@ -477,6 +635,11 @@ export function CotacaoForm() {
                   .
                 </span>
               </label>
+              {fieldErrors.consent ? (
+                <p role="alert" className="mt-2 font-sans text-sm text-[#b42318]">
+                  {fieldErrors.consent}
+                </p>
+              ) : null}
 
               {status === "error" ? (
                 <div
@@ -512,7 +675,7 @@ export function CotacaoForm() {
 
               <button
                 type="submit"
-                disabled={!canSubmit}
+                disabled={status === "submitting"}
                 className={`${getButtonClassName("primary", "md")} mt-6 w-full disabled:cursor-not-allowed disabled:opacity-50`}
               >
                 {status === "submitting"

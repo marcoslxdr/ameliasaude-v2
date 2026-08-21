@@ -55,7 +55,7 @@ export function CotacaoModalProvider({ children }: { children: ReactNode }) {
                   </span>
                 </div>
                 {/* The form component, but we render a compact version by overriding some styles if needed */}
-                <CotacaoForm />
+                <CotacaoForm compact />
               </div>
             </div>
           </div>
