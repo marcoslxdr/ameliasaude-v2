@@ -25,7 +25,7 @@ const navLinks = [
   { label: "Rede", href: "/#rede" },
   { label: "Telemedicina", href: "/#telemedicina" },
   { label: "Fale conosco", href: "/#contato" },
-  { label: "Saúde e bem estar", href: "/blog" },
+  { label: "Blog", href: "/blog" },
 ] as const;
 
 /** Destinos legais: rotas internas do site. */
