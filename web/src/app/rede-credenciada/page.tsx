@@ -20,7 +20,7 @@ export default function RedeCredenciadaPage() {
           <div className="mx-auto max-w-[1084px]">
             <p className="mb-4 text-xs font-medium uppercase tracking-[0.16em] text-white/75">Serviços · Amélia Saúde</p>
             <h1 className="font-display text-5xl leading-[1.05] sm:text-6xl">Rede credenciada</h1>
-            <p className="mt-5 max-w-2xl text-base font-light leading-relaxed text-white/90 sm:text-lg">Encontre médicos, clínicas, laboratórios e outros serviços de saúde disponíveis para o seu plano e sua região.</p>
+            <p className="mt-5 max-w-2xl text-base font-light leading-relaxed text-white/90 sm:text-lg">Hospitais, Clínicas e Laboratórios disponíveis para o seu plano e sua região.</p>
             <p className="mt-5 text-xs text-white/75">Dados recebidos em {networkUpdatedAt}. Confirme a disponibilidade antes do atendimento.</p>
           </div>
         </header>
