@@ -48,7 +48,7 @@ export function Network() {
                 className="mb-8 max-w-md font-sans font-light leading-relaxed text-[var(--amelia-body)]"
                 style={{ fontSize: "clamp(1.1rem, 1.9vw, 1.35rem)" }}
               >
-                Contamos com uma ampla rede credenciada, presente em mais de 10 municípios, com diversos hospitais no Rio e Grande Rio.
+                Consulte os prestadores, serviços e especialidades disponíveis no Rio e Grande Rio.
               </motion.p>
               <motion.div variants={fadeUpFast}>
                 <Link href="/rede" className={getButtonClassName("outline", "md")}>

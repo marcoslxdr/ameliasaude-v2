@@ -153,7 +153,7 @@
     "name": "CASA DE SAÚDE E MATERNIDADE SANTA MARTHA - GR.HAPVIDA",
     "city": "NITERÓI",
     "neighborhood": "SANTA ROSA",
-    "street": "RUA DOUTOR MÁRIO VIANA 545 ATÉ 99999",
+    "street": "RUA DOUTOR MÁRIO VIANA",
     "number": "653",
     "phone": "2135119191",
     "networks": [
@@ -273,7 +273,7 @@
     "name": "HGP HOSPITAL GERAL PRONTONIL",
     "city": "NOVA IGUAÇU",
     "neighborhood": "CENTRO",
-    "street": "RUA OSCAR SOARES 1 ATÉ 1749",
+    "street": "RUA OSCAR SOARES",
     "number": "315",
     "phone": "",
     "networks": [
@@ -310,7 +310,7 @@
     "name": "CASA DE SAÚDE SAINT ROMAN",
     "city": "RIO DE JANEIRO",
     "neighborhood": "SANTA TERESA",
-    "street": "RUA ALMIRANTE ALEXANDRINO 1 ATÉ 1377",
+    "street": "RUA ALMIRANTE ALEXANDRINO",
     "number": "1342",
     "phone": "",
     "networks": [
@@ -642,7 +642,7 @@
     "name": "HOSPITAL DE CLÍNICAS SÃO MATHEUS",
     "city": "RIO DE JANEIRO",
     "neighborhood": "BANGU",
-    "street": "RUA SILVA CARDOSO 1 ATÉ 783",
+    "street": "RUA SILVA CARDOSO",
     "number": "689",
     "phone": "",
     "networks": [
@@ -661,7 +661,7 @@
     "name": "HOSPITAL INTERMÉDICA JACAREPAGUÁ - GR.HAPVIDA",
     "city": "RIO DE JANEIRO",
     "neighborhood": "FREGUESIA (JACAREPAGUÁ)",
-    "street": "ESTRADA DOS DOS TRÊS RIOS 268 ATÉ 99998",
+    "street": "ESTRADA DOS DOS TRÊS RIOS",
     "number": "542",
     "phone": "2135119191",
     "networks": [
@@ -698,7 +698,7 @@
     "name": "HOSPITAL QUALI IPANEMA",
     "city": "RIO DE JANEIRO",
     "neighborhood": "IPANEMA",
-    "street": "RUA DA BARÃO DA TORRE 1 ATÉ 423",
+    "street": "RUA DA BARÃO DA TORRE",
     "number": "145",
     "phone": "",
     "networks": [
@@ -716,7 +716,7 @@
     "name": "POLICLÍNICA DE BOTAFOGO",
     "city": "RIO DE JANEIRO",
     "neighborhood": "BOTAFOGO",
-    "street": "AVENIDA PASTEUR 1 ATÉ 214",
+    "street": "AVENIDA PASTEUR",
     "number": "72",
     "phone": "",
     "networks": [

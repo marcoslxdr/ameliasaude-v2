@@ -37,12 +37,12 @@ export function Navigation() {
       if (isBlogPage) {
         links = links.filter((link) => link.href !== "/blog");
       }
-    if (isPlanosPage) {
-      links = links.filter((link) => link.href !== "/planos");
-    }
-    if (pathname?.startsWith("/rede")) {
-      links = links.filter((link) => link.href !== "/rede");
-    }
+      if (isPlanosPage) {
+        links = links.filter((link) => link.href !== "/planos");
+      }
+      if (pathname?.startsWith("/rede")) {
+        links = links.filter((link) => link.href !== "/rede");
+      }
       links = [{ label: "Início", href: "/" }, ...links];
     }
 
