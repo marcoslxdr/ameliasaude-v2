@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { staggerContainer, fadeUpFast } from "@/lib/motion";
 import { CoverageOrbital } from "@/components/sections/CoverageOrbital";
 import { HeroBackground } from "@/components/ui/HeroBackground";
+import Link from "next/link";
 
 export function Network() {
   return (
@@ -46,9 +47,11 @@ export function Network() {
                 className="mb-8 max-w-md font-sans font-light leading-relaxed text-[var(--amelia-body)]"
                 style={{ fontSize: "clamp(1.1rem, 1.9vw, 1.35rem)" }}
               >
-                Contamos com uma ampla rede credenciada, presente em mais de 10 municípios, com diversos hospitais no Rio e Grande Rio.
+                Consulte os prestadores disponíveis para o seu plano por serviço, especialidade e município no Rio e Grande Rio.
               </motion.p>
-              {/* Botão "Conheça nossa rede" removido a pedido do cliente (12/08): rede ainda em finalização; botão sugeria rede ativa sem funcionar. */}
+              <motion.div variants={fadeUpFast}>
+                <Link href="/rede-credenciada" className="inline-flex min-h-12 items-center rounded-full bg-[var(--amelia-deep)] px-6 text-sm font-medium text-white transition hover:bg-[var(--amelia-purple)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--amelia-deep)] focus-visible:ring-offset-2">Conheça nossa rede</Link>
+              </motion.div>
             </motion.div>
           </div>
 

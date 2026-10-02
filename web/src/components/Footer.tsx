@@ -2,19 +2,14 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import {
   fadeUp,
   staggerContainer,
   viewportConfig,
 } from "@/lib/motion";
 
-/** Atualize números/e-mail quando a operação confirmar os canais oficiais (espelhar Contact.tsx). */
-const CONTACT = {
-  phoneDisplay: "(21) 2640-0777",
-  phoneHref: "tel:+552126400777",
-  sacDisplay: "0800 021 0777",
-  sacHref: "tel:08000210777",
-  email: "atendimento@ameliasaude.com.br",
+const SOCIAL_LINKS = {
   site: "https://ameliasaude.com.br/",
   instagram: "https://www.instagram.com/ameliasauderj/",
 } as const;
@@ -22,7 +17,7 @@ const CONTACT = {
 const navLinks = [
   { label: "Sobre nós", href: "/#origem" },
   { label: "Planos", href: "/planos" },
-  { label: "Rede", href: "/#rede" },
+  { label: "Rede", href: "/rede-credenciada" },
   { label: "Telemedicina", href: "/#telemedicina" },
   { label: "Fale conosco", href: "/#contato" },
   { label: "Blog", href: "/blog" },
@@ -37,9 +32,6 @@ const legalLinks = [
 ] as const;
 
 const accent = "text-[#c9bcf0]";
-const iconBox =
-  "flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[rgba(255,255,255,0.18)] bg-[rgba(255,255,255,0.08)] text-[#ede9fa]";
-
 const linkMuted =
   "font-sans text-sm font-normal tracking-wide text-white/75 transition-colors duration-300 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(201,188,240,0.45)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--amelia-deep)] rounded-sm";
 
@@ -49,23 +41,6 @@ const ringFooter =
 
 const headingClass =
   "font-sans text-[11px] font-semibold uppercase tracking-[0.14em] text-white";
-
-function IconMail({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-      <path d="m22 6-10 7L2 6" />
-    </svg>
-  );
-}
-
-function IconPhone({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" />
-    </svg>
-  );
-}
 
 function IconInstagram({ className }: { className?: string }) {
   return (
@@ -106,12 +81,12 @@ export function Footer() {
           initial="hidden"
           whileInView="visible"
           viewport={viewportConfig}
-          className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-6 lg:gap-x-8 xl:gap-x-12"
+          className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-5 lg:gap-x-8 xl:gap-x-12"
         >
           {/* Coluna institucional */}
           <motion.div variants={fadeUp} className="flex flex-col gap-5 sm:col-span-2 lg:col-span-1">
-            <a
-              href="#hero"
+            <Link
+              href="/"
               className={`inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(201,188,240,0.5)] ${ringFooter} rounded-sm`}
               aria-label="Amélia Saúde — voltar ao início"
             >
@@ -123,7 +98,7 @@ export function Footer() {
                 sizes="200px"
                 className="h-14 w-auto object-contain mix-blend-screen contrast-[1.05]"
               />
-            </a>
+            </Link>
             <p className="max-w-[280px] font-sans text-sm leading-relaxed tracking-wide text-white/65">
               Operadora de planos de saúde com rede credenciada no Rio de Janeiro e Grande Rio — simples e sem burocracias.
             </p>
@@ -132,7 +107,7 @@ export function Footer() {
             </p>
             <div className="flex items-center gap-3 pt-1">
               <a
-                href={CONTACT.instagram}
+                href={SOCIAL_LINKS.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`flex h-10 w-10 items-center justify-center rounded-full border border-[rgba(201,188,240,0.35)] text-[#d8cef7] transition-colors hover:border-[rgba(201,188,240,0.55)] hover:bg-[rgba(255,255,255,0.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(201,188,240,0.45)] ${ringFooter}`}
@@ -141,7 +116,7 @@ export function Footer() {
                 <IconInstagram className="h-[18px] w-[18px]" />
               </a>
               <a
-                href={CONTACT.site}
+                href={SOCIAL_LINKS.site}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`flex h-10 w-10 items-center justify-center rounded-full border border-[rgba(201,188,240,0.35)] text-[#d8cef7] transition-colors hover:border-[rgba(201,188,240,0.55)] hover:bg-[rgba(255,255,255,0.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(201,188,240,0.45)] ${ringFooter}`}
@@ -185,71 +160,6 @@ export function Footer() {
               ))}
             </ul>
           </motion.nav>
-
-          {/* Contato */}
-          <motion.div variants={fadeUp} className="flex flex-col gap-4">
-            <p className={headingClass}>Contato</p>
-            <ul className="flex flex-col gap-4">
-              <li>
-                <a
-                  href={CONTACT.sacHref}
-                  className={`group flex gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-[rgba(201,188,240,0.45)] ${ringFooter}`}
-                >
-                  <span className={iconBox}>
-                    <IconPhone className="h-[18px] w-[18px]" />
-                  </span>
-                  <span className="flex min-w-0 flex-col">
-                    <span className={`font-sans text-[10px] font-semibold uppercase tracking-[0.12em] ${accent}`}>
-                      SAC
-                    </span>
-                    <span className="font-sans text-sm text-white/85 group-hover:text-white">{CONTACT.sacDisplay}</span>
-                  </span>
-                </a>
-              </li>
-              <li>
-                <a
-                  href={CONTACT.phoneHref}
-                  className={`group flex gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-[rgba(201,188,240,0.45)] ${ringFooter}`}
-                >
-                  <span className={iconBox}>
-                    <IconPhone className="h-[18px] w-[18px]" />
-                  </span>
-                  <span className="flex min-w-0 flex-col">
-                    <span className={`font-sans text-[10px] font-semibold uppercase tracking-[0.12em] ${accent}`}>
-                      Telefone
-                    </span>
-                    <span className="font-sans text-sm text-white/85 group-hover:text-white">{CONTACT.phoneDisplay}</span>
-                  </span>
-                </a>
-              </li>
-              <li>
-                <a
-                  href={`mailto:${CONTACT.email}`}
-                  className={`group flex gap-3 rounded-md outline-none focus-visible:ring-2 focus-visible:ring-[rgba(201,188,240,0.45)] ${ringFooter}`}
-                >
-                  <span className={iconBox}>
-                    <IconMail className="h-[18px] w-[18px]" />
-                  </span>
-                  <span className="flex min-w-0 flex-col">
-                    <span className={`font-sans text-[10px] font-semibold uppercase tracking-[0.12em] ${accent}`}>
-                      E-mail
-                    </span>
-                    <span className="font-sans text-sm text-white/85 group-hover:text-white">
-                      {CONTACT.email.includes("@") ? (
-                        <>
-                          {CONTACT.email.split("@")[0]}@
-                          <wbr />
-                          {CONTACT.email.split("@")[1]}
-                        </>
-                      ) : (
-                        CONTACT.email
-                      )}
-                    </span>
-                  </span>
-                </a>
-              </li>
-            </ul>
-          </motion.div>
 
           {/* Certificações */}
           <motion.div variants={fadeUp} className="flex flex-col gap-4 sm:col-span-2 lg:col-span-2">

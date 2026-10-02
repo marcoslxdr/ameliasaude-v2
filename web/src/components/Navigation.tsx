@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 const navLinks = [
   { label: "Sobre nós", href: "#origem" },
   { label: "Planos", href: "/planos" },
-  { label: "Rede", href: "#rede" },
+  { label: "Rede", href: "/rede-credenciada" },
   { label: "Telemedicina", href: "#telemedicina" },
   { label: "Fale conosco", href: "#contato" },
   { label: "Blog", href: "/blog" },

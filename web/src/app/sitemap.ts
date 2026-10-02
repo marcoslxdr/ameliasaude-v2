@@ -10,6 +10,7 @@ const STATIC_PATHS: {
 }[] = [
   { path: "", priority: 1, changeFrequency: "weekly" },
   { path: "/planos", priority: 0.95, changeFrequency: "monthly" },
+  { path: "/rede-credenciada", priority: 0.9, changeFrequency: "weekly" },
   { path: "/planos/empresarial", priority: 0.9, changeFrequency: "monthly" },
   { path: "/planos/adesao", priority: 0.9, changeFrequency: "monthly" },
   { path: "/blog", priority: 0.85, changeFrequency: "weekly" },
