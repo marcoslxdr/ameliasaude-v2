@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 const navLinks = [
   { label: "Sobre nós", href: "#origem" },
   { label: "Planos", href: "/planos" },
-  { label: "Rede", href: "#rede" },
+  { label: "Rede credenciada", href: "/rede" },
   { label: "Telemedicina", href: "#telemedicina" },
   { label: "Fale conosco", href: "#contato" },
   { label: "Blog", href: "/blog" },
@@ -37,9 +37,12 @@ export function Navigation() {
       if (isBlogPage) {
         links = links.filter((link) => link.href !== "/blog");
       }
-      if (isPlanosPage) {
-        links = links.filter((link) => link.href !== "/planos");
-      }
+    if (isPlanosPage) {
+      links = links.filter((link) => link.href !== "/planos");
+    }
+    if (pathname?.startsWith("/rede")) {
+      links = links.filter((link) => link.href !== "/rede");
+    }
       links = [{ label: "Início", href: "/" }, ...links];
     }
 

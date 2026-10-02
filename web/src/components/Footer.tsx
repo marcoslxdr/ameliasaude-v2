@@ -22,7 +22,7 @@ const CONTACT = {
 const navLinks = [
   { label: "Sobre nós", href: "/#origem" },
   { label: "Planos", href: "/planos" },
-  { label: "Rede", href: "/#rede" },
+  { label: "Rede credenciada", href: "/rede" },
   { label: "Telemedicina", href: "/#telemedicina" },
   { label: "Fale conosco", href: "/#contato" },
   { label: "Blog", href: "/blog" },

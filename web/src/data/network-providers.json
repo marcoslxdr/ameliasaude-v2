@@ -1,0 +1,877 @@
+[
+  {
+    "name": "C& M PILATES",
+    "city": "DUQUE DE CAXIAS",
+    "neighborhood": "CENTRO",
+    "street": "RUA CONDE DE PORTO ALEGRE",
+    "number": "406",
+    "phone": "2135547651",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "TERAPIA"
+    ],
+    "specialties": [
+      "ACUPUNTURA",
+      "FISIOTERAPIA"
+    ]
+  },
+  {
+    "name": "CENTRO MEDICO SOLUTION CAXIAS",
+    "city": "DUQUE DE CAXIAS",
+    "neighborhood": "JARDIM VINTE E CINCO DE AGOSTO",
+    "street": "AVENIDA PERIMETRAL MARECHAL DEODORO",
+    "number": "629",
+    "phone": "21999516993",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "CONSULTA"
+    ],
+    "specialties": [
+      "CARDIOLOGIA",
+      "CLÍNICA MÉDICA",
+      "ENDOCRINOLOGIA E METABOLOGIA",
+      "GASTROENTEROLOGIA",
+      "GINECOLOGIA",
+      "GINECOLOGIA E OBSTETRÍCIA",
+      "NEUROLOGIA PEDIÁTRICA",
+      "PSIQUIATRIA"
+    ]
+  },
+  {
+    "name": "HOSPITAL DANIEL LIPP",
+    "city": "DUQUE DE CAXIAS",
+    "neighborhood": "CENTRO",
+    "street": "RUA CONDE DE PORTO ALEGRE",
+    "number": "271",
+    "phone": "",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "PRONTO SOCORRO"
+    ],
+    "specialties": [
+      "CLÍNICO GERAL",
+      "PEDIATRIA"
+    ]
+  },
+  {
+    "name": "HOSPITAL DO CORAÇÃO DE DUQUE DE CAXIAS - GR.HAPVIDA",
+    "city": "DUQUE DE CAXIAS",
+    "neighborhood": "JARDIM VINTE E CINCO DE AGOSTO",
+    "street": "RUA GENERAL MITRE",
+    "number": "110",
+    "phone": "2131789601",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "PRONTO SOCORRO"
+    ],
+    "specialties": [
+      "CLÍNICO GERAL"
+    ]
+  },
+  {
+    "name": "LIFEMED CLINICA & EXAMES",
+    "city": "DUQUE DE CAXIAS",
+    "neighborhood": "JARDIM VINTE E CINCO DE AGOSTO",
+    "street": "RUA CONDE DE PORTO ALEGRE",
+    "number": "119",
+    "phone": "2134914916",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "CONSULTA",
+      "EXAME",
+      "TERAPIA"
+    ],
+    "specialties": [
+      "CARDIOLOGIA",
+      "CLÍNICA MÉDICA",
+      "DERMATOLOGIA",
+      "ECOCARDIOGRAMA",
+      "ELETROCARDIOGRAMA",
+      "ELETROENCEFALOGRAMA",
+      "ENDOCRINOLOGIA E METABOLOGIA",
+      "GASTROENTEROLOGIA",
+      "GINECOLOGIA",
+      "GINECOLOGIA E OBSTETRÍCIA",
+      "HOLTER",
+      "M.A.P.A. - MONITORIZACAO AMBULATORIAL DA PRESSAO ARTERIAL",
+      "NEUROLOGIA",
+      "NUTRIÇÃO",
+      "ORTOPEDIA E TRAUMATOLOGIA",
+      "PNEUMOLOGIA",
+      "PROVA DE FUNÇÃO PULMONAR (ESPIROMETRIA)",
+      "PSICOLOGIA CLÍNICA",
+      "ULTRASSONOGRAFIA",
+      "UROLOGIA"
+    ]
+  },
+  {
+    "name": "CENTRO MEDICO MESQUITA",
+    "city": "MESQUITA",
+    "neighborhood": "CENTRO",
+    "street": "RUA MANOEL DUARTE",
+    "number": "609",
+    "phone": "2127964198",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "CONSULTA",
+      "EXAME"
+    ],
+    "specialties": [
+      "ANGIOLOGIA",
+      "CARDIOLOGIA",
+      "CLÍNICA MÉDICA",
+      "DERMATOLOGIA",
+      "ELETROCARDIOGRAMA",
+      "ENDOCRINOLOGIA E METABOLOGIA",
+      "GASTROENTEROLOGIA",
+      "GINECOLOGIA",
+      "ORTOPEDIA E TRAUMATOLOGIA",
+      "OTORRINOLARINGOLOGIA",
+      "PEDIATRIA",
+      "REMOCAO DE CERUME"
+    ]
+  },
+  {
+    "name": "CASA DE SAÚDE E MATERNIDADE SANTA MARTHA - GR.HAPVIDA",
+    "city": "NITERÓI",
+    "neighborhood": "SANTA ROSA",
+    "street": "RUA DOUTOR MÁRIO VIANA 545 ATÉ 99999",
+    "number": "653",
+    "phone": "2135119191",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "PRONTO SOCORRO"
+    ],
+    "specialties": [
+      "CLÍNICO GERAL"
+    ]
+  },
+  {
+    "name": "CENTRO MEDICO SOLUTION NITEROI",
+    "city": "NITERÓI",
+    "neighborhood": "ICARAÍ",
+    "street": "RUA MARIZ E BARROS",
+    "number": "176",
+    "phone": "21999516993",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "CONSULTA"
+    ],
+    "specialties": [
+      "CARDIOLOGIA",
+      "CLÍNICA MÉDICA",
+      "ENDOCRINOLOGIA E METABOLOGIA",
+      "GASTROENTEROLOGIA",
+      "GINECOLOGIA",
+      "GINECOLOGIA E OBSTETRÍCIA",
+      "NEUROLOGIA PEDIÁTRICA",
+      "PSIQUIATRIA"
+    ]
+  },
+  {
+    "name": "PROCEM CENTRO DE ESPECIALIDADES MÉDICAS",
+    "city": "NITERÓI",
+    "neighborhood": "INGÁ",
+    "street": "RUA TIRADENTES",
+    "number": "12",
+    "phone": "",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "PRONTO SOCORRO"
+    ],
+    "specialties": [
+      "PEDIATRIA"
+    ]
+  },
+  {
+    "name": "CENTRO MEDICO CIRURGICO SAO PAULO",
+    "city": "NOVA IGUAÇU",
+    "neighborhood": "JARDIM ALVORADA",
+    "street": "AVENIDA ABILIO AUGUSTO TAVORA",
+    "number": "237",
+    "phone": "2128824606",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "CONSULTA",
+      "EXAME",
+      "TERAPIA"
+    ],
+    "specialties": [
+      "ALERGOLOGIA E IMUNOLOGIA",
+      "ANGIOLOGIA",
+      "CARDIOLOGIA",
+      "CIRURGIA DERMATOLÓGICA",
+      "CIRURGIA GERAL",
+      "CIRURGIA ONCOLÓGICA",
+      "CIRURGIA PEDIÁTRICA",
+      "CIRURGIA PLÁSTICA",
+      "CIRURGIA UROLÓGICA",
+      "CIRURGIA VASCULAR",
+      "COLONOSCOPIA",
+      "DERMATOLOGIA",
+      "ECOCARDIOGRAMA",
+      "ENDOCRINOLOGIA E METABOLOGIA",
+      "ENDOSCOPIA DIGESTIVA",
+      "EXAMES OFTALMOLÓGICOS",
+      "FISIOTERAPIA",
+      "FONOAUDIOLOGIA",
+      "GASTROENTEROLOGIA",
+      "GINECOLOGIA",
+      "HISTEROSCOPIA",
+      "HOLTER",
+      "M.A.P.A. - MONITORIZACAO AMBULATORIAL DA PRESSAO ARTERIAL",
+      "MASTOLOGIA",
+      "NEUROCIRURGIA",
+      "NEUROLOGIA",
+      "NUTRIÇÃO",
+      "OFTALMOLOGIA",
+      "ONCOLOGIA CLÍNICA",
+      "ORTOPEDIA E TRAUMATOLOGIA",
+      "OTORRINOLARINGOLOGIA",
+      "OTORRINOLARINGOLÓGICOS",
+      "PEDIATRIA",
+      "PROCTOLOGIA",
+      "PROVA DE FUNÇÃO PULMONAR (ESPIROMETRIA)",
+      "PSICOLOGIA CLÍNICA",
+      "RADIOLOGIA E DIAGNÓSTICO POR IMAGEM",
+      "TESTES ALÉRGICOS",
+      "ULTRASSONOGRAFIA",
+      "UROLOGIA"
+    ]
+  },
+  {
+    "name": "HGP HOSPITAL GERAL PRONTONIL",
+    "city": "NOVA IGUAÇU",
+    "neighborhood": "CENTRO",
+    "street": "RUA OSCAR SOARES 1 ATÉ 1749",
+    "number": "315",
+    "phone": "",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "PRONTO SOCORRO"
+    ],
+    "specialties": [
+      "CLÍNICO GERAL",
+      "PEDIATRIA"
+    ]
+  },
+  {
+    "name": "CALREN HOSPITAL DE URGÊNCIAS UROLÓGICAS LTDA",
+    "city": "RIO DE JANEIRO",
+    "neighborhood": "RECREIO DOS BANDEIRANTES",
+    "street": "RUA GENERAL ORLANDO GEISEL",
+    "number": "100",
+    "phone": "",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "PRONTO SOCORRO"
+    ],
+    "specialties": [
+      "UROLOGIA"
+    ]
+  },
+  {
+    "name": "CASA DE SAÚDE SAINT ROMAN",
+    "city": "RIO DE JANEIRO",
+    "neighborhood": "SANTA TERESA",
+    "street": "RUA ALMIRANTE ALEXANDRINO 1 ATÉ 1377",
+    "number": "1342",
+    "phone": "",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "INTERNAÇÃO"
+    ],
+    "specialties": [
+      "PSIQUIATRIA"
+    ]
+  },
+  {
+    "name": "CENTRO MEDICO SOLUTION BARRA DA TIJUCA",
+    "city": "RIO DE JANEIRO",
+    "neighborhood": "BARRA DA TIJUCA",
+    "street": "AVENIDA DAS AMERICAS",
+    "number": "4801",
+    "phone": "21999516993",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "CONSULTA"
+    ],
+    "specialties": [
+      "CARDIOLOGIA",
+      "CLÍNICA MÉDICA",
+      "ENDOCRINOLOGIA E METABOLOGIA",
+      "GASTROENTEROLOGIA",
+      "GINECOLOGIA",
+      "GINECOLOGIA E OBSTETRÍCIA",
+      "NEUROLOGIA PEDIÁTRICA",
+      "PSIQUIATRIA"
+    ]
+  },
+  {
+    "name": "CENTRO MEDICO SOLUTION CAMPO GRANDE",
+    "city": "RIO DE JANEIRO",
+    "neighborhood": "CAMPO GRANDE",
+    "street": "AVENIDA CESARIO DE MELO",
+    "number": "3600",
+    "phone": "21999516993",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "CONSULTA"
+    ],
+    "specialties": [
+      "CARDIOLOGIA",
+      "CLÍNICA MÉDICA",
+      "ENDOCRINOLOGIA E METABOLOGIA",
+      "GASTROENTEROLOGIA",
+      "GINECOLOGIA",
+      "GINECOLOGIA E OBSTETRÍCIA",
+      "NEUROLOGIA PEDIÁTRICA",
+      "PSIQUIATRIA"
+    ]
+  },
+  {
+    "name": "CLINICA SAO CARLOS",
+    "city": "RIO DE JANEIRO",
+    "neighborhood": "HUMAITÁ",
+    "street": "RUA DO HUMAITA",
+    "number": "296",
+    "phone": "2125361300",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "INTERNAÇÃO"
+    ],
+    "specialties": [
+      "CIRURGIA GERAL",
+      "CLÍNICO GERAL"
+    ]
+  },
+  {
+    "name": "CLINICA SAO JOAO",
+    "city": "RIO DE JANEIRO",
+    "neighborhood": "PENHA",
+    "street": "RUA COSTA RICA",
+    "number": "87",
+    "phone": "2125607645",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "CONSULTA",
+      "EXAME"
+    ],
+    "specialties": [
+      "CARDIOLOGIA",
+      "CLÍNICA MÉDICA",
+      "DERMATOLOGIA",
+      "ELETROCARDIOGRAMA",
+      "ENDOCRINOLOGIA E METABOLOGIA",
+      "GASTROENTEROLOGIA",
+      "GERIATRIA E GERONTOLOGIA",
+      "GINECOLOGIA",
+      "GINECOLOGIA E OBSTETRÍCIA",
+      "MASTOLOGIA",
+      "NEUROLOGIA",
+      "ORTOPEDIA DA MÃO",
+      "ORTOPEDIA DE OMBRO E COTOVELO",
+      "ORTOPEDIA DE PÉ E TORNOZELO",
+      "ORTOPEDIA DO JOELHO",
+      "ORTOPEDIA DO QUADRIL",
+      "ORTOPEDIA E TRAUMATOLOGIA",
+      "ORTOPEDIA E TRAUMATOLOGIA PEDIÁTRICO",
+      "OTORRINOLARINGOLOGIA",
+      "PEDIATRIA",
+      "PNEUMOLOGIA",
+      "PNEUMOLOGIA PEDIÁTRICA",
+      "PSIQUIATRIA",
+      "RADIOLOGIA E DIAGNÓSTICO POR IMAGEM",
+      "REUMATOLOGIA",
+      "UROLOGIA"
+    ]
+  },
+  {
+    "name": "CLINICA TOTAL KIDS - ANIL",
+    "city": "RIO DE JANEIRO",
+    "neighborhood": "ANIL",
+    "street": "ESTRADA DE JACAREPAGUA",
+    "number": "6069",
+    "phone": "2123230303",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "CONSULTA"
+    ],
+    "specialties": [
+      "ALERGOLOGIA E IMUNOLOGIA PEDIATRICO",
+      "CARDIOLOGIA PEDIÁTRICA",
+      "CIRURGIA PEDIÁTRICA",
+      "DERMATOLOGIA PEDIÁTRICA",
+      "ENDOCRINOLOGIA E METABOLOGIA PEDIÁTRICA",
+      "GASTROENTEROLOGIA PEDIÁTRICO",
+      "GINECOLOGIA INFANTO PUBERAL",
+      "HOMEOPATIA PEDIÁTRICA",
+      "NEFROLOGIA PEDIÁTRICO",
+      "NEUROLOGIA PEDIÁTRICA",
+      "ORTOPEDIA E TRAUMATOLOGIA PEDIÁTRICO",
+      "OTORRINOLARINGOLOGIA PEDIÁTRICO",
+      "PEDIATRIA PUERICULTURA",
+      "PNEUMOLOGIA PEDIÁTRICA",
+      "PSIQUIATRIA PEDIATRICA"
+    ]
+  },
+  {
+    "name": "CLINICA TOTAL KIDS - BONSUCESSO",
+    "city": "RIO DE JANEIRO",
+    "neighborhood": "BONSUCESSO",
+    "street": "RUA BATURITE",
+    "number": "19",
+    "phone": "2139772011",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "CONSULTA"
+    ],
+    "specialties": [
+      "ALERGOLOGIA E IMUNOLOGIA PEDIATRICO",
+      "CARDIOLOGIA PEDIÁTRICA",
+      "CIRURGIA PEDIÁTRICA",
+      "DERMATOLOGIA PEDIÁTRICA",
+      "ENDOCRINOLOGIA E METABOLOGIA PEDIÁTRICA",
+      "GASTROENTEROLOGIA PEDIÁTRICO",
+      "GINECOLOGIA INFANTO PUBERAL",
+      "HOMEOPATIA PEDIÁTRICA",
+      "NEFROLOGIA PEDIÁTRICO",
+      "NEUROLOGIA PEDIÁTRICA",
+      "ORTOPEDIA PEDIÁTRICA",
+      "OTORRINOLARINGOLOGIA PEDIÁTRICO",
+      "PEDIATRIA PUERICULTURA",
+      "PNEUMOLOGIA PEDIÁTRICA",
+      "PSIQUIATRIA PEDIATRICA"
+    ]
+  },
+  {
+    "name": "CLINICA TOTAL KIDS - CAMPO GRANDE",
+    "city": "RIO DE JANEIRO",
+    "neighborhood": "CAMPO GRANDE",
+    "street": "ESTRADA DO MONTEIRO",
+    "number": "1200",
+    "phone": "2139772011",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "CONSULTA"
+    ],
+    "specialties": [
+      "ALERGOLOGIA E IMUNOLOGIA PEDIATRICO",
+      "CARDIOLOGIA PEDIÁTRICA",
+      "CIRURGIA PEDIÁTRICA",
+      "DERMATOLOGIA PEDIÁTRICA",
+      "ENDOCRINOLOGIA E METABOLOGIA PEDIÁTRICA",
+      "GASTROENTEROLOGIA PEDIÁTRICO",
+      "GINECOLOGIA INFANTO PUBERAL",
+      "HOMEOPATIA PEDIÁTRICA",
+      "NEFROLOGIA PEDIÁTRICO",
+      "NEUROLOGIA PEDIÁTRICA",
+      "ORTOPEDIA PEDIÁTRICA",
+      "OTORRINOLARINGOLOGIA PEDIÁTRICO",
+      "PEDIATRIA PUERICULTURA",
+      "PNEUMOLOGIA PEDIÁTRICA",
+      "PSIQUIATRIA PEDIATRICA"
+    ]
+  },
+  {
+    "name": "CLÍNICA TOTAL KIDS - MATRIZ",
+    "city": "RIO DE JANEIRO",
+    "neighborhood": "OLARIA",
+    "street": "RUA ANGÉLICA MOTA",
+    "number": "51",
+    "phone": "2123230303",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "CONSULTA",
+      "TERAPIA"
+    ],
+    "specialties": [
+      "ACUPUNTURA",
+      "CARDIOLOGIA PEDIÁTRICA",
+      "CIRURGIA PEDIÁTRICA",
+      "DERMATOLOGIA PEDIÁTRICA",
+      "ENDOCRINOLOGIA E METABOLOGIA PEDIÁTRICA",
+      "GASTROENTEROLOGIA PEDIÁTRICO",
+      "GINECOLOGIA INFANTO PUBERAL",
+      "HOMEOPATIA PEDIÁTRICA",
+      "NEFROLOGIA PEDIÁTRICO",
+      "ORTOPEDIA PEDIÁTRICA",
+      "OTORRINOLARINGOLOGIA PEDIÁTRICO",
+      "PEDIATRIA PUERICULTURA",
+      "PNEUMOLOGIA PEDIÁTRICA",
+      "PSIQUIATRIA PEDIATRICA"
+    ]
+  },
+  {
+    "name": "CMIPRJ CENTRO MEDICO INTEGRADO POPULAR DO RIO DE JANEIRO",
+    "city": "RIO DE JANEIRO",
+    "neighborhood": "CASCADURA",
+    "street": "RUA CERQUEIRA DALTRO",
+    "number": "157",
+    "phone": "2122691149",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "CONSULTA"
+    ],
+    "specialties": [
+      "CARDIOLOGIA",
+      "CLÍNICA MÉDICA"
+    ]
+  },
+  {
+    "name": "ERGO MED",
+    "city": "RIO DE JANEIRO",
+    "neighborhood": "MÉIER",
+    "street": "RUA INTENDENTE CUNHA MENEZES",
+    "number": "68",
+    "phone": "2125920207",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "CONSULTA",
+      "EXAME",
+      "TERAPIA"
+    ],
+    "specialties": [
+      "ANGIOLOGIA",
+      "CARDIOLOGIA",
+      "CIRURGIA VASCULAR",
+      "CLÍNICA MÉDICA",
+      "DERMATOLOGIA",
+      "DOPPLER",
+      "ECOCARDIOGRAMA",
+      "ELETROCARDIOGRAMA",
+      "ENDOCRINOLOGIA E METABOLOGIA",
+      "FISIOTERAPIA",
+      "FISIOTERAPIA RESPIRATÓRIA",
+      "GASTROENTEROLOGIA",
+      "HOLTER",
+      "M.A.P.A. - MONITORIZACAO AMBULATORIAL DA PRESSAO ARTERIAL",
+      "NUTRIÇÃO",
+      "PNEUMOLOGIA",
+      "PROVA DE FUNÇÃO RESPIRATÓRIA"
+    ]
+  },
+  {
+    "name": "HOSPITAL AMERICAN COR",
+    "city": "RIO DE JANEIRO",
+    "neighborhood": "ENGENHO DE DENTRO",
+    "street": "RUA ADOLFO BERGAMINI",
+    "number": "206",
+    "phone": "",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "PRONTO SOCORRO"
+    ],
+    "specialties": [
+      "CLÍNICO GERAL"
+    ]
+  },
+  {
+    "name": "HOSPITAL DE CLÍNICAS SÃO MATHEUS",
+    "city": "RIO DE JANEIRO",
+    "neighborhood": "BANGU",
+    "street": "RUA SILVA CARDOSO 1 ATÉ 783",
+    "number": "689",
+    "phone": "",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "PRONTO SOCORRO"
+    ],
+    "specialties": [
+      "CLÍNICO GERAL",
+      "PEDIATRIA"
+    ]
+  },
+  {
+    "name": "HOSPITAL INTERMÉDICA JACAREPAGUÁ - GR.HAPVIDA",
+    "city": "RIO DE JANEIRO",
+    "neighborhood": "FREGUESIA (JACAREPAGUÁ)",
+    "street": "ESTRADA DOS DOS TRÊS RIOS 268 ATÉ 99998",
+    "number": "542",
+    "phone": "2135119191",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "PRONTO SOCORRO"
+    ],
+    "specialties": [
+      "PEDIATRIA"
+    ]
+  },
+  {
+    "name": "HOSPITAL NOTRECARE RIO - GR.HAPVIDA",
+    "city": "RIO DE JANEIRO",
+    "neighborhood": "ANDARAÍ",
+    "street": "RUA SILVA TELES",
+    "number": "52",
+    "phone": "2135119191",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "INTERNAÇÃO"
+    ],
+    "specialties": [
+      "CIRURGIA GERAL",
+      "CLÍNICO GERAL"
+    ]
+  },
+  {
+    "name": "HOSPITAL QUALI IPANEMA",
+    "city": "RIO DE JANEIRO",
+    "neighborhood": "IPANEMA",
+    "street": "RUA DA BARÃO DA TORRE 1 ATÉ 423",
+    "number": "145",
+    "phone": "",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "PRONTO SOCORRO"
+    ],
+    "specialties": [
+      "CLÍNICO GERAL"
+    ]
+  },
+  {
+    "name": "POLICLÍNICA DE BOTAFOGO",
+    "city": "RIO DE JANEIRO",
+    "neighborhood": "BOTAFOGO",
+    "street": "AVENIDA PASTEUR 1 ATÉ 214",
+    "number": "72",
+    "phone": "",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "PRONTO ATENDIMENTO"
+    ],
+    "specialties": [
+      "CLÍNICO GERAL"
+    ]
+  },
+  {
+    "name": "SEMERJ CAMBOATA",
+    "city": "RIO DE JANEIRO",
+    "neighborhood": "GUADALUPE",
+    "street": "ESTRADA DE CAMBOATA",
+    "number": "2194",
+    "phone": "2131066225",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "CONSULTA",
+      "EXAME",
+      "TERAPIA"
+    ],
+    "specialties": [
+      "ACUPUNTURA",
+      "ALERGOLOGIA E IMUNOLOGIA",
+      "ALERGOLOGIA E IMUNOLOGIA PEDIATRICO",
+      "ANGIOLOGIA",
+      "CARDIOLOGIA",
+      "CIRURGIA GERAL",
+      "CIRURGIA VASCULAR",
+      "CLÍNICA MÉDICA",
+      "DERMATOLOGIA",
+      "ELETROCARDIOGRAMA",
+      "ENDOCRINOLOGIA E METABOLOGIA",
+      "ENDOCRINOLOGIA E METABOLOGIA PEDIÁTRICA",
+      "FISIOTERAPIA",
+      "FISIOTERAPIA CARDIOVASCULAR",
+      "FISIOTERAPIA NEUROLOGICA",
+      "FISIOTERAPIA RESPIRATÓRIA",
+      "GASTROENTEROLOGIA",
+      "GINECOLOGIA E OBSTETRÍCIA",
+      "HOMEOPATIA",
+      "M.A.P.A. - MONITORIZACAO AMBULATORIAL DA PRESSAO ARTERIAL",
+      "NEUROLOGIA",
+      "NEUROLOGIA PEDIÁTRICA",
+      "NUTRIÇÃO",
+      "ORTOPEDIA DA MÃO",
+      "ORTOPEDIA DE OMBRO E COTOVELO",
+      "ORTOPEDIA DE PÉ E TORNOZELO",
+      "ORTOPEDIA DO JOELHO",
+      "ORTOPEDIA DO QUADRIL",
+      "ORTOPEDIA E TRAUMATOLOGIA",
+      "OTORRINOLARINGOLOGIA",
+      "OTORRINOLARINGOLOGIA PEDIÁTRICO",
+      "PEDIATRIA",
+      "PSICOLOGIA CLÍNICA",
+      "PSIQUIATRIA",
+      "UROLOGIA"
+    ]
+  },
+  {
+    "name": "UNIDADE AVANÇADA CIDADE NOVA - GR.HAPVIDA",
+    "city": "RIO DE JANEIRO",
+    "neighborhood": "CIDADE NOVA",
+    "street": "RUA PINTO DE AZEVEDO",
+    "number": "105",
+    "phone": "2131789601",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "PRONTO ATENDIMENTO"
+    ],
+    "specialties": [
+      "CLÍNICO GERAL",
+      "PEDIATRIA"
+    ]
+  },
+  {
+    "name": "PROSAUDE SERVICOS MEDICOS",
+    "city": "SÃO GONÇALO",
+    "neighborhood": "CENTRO",
+    "street": "RUA DOUTOR FELICIANO SODRÉ",
+    "number": "46",
+    "phone": "2137158800",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "CONSULTA",
+      "EXAME"
+    ],
+    "specialties": [
+      "ALERGOLOGIA E IMUNOLOGIA",
+      "ANATOMOPATOLOGIA",
+      "ANGIOLOGIA",
+      "ANÁLISES CLÍNICAS",
+      "CARDIOLOGIA",
+      "CIRURGIA CARDIOVASCULAR",
+      "CIRURGIA GERAL",
+      "CIRURGIA VASCULAR",
+      "CLÍNICA MÉDICA",
+      "COLOPROCTOLOGIA",
+      "DENSINTOMETRIA ÓSSEA",
+      "DERMATOLOGIA",
+      "ECOCARDIOGRAFIA",
+      "ECOCARDIOGRAMA",
+      "ECOGRAFIA VASCULAR COM DOPPLER",
+      "ELETROCARDIOGRAMA",
+      "ENDOCRINOLOGIA E METABOLOGIA",
+      "GASTROENTEROLOGIA",
+      "GINECOLOGIA",
+      "GINECOLOGIA E OBSTETRÍCIA",
+      "HOLTER",
+      "M.A.P.A. - MONITORIZACAO AMBULATORIAL DA PRESSAO ARTERIAL",
+      "MAMOGRAFIA",
+      "MASTOLOGIA",
+      "NEUROCIRURGIA",
+      "NEUROFISIOLOGIA",
+      "NEUROLOGIA",
+      "NUTRIÇÃO",
+      "OFTALMOLOGIA",
+      "ORTOPEDIA E TRAUMATOLOGIA",
+      "PEDIATRIA",
+      "PSIQUIATRIA",
+      "ULTRASSONOGRAFIA",
+      "ULTRASSONOGRAFIA DA MAMA",
+      "UROLOGIA"
+    ]
+  },
+  {
+    "name": "CASA DE SAÚDE E MATERNIDADE TEREZINHA DE JESUS",
+    "city": "SÃO JOÃO DE MERITI",
+    "neighborhood": "CENTRO",
+    "street": "RUA GESSYR GONÇALVES FONTES",
+    "number": "153",
+    "phone": "",
+    "networks": [
+      "CARIOCA 10 COM COPART",
+      "CARIOCA 10 SEM COPART"
+    ],
+    "services": [
+      "PRONTO SOCORRO"
+    ],
+    "specialties": [
+      "CLÍNICO GERAL"
+    ]
+  }
+]
