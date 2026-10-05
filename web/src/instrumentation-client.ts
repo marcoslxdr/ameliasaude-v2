@@ -15,6 +15,8 @@ if (token) {
     persistence: "localStorage+cookie",
     // Session recording — explicitly on for Amélia Saúde
     disable_session_recording: false,
+    // Chat content can contain beneficiary data. Exclude the entire widget.
+    session_recording: { blockSelector: "#amelia-chat", maskAllInputs: true },
     // Enable autocapture for clicks, inputs, etc.
     autocapture: true,
     // Cross-subdomain tracking (www.ameliasaude.com.br ↔ ameliasaude.com.br)

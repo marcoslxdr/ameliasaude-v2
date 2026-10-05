@@ -90,7 +90,8 @@ export async function POST(request: Request) {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
-      body: JSON.stringify(parsed.data),
+      // This site's brand is trusted server configuration, never visitor input.
+      body: JSON.stringify({ ...parsed.data, brand: "amelia" }),
       cache: "no-store",
       signal: AbortSignal.timeout(CRM_TIMEOUT_MS),
     });
