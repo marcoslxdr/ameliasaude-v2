@@ -43,3 +43,16 @@ As provas locais não substituem a publicação e a matriz integrada no CRM. Ant
 - Limites: não publicado; dados e operadores são sintéticos, em banco local dedicado. Sessões ficam apenas em memória durante a visita. O texto genérico de fila/atendente em Vendas foi encaminhado ao responsável do backend para revisão.
 
 `chat-qa/e2e-integrated.mjs` reproduz a matriz final. `chat-qa/integrated-final-summary.json` registra apenas metadados e IDs locais, sem tokens, CPF ou transcript.
+
+## Revisão complementar antes da publicação
+
+- Corrigido descarte involuntário de sessão ao reabrir departamento depois de falha transitória. A conversa existente permanece; somente “Iniciar nova conversa” solicita reset.
+- HTTP 410 do CRM preservado como `session_closed`. Encerramento/expiração mostram aviso específico e suspendem envio e polling até reinício explícito.
+- `chat-qa/e2e-error-resume.mjs` validou em navegador a retomada da mesma sessão, retry real no CRM e reset real, com falhas 503/410 injetadas e identificadas como fixtures. Nenhum consentimento foi enviado nessa rodada.
+- Contrato unitário: 10 testes aprovados. Lint sem erros (12 warnings preexistentes); TypeScript aprovado.
+- Vercel inspecionado em leitura: `atriahub/ameliasaude-v2`, rootDirectory `web`, Node 24.x. Antes da configuração pelo coordenador, Preview/Production tinham `CRM_LEADS_ENDPOINT` e `CRM_INGEST_TOKEN`, mas não tinham `CRM_WEBCHAT_TOKEN` nem endpoint do fluxo. Nenhuma variável foi alterada nesta inspeção.
+- A CLI ignora automaticamente `.env.local` e `.env.*.local`, conforme documentação oficial: https://vercel.com/docs/builds/build-features . A publicação deve usar as variáveis do projeto e não valores do banco QA.
+- Limite operacional: identificar o navegador por cookie permite redefinir a chave de rate limit descartando o cookie. O backend continua exigindo token dedicado e vinculando sessão à chave HMAC; proteção contra abuso em escala demanda limite adicional na borda/IP. O limitador de cotação continua best-effort em memória, já existente.
+- Cotação validada end-to-end no banco QA: visitante enviou `brand: six`, site respondeu HTTP 202 e a oportunidade persistiu com `brand: amelia`, `department: sales`. Script reexecutável com requestId fixo: `chat-qa/cotacao-brand.mjs`; evidência sem dados pessoais em `chat-qa/cotacao-brand-summary.json`.
+- Build final após ajustes: 51 páginas geradas, rotas `/api/chat` e `/api/cotacao` dinâmicas, TypeScript aprovado.
+- O Gate B `--enforce` foi tentado para os arquivos do app, mas o checker resolve paths exclusivamente a partir do Segundo Cérebro e retorna “path alterado não encontrado”. A validação advisory desse checker passou; não representa cobertura enforce deste repositório.

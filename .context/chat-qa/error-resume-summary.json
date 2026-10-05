@@ -1,0 +1,20 @@
+{
+  "scope": "LOCAL_QA",
+  "faultInjection": [
+    503,
+    410
+  ],
+  "realCrmGreeting": true,
+  "realCrmNameRetry": true,
+  "resumePreservesSession": true,
+  "terminalMessage": true,
+  "terminalInputBlocked": true,
+  "explicitReset": true,
+  "consentSubmitted": false,
+  "counts": {
+    "start": 1,
+    "reset": 1,
+    "message": 3,
+    "poll": 0
+  }
+}

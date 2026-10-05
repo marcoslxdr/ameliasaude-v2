@@ -69,6 +69,13 @@ test("unavailable CRM is an error and never a simulated successful chat", async 
   assert.equal((await relayAmeliaChat(body, { clientKey: options.clientKey })).status, 503);
 });
 
+test("closed and invalid sessions retain terminal statuses without becoming network errors", async () => {
+  for (const [status, error] of [[410, "session_closed"], [400, "session_expired"], [409, "session_expired"], [429, "rate_limited"]]) {
+    const result = await relayAmeliaChat({ ...body, action: "poll", token: "x" }, { ...options, fetchImpl: async () => Response.json({ error: "private detail" }, { status }) });
+    assert.deepEqual(result, { status, payload: { error } });
+  }
+});
+
 test("unsafe documents and malformed bot/agent content are blocked", async () => {
   for (const patch of [{ messages: [{ id: "x", text: "x", document: { url: "javascript:alert(1)", fileName: "x" } }] }, { agentMessages: [{ id: "x", text: 123 }] }, { messages: [{ id: "x", text: "x", quickReplies: [{ label: "x", value: {} }] }] }]) {
     assert.equal((await relayAmeliaChat(body, { ...options, fetchImpl: async () => Response.json({ ...fixture(), ...patch }) })).status, 502);

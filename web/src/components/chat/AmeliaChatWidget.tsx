@@ -5,7 +5,7 @@ import { MessageCircle, Send, X, ArrowLeft, Headphones, Sparkles } from "lucide-
 import type { ChatRequest, ChatResponse, Department, ChatMessage } from "@/lib/chat";
 
 type Bubble = { id: string; role: "bot" | "user" | "agent"; text: string; options?: ChatMessage["quickReplies"]; document?: ChatMessage["document"] };
-type Session = { token?: string; messages: Bubble[]; input: ChatResponse["input"]; handoff: boolean; crmSynced: boolean; started: boolean; error?: string };
+type Session = { token?: string; messages: Bubble[]; input: ChatResponse["input"]; handoff: boolean; crmSynced: boolean; started: boolean; error?: string; terminal?: boolean };
 const fresh = (): Session => ({ messages: [], input: null, handoff: false, crmSynced: false, started: false });
 const names = { sales: "Vendas", service: "Atendimento" };
 
@@ -18,7 +18,11 @@ async function requestChat(body: ChatRequest): Promise<ChatResponse> {
 
 function errorText(error: unknown) {
   const code = error instanceof Error ? error.message : "";
-  return code === "rate_limited" ? "Aguarde um instante antes de enviar outra mensagem." : code === "session_expired" ? "Esta conversa expirou. Inicie uma nova conversa para continuar." : "Não foi possível conectar ao chat. Tente novamente em instantes. Sua mensagem não foi confirmada.";
+  return code === "rate_limited" ? "Aguarde um instante antes de enviar outra mensagem." : code === "session_closed" ? "Esta conversa foi encerrada. Inicie uma nova conversa para continuar." : code === "session_expired" ? "Esta conversa expirou. Inicie uma nova conversa para continuar." : "Não foi possível conectar ao chat. Tente novamente em instantes. Sua mensagem não foi confirmada.";
+}
+
+function terminalError(error: unknown) {
+  return error instanceof Error && ["session_closed", "session_expired"].includes(error.message);
 }
 
 export function AmeliaChatWidget() {
@@ -68,7 +72,9 @@ export function AmeliaChatWidget() {
     if (submitting.current) return;
     setDepartment(target);
     setDraft("");
-    if (sessions[target].started && !reset && !sessions[target].error) return;
+    // Reopening a department must preserve its conversation, including errors.
+    // Only the explicit restart action may discard the established session.
+    if (sessions[target].started && !reset) return;
     submitting.current = true;
     setBusy(true);
     try {
@@ -76,12 +82,12 @@ export function AmeliaChatWidget() {
       setSessions(previous => ({ ...previous, [target]: fresh() }));
       merge(target, data);
     } catch (error) {
-      setSessions(previous => ({ ...previous, [target]: { ...previous[target], error: errorText(error) } }));
+      setSessions(previous => ({ ...previous, [target]: { ...previous[target], error: errorText(error), terminal: terminalError(error) } }));
     } finally { submitting.current = false; setBusy(false); }
   }
 
   async function send(value: string) {
-    if (!department || !active?.token || submitting.current || !value.trim()) return;
+    if (!department || !active?.token || active.terminal || submitting.current || !value.trim()) return;
     const target = department;
     submitting.current = true;
     setBusy(true);
@@ -91,13 +97,13 @@ export function AmeliaChatWidget() {
       setDraft("");
     } catch (error) {
       setDraft(value);
-      setSessions(previous => ({ ...previous, [target]: { ...previous[target], error: errorText(error) } }));
+      setSessions(previous => ({ ...previous, [target]: { ...previous[target], error: errorText(error), terminal: terminalError(error) } }));
     } finally { submitting.current = false; setBusy(false); }
   }
 
   // Poll only the current department. Tokens remain in memory, scoped to each conversation.
   useEffect(() => {
-    if (!open || !department || !active?.token || !active.crmSynced) return;
+    if (!open || !department || !active?.token || !active.crmSynced || active.terminal) return;
     let stopped = false;
     let polling = false;
     const timer = window.setInterval(async () => {
@@ -107,14 +113,14 @@ export function AmeliaChatWidget() {
         const data = await requestChat({ action: "poll", department, token: active.token });
         if (!stopped) merge(department, data, undefined, true);
       } catch (error) {
-        if (!stopped) setSessions(previous => ({ ...previous, [department]: { ...previous[department], error: errorText(error) } }));
+        if (!stopped) setSessions(previous => ({ ...previous, [department]: { ...previous[department], error: errorText(error), terminal: terminalError(error) } }));
       } finally { polling = false; }
     }, 5000);
     return () => { stopped = true; window.clearInterval(timer); };
-  }, [open, department, active?.token, active?.crmSynced, merge]);
+  }, [open, department, active?.token, active?.crmSynced, active?.terminal, merge]);
 
   function submit(event: FormEvent) { event.preventDefault(); void send(draft); }
-  const canType = Boolean(active?.token && active.input && !["none", "choice"].includes(active.input.kind));
+  const canType = Boolean(active?.token && !active.terminal && active.input && !["none", "choice"].includes(active.input.kind));
 
   return <>
     <button ref={launcher} type="button" onClick={() => setOpen(true)} aria-haspopup="dialog" aria-controls="amelia-chat" aria-expanded={open} className="fixed bottom-5 right-5 z-[90] flex min-h-12 items-center gap-2 rounded-full bg-[var(--amelia-deep)] px-5 py-3 font-sans text-sm text-white shadow-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--amelia-purple)]">
@@ -138,7 +144,7 @@ export function AmeliaChatWidget() {
               {message.role === "agent" && <p className="mb-1 text-xs font-medium">Equipe Amélia Saúde</p>}
               <p className="whitespace-pre-wrap break-words">{message.text}</p>
               {message.document && <a href={message.document.url} target="_blank" rel="noopener noreferrer" className="mt-2 block underline">Abrir {message.document.fileName}</a>}
-              {message.options && index === (active?.messages.length ?? 0) - 1 && <div className="mt-3 flex flex-wrap gap-2">{message.options.map(option => <button key={option.value} type="button" disabled={busy} onClick={() => void send(option.value)} className="rounded-xl border border-[var(--amelia-purple)] bg-white px-3 py-2 text-left text-sm disabled:opacity-50 focus-visible:outline-2">{option.label}</button>)}</div>}
+              {message.options && index === (active?.messages.length ?? 0) - 1 && <div className="mt-3 flex flex-wrap gap-2">{message.options.map(option => <button key={option.value} type="button" disabled={busy || active?.terminal} onClick={() => void send(option.value)} className="rounded-xl border border-[var(--amelia-purple)] bg-white px-3 py-2 text-left text-sm disabled:opacity-50 focus-visible:outline-2">{option.label}</button>)}</div>}
             </div>)}
             {busy && <p role="status" className="text-xs text-[var(--amelia-body)]">Conectando…</p>}
             <div ref={end} />
