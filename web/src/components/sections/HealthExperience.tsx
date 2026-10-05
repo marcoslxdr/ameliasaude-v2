@@ -8,6 +8,7 @@ import { Shield, Wallet, Zap, Users, Building, Landmark } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { HeroBackground } from "@/components/ui/HeroBackground";
 import { useCotacao } from "@/components/CotacaoModal";
+import { trackCtaClick } from "@/lib/analytics";
 
 const items = [
   {
@@ -131,6 +132,7 @@ export function HealthExperience() {
             variant="primary"
             onClick={(e) => {
               e.preventDefault();
+              trackCtaClick("conhecer_os_planos", "/cotacao");
               open();
             }}
           >

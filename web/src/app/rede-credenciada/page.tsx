@@ -6,7 +6,7 @@ import { networkUpdatedAt, providers } from "@/data/provider-network";
 
 export const metadata: Metadata = {
   title: "Rede credenciada",
-  description: "Consulte médicos, clínicas, laboratórios e serviços da rede credenciada da Amélia Saúde para o seu produto e região.",
+  description: "Hospitais, Clínicas e Laboratórios disponíveis para o seu plano e sua região.",
   alternates: { canonical: "/rede-credenciada" },
   robots: { index: providers.length > 0, follow: providers.length > 0 },
 };

@@ -1,5 +1,4 @@
 import type { MetadataRoute } from "next";
-import { getPostTimestamp, getPublishedPosts } from "@/data/blog";
 
 const SITE_URL = "https://www.ameliasaude.com.br";
 
@@ -13,7 +12,6 @@ const STATIC_PATHS: {
   { path: "/rede-credenciada", priority: 0.9, changeFrequency: "weekly" },
   { path: "/planos/empresarial", priority: 0.9, changeFrequency: "monthly" },
   { path: "/planos/adesao", priority: 0.9, changeFrequency: "monthly" },
-  { path: "/blog", priority: 0.85, changeFrequency: "weekly" },
   { path: "/privacidade", priority: 0.4, changeFrequency: "yearly" },
   { path: "/termos", priority: 0.4, changeFrequency: "yearly" },
   { path: "/lgpd", priority: 0.4, changeFrequency: "yearly" },
@@ -32,15 +30,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
   );
 
-  const blogEntries: MetadataRoute.Sitemap = getPublishedPosts().map((post) => {
-    const ts = getPostTimestamp(post);
-    return {
-      url: `${SITE_URL}/blog/${post.slug}`,
-      lastModified: ts ? new Date(ts) : now,
-      changeFrequency: "monthly" as const,
-      priority: 0.7,
-    };
-  });
-
-  return [...staticEntries, ...blogEntries];
+  return staticEntries;
 }

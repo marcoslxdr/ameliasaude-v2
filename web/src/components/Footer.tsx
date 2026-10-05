@@ -20,12 +20,10 @@ const navLinks = [
   { label: "Rede", href: "/rede-credenciada" },
   { label: "Telemedicina", href: "/#telemedicina" },
   { label: "Fale conosco", href: "/#contato" },
-  { label: "Blog", href: "/blog" },
 ] as const;
 
 /** Destinos legais: rotas internas do site. */
 const legalLinks = [
-  { label: "Política de Privacidade", href: "/privacidade" },
   { label: "Termos de Uso", href: "/termos" },
   { label: "Política de Cookies", href: "/cookies" },
   { label: "LGPD", href: "/lgpd" },
@@ -164,32 +162,19 @@ export function Footer() {
           {/* Certificações */}
           <motion.div variants={fadeUp} className="flex flex-col gap-4 sm:col-span-2 lg:col-span-2">
             <p className={headingClass}>Certificações</p>
-            <ul className="flex flex-col gap-3">
-              <li className="flex items-center gap-3">
+            <ul className="grid grid-cols-1 items-center gap-3 sm:grid-cols-2">
+              <li className="flex min-h-[71px] items-center justify-center">
                 <Image
                   src="/faixa-registro-ans.png"
-                  alt="Registro ANS da Amélia Saúde"
+                  alt="Agência Nacional de Saúde Suplementar"
                   width={240}
                   height={71}
-                  sizes="340px"
-                  className="w-auto max-w-[52%] shrink-0 object-contain shadow-[0_4px_16px_rgba(0,0,0,0.25)]"
+                  sizes="(min-width: 640px) 240px, 100vw"
+                  className="h-auto w-full max-w-[240px] object-contain shadow-[0_4px_16px_rgba(0,0,0,0.25)]"
                 />
-                <div className="flex min-w-0 flex-1 flex-col justify-center gap-2">
-                  <div className="flex items-center justify-center border border-white bg-black px-3 py-1.5 text-center">
-                    <p className="whitespace-nowrap font-sans text-[11px] font-semibold leading-snug tracking-wide text-white">
-                      ANS - nº 42427-7
-                    </p>
-                  </div>
-                  <a
-                    href="/privacidade"
-                    className="flex items-center justify-center border border-white bg-black px-4 py-2 text-center font-sans text-[13px] leading-snug text-white transition-colors duration-300 hover:bg-[#262626] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(255,255,255,0.5)]"
-                  >
-                    Política de Privacidade
-                  </a>
-                </div>
               </li>
-              <li className="flex items-center gap-4 border border-[rgba(255,255,255,0.14)] bg-[rgba(255,255,255,0.06)] px-4 py-3 backdrop-blur-[2px]">
-                <span className={`inline-block rounded px-2 py-0.5 font-sans text-[10px] font-semibold uppercase tracking-wider ${accent} ring-1 ring-[rgba(201,188,240,0.35)]`}>
+              <li className="flex min-h-[71px] w-full max-w-[240px] items-center justify-between gap-3 border border-[rgba(255,255,255,0.14)] bg-[rgba(255,255,255,0.06)] px-3 py-2 backdrop-blur-[2px] justify-self-center sm:justify-self-end">
+                <span className={`font-sans text-[10px] font-semibold uppercase tracking-wider ${accent}`}>
                   Reclame Aqui
                 </span>
                 <Image
@@ -197,8 +182,8 @@ export function Footer() {
                   alt="Amélia Saúde no Reclame Aqui"
                   width={320}
                   height={313}
-                  sizes="110px"
-                  className="ml-auto h-auto w-[92px] shrink-0 object-contain"
+                  sizes="52px"
+                  className="h-auto w-[52px] shrink-0 object-contain"
                 />
               </li>
             </ul>
@@ -216,7 +201,30 @@ export function Footer() {
             <p className="max-w-3xl">
               © {new Date().getFullYear()} Amelia Operadora de Planos de Saude S.A. Todos os direitos reservados.
             </p>
-            <p className="shrink-0 text-white/55 tabular-nums">CNPJ: 57.395.677/0001-93</p>
+            <div className="flex flex-wrap items-center gap-3 text-white/55">
+              <p className="whitespace-nowrap tabular-nums">CNPJ: 57.395.677/0001-93</p>
+              <div
+                className="relative h-5 w-[92px] shrink-0 overflow-hidden"
+                role="img"
+                aria-label="Registro ANS da Amélia Saúde, número 42.427-7"
+              >
+                <Image
+                  src="/ans-registro-amelia.png"
+                  alt=""
+                  width={930}
+                  height={500}
+                  sizes="127px"
+                  className="absolute left-[-18px] top-[-24px] h-[68px] w-[127px] max-w-none"
+                  draggable={false}
+                />
+              </div>
+              <Link
+                href="/privacidade"
+                className={`whitespace-nowrap font-sans text-xs text-white/55 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(201,188,240,0.45)] ${ringFooter} rounded-sm`}
+              >
+                Política de Privacidade
+              </Link>
+            </div>
           </div>
         </motion.div>
       </div>

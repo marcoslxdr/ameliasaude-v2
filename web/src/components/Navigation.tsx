@@ -12,7 +12,6 @@ const navLinks = [
   { label: "Rede", href: "/rede-credenciada" },
   { label: "Telemedicina", href: "#telemedicina" },
   { label: "Fale conosco", href: "#contato" },
-  { label: "Blog", href: "/blog" },
 ];
 
 export function Navigation() {
@@ -21,7 +20,6 @@ export function Navigation() {
   const pathname = usePathname();
 
   const isHomePage = pathname === "/";
-  const isBlogPage = pathname?.startsWith("/blog") ?? false;
   const isPlanosPage = pathname?.startsWith("/planos") ?? false;
   const isInteriorPage = !isHomePage;
 
@@ -34,9 +32,6 @@ export function Navigation() {
 
     // Interior pages: show "Início"; hide self-link on the current section.
     if (isInteriorPage) {
-      if (isBlogPage) {
-        links = links.filter((link) => link.href !== "/blog");
-      }
       if (isPlanosPage) {
         links = links.filter((link) => link.href !== "/planos");
       }
