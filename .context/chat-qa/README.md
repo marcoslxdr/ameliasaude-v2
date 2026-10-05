@@ -17,14 +17,16 @@ Contagem exata desta execução:
 | Segurança de marca | 1/1: body/header Six continuam retornando Amélia |
 | Segurança de departamento | 1/1: token Vendas no Atendimento rejeitado com HTTP 400 |
 | Retomada sem novo start | 1/1: Vendas preservada após visitar Atendimento |
-| Encerramento e pesquisa | 1/1: finalizar → nota 5 → comentário 0 → fechamento |
-| Sessão terminal | 1/1: poll HTTP 410 `session_closed`, input bloqueado |
-| Reset explícito | 1/1: HTTP 200, nova sessão Vendas, `crmSynced=false` |
+| Encerramento e pesquisa de Vendas | 1/1: finalizar → nota 5 → comentário 0 → fechamento; Atendimento não foi encerrado |
+| Sessão terminal de Vendas | 1/1: poll HTTP 410 `session_closed`, input bloqueado |
+| Reset explícito de Vendas | 1/1: HTTP 200, nova sessão Vendas, `crmSynced=false` |
 | Respostas humanas de operador em produção | 0; não testadas sem sessão autenticada |
 
 Arquivos: `production-public-jmedddeelb/summary.json`, `amelia-{sales,service}-queue-{desktop,mobile}.png` e `amelia-sales-closed-desktop.png`. JSON registra apenas metadados; tokens, cookies e credenciais ficam fora dos artefatos. O navegador foi fechado após a execução.
 
-`crmSynced=true` confirma o contrato público do backend. A reconciliação independente de IDs/estado persistido cabe ao coordenador. Marcadores sintéticos: `Qa Amelia Vendas jmedddeelb` e `Qa Amelia Atendimento jmedddeelb`.
+`crmSynced=true` confirma o contrato público do backend. O coordenador confirmou a persistência independentemente no banco: Vendas `1098e73a…` está `closed` com uma oportunidade; Atendimento `0c21e40b-2661-4a04-b66c-8e092b82ca15` está `active/human_queue` com caso de atendimento aberto. Marcadores sintéticos: `Qa Amelia Vendas jmedddeelb` e `Qa Amelia Atendimento jmedddeelb`.
+
+Pendência de limpeza: o Atendimento QA permanece na fila e deve ser encerrado por operador autorizado. O runner fechou o navegador e terminou; nenhum token ou sessão do visitante ficou retido para retomada. Não foi feita alteração direta no banco nem reconstrução de token para encerrar essa conversa.
 
 Observação visual menor: a linha de acompanhamento de resposta humana permanece junto ao aviso explícito de encerramento. O campo e polling ficam bloqueados corretamente. Não houve mudança de código do produto nesta rodada de documentação.
 
