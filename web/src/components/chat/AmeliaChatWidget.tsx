@@ -29,6 +29,7 @@ export function AmeliaChatWidget() {
   const [busy, setBusy] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null);
   const launcher = useRef<HTMLButtonElement>(null);
+  const messageLog = useRef<HTMLDivElement>(null);
   const end = useRef<HTMLDivElement>(null);
   const submitting = useRef(false);
   const active = department ? sessions[department] : null;
@@ -39,6 +40,13 @@ export function AmeliaChatWidget() {
   }, [open]);
 
   useEffect(() => { end.current?.scrollIntoView({ block: "nearest" }); }, [active?.messages.length, open]);
+
+  useEffect(() => {
+    if (!open || !messageLog.current) return;
+    const observer = new ResizeObserver(() => end.current?.scrollIntoView({ block: "nearest" }));
+    observer.observe(messageLog.current);
+    return () => observer.disconnect();
+  }, [open, department]);
 
   const merge = useCallback((target: Department, data: ChatResponse, inbound?: string, polling = false) => {
     setSessions(previous => {
@@ -125,7 +133,7 @@ export function AmeliaChatWidget() {
           <button type="button" onClick={() => void start("service")} className="flex w-full items-start gap-3 rounded-2xl border border-[var(--amelia-line)] p-4 text-left hover:bg-purple-50 focus-visible:outline-2 focus-visible:outline-[var(--amelia-purple)]"><Headphones size={22} aria-hidden="true" /><span><strong className="block text-base font-medium">Preciso de atendimento</strong><span className="text-sm text-[var(--amelia-body)]">Ajuda com meu plano Amélia Saúde.</span></span></button>
           <p className="text-xs leading-relaxed text-[var(--amelia-body)]">As conversas de vendas e atendimento são separadas. Consulte nossa <a href="/privacidade" target="_blank" rel="noopener noreferrer" className="underline">Política de Privacidade</a>.</p>
         </div> : <>
-          <div role="log" aria-label={`Mensagens de ${names[department]}`} aria-live="polite" aria-relevant="additions" className="ph-mask flex-1 space-y-3 overflow-y-auto overscroll-contain p-4">
+          <div ref={messageLog} role="log" aria-label={`Mensagens de ${names[department]}`} aria-live="polite" aria-relevant="additions" className="ph-mask flex-1 space-y-3 overflow-y-auto overscroll-contain p-4">
             {active?.messages.map((message, index) => <div key={message.id} className={`max-w-[95%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${message.role === "user" ? "ml-auto bg-[var(--amelia-deep)] text-white" : "bg-purple-50"}`}>
               {message.role === "agent" && <p className="mb-1 text-xs font-medium">Equipe Amélia Saúde</p>}
               <p className="whitespace-pre-wrap break-words">{message.text}</p>

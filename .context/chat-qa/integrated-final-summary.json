@@ -1,0 +1,84 @@
+{
+  "scope": "LOCAL_QA",
+  "phases": [
+    {
+      "department": "sales",
+      "consented": true,
+      "crmSynced": true,
+      "humanReply": true,
+      "desktop": true,
+      "mobile": true,
+      "horizontalOverflow": false
+    },
+    {
+      "department": "service",
+      "consented": true,
+      "crmSynced": true,
+      "humanReply": true,
+      "desktop": true,
+      "mobile": true,
+      "horizontalOverflow": false
+    }
+  ],
+  "conversations": [
+    {
+      "id": "c04d2e95-811c-4acb-88b7-25832f3e73b4",
+      "brand": "amelia",
+      "department": "service",
+      "channel": "webchat",
+      "channelAccountId": "amelia-webchat"
+    },
+    {
+      "id": "3b578c31-b731-4386-9230-be7e05d50f45",
+      "brand": "amelia",
+      "department": "sales",
+      "channel": "webchat",
+      "channelAccountId": "amelia-webchat"
+    }
+  ],
+  "metadata": [
+    {
+      "status": 200,
+      "brand": "amelia",
+      "department": "sales",
+      "crmSynced": false,
+      "handoff": false
+    },
+    {
+      "status": 200,
+      "brand": "amelia",
+      "department": "sales",
+      "crmSynced": true,
+      "handoff": false
+    },
+    {
+      "status": 200,
+      "brand": "amelia",
+      "department": "sales",
+      "crmSynced": true,
+      "handoff": true
+    },
+    {
+      "status": 200,
+      "brand": "amelia",
+      "department": "service",
+      "crmSynced": false,
+      "handoff": false
+    },
+    {
+      "status": 200,
+      "brand": "amelia",
+      "department": "service",
+      "crmSynced": true,
+      "handoff": false
+    },
+    {
+      "status": 200,
+      "brand": "amelia",
+      "department": "service",
+      "crmSynced": true,
+      "handoff": true
+    }
+  ],
+  "anonymousSessionsObserved": 4
+}

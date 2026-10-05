@@ -1,0 +1,68 @@
+{
+  "scope": "LOCAL_QA",
+  "brand": "amelia",
+  "conversations": [
+    {
+      "id": "fbc98118-a1e0-4a6d-8eac-8fd6ac37b524",
+      "department": "service",
+      "brand": "amelia",
+      "channel": "webchat",
+      "channelAccountId": "amelia-webchat",
+      "name": "QA"
+    },
+    {
+      "id": "28dbde51-0686-4e4d-8336-b43d0e7b11a3",
+      "department": "sales",
+      "brand": "amelia",
+      "channel": "webchat",
+      "channelAccountId": "amelia-webchat",
+      "name": "QA"
+    }
+  ],
+  "serviceHumanReply": true,
+  "responses": [
+    {
+      "brand": "amelia",
+      "department": "sales",
+      "crmSynced": false,
+      "handoff": false
+    },
+    {
+      "brand": "amelia",
+      "department": "sales",
+      "crmSynced": true,
+      "handoff": false
+    },
+    {
+      "brand": "amelia",
+      "department": "sales",
+      "crmSynced": true,
+      "handoff": true
+    },
+    {
+      "brand": "amelia",
+      "department": "service",
+      "crmSynced": false,
+      "handoff": false
+    },
+    {
+      "brand": "amelia",
+      "department": "service",
+      "crmSynced": true,
+      "handoff": false
+    },
+    {
+      "brand": "amelia",
+      "department": "service",
+      "crmSynced": true,
+      "handoff": true
+    }
+  ],
+  "salesHumanReply": false,
+  "mobileHumanScreenshotFinal": false,
+  "limitations": [
+    "CRM QA runtime restarted during browser matrix",
+    "Sales human reply and final mobile screenshot pending stable CRM",
+    "Evidence is local QA only"
+  ]
+}

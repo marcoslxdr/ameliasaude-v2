@@ -29,3 +29,17 @@ A cotação existente continua separada e injeta `brand: amelia` no envio ao CRM
 - Navegador local: seletor desktop/mobile, teclado/Escape, fluxo de cada departamento, mensagens humanas, falha de conexão e isolamento entre marcas.
 
 As provas locais não substituem a publicação e a matriz integrada no CRM. Antes de publicar, configurar o token dedicado, endpoint correto e o roteamento Amélia no CRM. O projeto Vercel tem rootDirectory `web`; deploy deve partir da raiz do repositório e deve ser verificado no domínio servido.
+
+## Execução integrada local em 2026-10-05
+
+- Site: `127.0.0.1:3411`; CRM: `127.0.0.1:3410`; banco PGlite exclusivo de QA com operadores sintéticos.
+- Navegador real: Vendas e Atendimento passaram por nome, confirmação e consentimento. Ambos responderam `brand=amelia`, departamento correto e `crmSynced=true` após consentimento.
+- Vendas qualificou e-mail/telefone sintéticos e chegou à fila humana; Atendimento recebeu demanda sintética e chegou à fila humana. Nenhuma consulta Digital Saúde Six neste fluxo.
+- API autenticada do CRM confirmou duas conversas distintas, `channel=webchat`, `channelAccountId=amelia-webchat`, uma por departamento.
+- Operador assumiu Vendas e Atendimento pela interface do CRM, enviou mensagens de QA (HTTP 201), e o visitante recebeu as mesmas respostas pela sessão web. O reteste final autenticou o contexto pela API local e executou assunção/envio pela interface. O login visual também foi verificado na primeira rodada.
+- Desktop 1440×900 e mobile 360×800 passaram em ambos os departamentos, sem overflow horizontal e com o texto humano inteiramente visível no log. Capturas finais: `chat-qa/amelia-{sales,service}-human-final-{desktop,mobile}.png`.
+- O log agora acompanha redimensionamentos para manter a mensagem mais recente visível. O teste verifica o texto dentro da área visível, considerando o padding do log.
+- Houve falhas transitórias durante build/reinício do CRM. O reteste final foi executado após estabilização do runtime QA; capturas anteriores com aviso de indisponibilidade são evidência desse estado anterior.
+- Limites: não publicado; dados e operadores são sintéticos, em banco local dedicado. Sessões ficam apenas em memória durante a visita. O texto genérico de fila/atendente em Vendas foi encaminhado ao responsável do backend para revisão.
+
+`chat-qa/e2e-integrated.mjs` reproduz a matriz final. `chat-qa/integrated-final-summary.json` registra apenas metadados e IDs locais, sem tokens, CPF ou transcript.
