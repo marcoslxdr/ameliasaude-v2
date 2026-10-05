@@ -1,0 +1,84 @@
+{
+  "scope": "PRODUCTION_PUBLIC_SYNTHETIC_QA",
+  "run": "jmedddeelb",
+  "site": "https://www.ameliasaude.com.br",
+  "phases": [
+    {
+      "department": "sales",
+      "consented": true,
+      "crmSynced": true,
+      "humanQueue": true,
+      "desktop": true,
+      "mobile": true,
+      "horizontalOverflow": false
+    },
+    {
+      "department": "service",
+      "consented": true,
+      "crmSynced": true,
+      "humanQueue": true,
+      "desktop": true,
+      "mobile": true,
+      "horizontalOverflow": false
+    }
+  ],
+  "metadata": [
+    {
+      "status": 200,
+      "brand": "amelia",
+      "department": "sales",
+      "crmSynced": false,
+      "handoff": false
+    },
+    {
+      "status": 200,
+      "brand": "amelia",
+      "department": "sales",
+      "crmSynced": true,
+      "handoff": false
+    },
+    {
+      "status": 200,
+      "brand": "amelia",
+      "department": "sales",
+      "crmSynced": true,
+      "handoff": true
+    },
+    {
+      "status": 200,
+      "brand": "amelia",
+      "department": "service",
+      "crmSynced": false,
+      "handoff": false
+    },
+    {
+      "status": 200,
+      "brand": "amelia",
+      "department": "service",
+      "crmSynced": true,
+      "handoff": false
+    },
+    {
+      "status": 200,
+      "brand": "amelia",
+      "department": "service",
+      "crmSynced": true,
+      "handoff": true
+    },
+    {
+      "status": 410,
+      "error": "session_closed"
+    }
+  ],
+  "humanReplyTested": false,
+  "success": true,
+  "serverImposesAmeliaDespiteForgedBrand": true,
+  "crossDepartmentTokenRejected": 400,
+  "publicClosure": {
+    "survey": true,
+    "closing": true,
+    "terminalHttp410": true,
+    "inputBlocked": true,
+    "explicitReset": true
+  }
+}

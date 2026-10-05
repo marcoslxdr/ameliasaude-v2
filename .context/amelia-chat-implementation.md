@@ -56,3 +56,16 @@ As provas locais não substituem a publicação e a matriz integrada no CRM. Ant
 - Cotação validada end-to-end no banco QA: visitante enviou `brand: six`, site respondeu HTTP 202 e a oportunidade persistiu com `brand: amelia`, `department: sales`. Script reexecutável com requestId fixo: `chat-qa/cotacao-brand.mjs`; evidência sem dados pessoais em `chat-qa/cotacao-brand-summary.json`.
 - Build final após ajustes: 51 páginas geradas, rotas `/api/chat` e `/api/cotacao` dinâmicas, TypeScript aprovado.
 - O Gate B `--enforce` foi tentado para os arquivos do app, mas o checker resolve paths exclusivamente a partir do Segundo Cérebro e retorna “path alterado não encontrado”. A validação advisory desse checker passou; não representa cobertura enforce deste repositório.
+
+## Validação pública em produção em 2026-10-05
+
+- Coordenador promoveu o deployment `dpl_4Mm5pcaoZb6o8iM7xk2P42EFvorH`, origem `https://ameliasaude-v2-ggbbywj41-atriahub.vercel.app`, fonte `a14930e` (commit de release sem mudança de código sobre `93943cb`).
+- URL pública efetiva respondeu HTTP 200: `https://www.ameliasaude.com.br/`.
+- `chat-qa/e2e-production-public.mjs` foi executado contra esse domínio com dados sintéticos identificados pelo marcador `jmedddeelb`, sem interceptação de rede, mocks, CPF ou sessão de operador.
+- Vendas e Atendimento: nome/confirmar/LGPD, resposta `brand=amelia`, departamento correto, `crmSynced=true` e fila humana passaram. Capturas desktop 1440×900 e mobile 360×800 foram inspecionadas, sem overflow horizontal ou corte da interface.
+- Tokens de sessão eram distintos. Token de Vendas usado no Atendimento foi rejeitado com HTTP 400. Body/header com marca Six enviados à API pública continuaram retornando Amélia, pois a marca é definida pelo servidor.
+- Reabrir Vendas depois de navegar ao Atendimento preservou a sessão original: somente um start por departamento.
+- Encerramento público real passou por `finalizar → nota 5 → comentário 0`, mensagens de fechamento, polling HTTP 410 `session_closed`, bloqueio do campo de envio e reset explícito HTTP 200 para nova sessão sem consentimento anterior.
+- Evidência sanitizada: `chat-qa/production-public-jmedddeelb/summary.json` e cinco PNGs. Tokens, cookies, CPF e credenciais não foram gravados.
+- Limite da prova pública: `crmSynced=true` é confirmação do contrato do backend; IDs/estado persistido devem ser reconciliados pelo coordenador. Sem credencial de operador, resposta humana real de produção não foi testada. O runner completo `chat-qa/e2e-production.mjs` aguarda essa sessão real; não faz login com usuário QA do banco local.
+- Observação visual menor: a linha “Acompanhe a resposta da equipe aqui neste chat” permanece junto ao aviso explícito de encerramento. O input e polling ficam bloqueados corretamente; nenhum código adicional foi alterado após a publicação para tratar esse texto.
