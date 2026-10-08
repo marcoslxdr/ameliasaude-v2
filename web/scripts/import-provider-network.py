@@ -22,12 +22,25 @@ REQUIRED_COLUMNS = {
 }
 RJ_CITIES = {
     "RIO DE JANEIRO", "NOVA IGUAÇU", "SÃO GONÇALO", "DUQUE DE CAXIAS",
-    "MESQUITA", "NITERÓI", "SÃO JOÃO DE MERITI",
+    "MESQUITA", "NITERÓI", "SÃO JOÃO DE MERITI", "BELFORD ROXO",
+    "NILÓPOLIS", "QUEIMADOS", "MAGÉ",
 }
+# Remoção solicitada da rede pública, mesmo quando o export ainda marca SIM.
+EXCLUDED_PROVIDERS = {"AMERICAN COR", "HOSPITAL AMERICAN COR"}
 
 
 def clean(value: object) -> str:
     return str(value).strip() if value is not None else ""
+
+
+def should_publish(row: dict[str, str]) -> bool:
+    name = " ".join(clean(row["NOME_FANTASIA"]).upper().split())
+    return (
+        clean(row["IE_GUIA_MEDICO"]).upper() == "SIM"
+        and clean(row["IE_GUIA_MEDICO_ESPEC"]).upper() == "SIM"
+        and not clean(row["DATA_EXCLUSAO"])
+        and name not in EXCLUDED_PROVIDERS
+    )
 
 
 def main(source: Path) -> None:
@@ -40,12 +53,14 @@ def main(source: Path) -> None:
         raise ValueError(f"Colunas obrigatórias ausentes: {', '.join(sorted(missing))}")
 
     output = []
+    by_id = {}
     excluded = 0
+    duplicates = 0
     for line_number, values in enumerate(rows, start=2):
         if not any(value is not None for value in values):
             continue
         row = {key: clean(value) for key, value in zip(headers, values)}
-        if row["IE_GUIA_MEDICO"] != "SIM" or row["IE_GUIA_MEDICO_ESPEC"] != "SIM" or row["DATA_EXCLUSAO"]:
+        if not should_publish(row):
             excluded += 1
             continue
         network = row["REDE_NOME"]
@@ -60,11 +75,13 @@ def main(source: Path) -> None:
             raise ValueError(f"Linha {line_number}: município sem UF confirmada: {city!r}")
         required_values = (
             "TIPO_SERVICO_DESCRICAO", "ESPECIALIDADE_DESCRICAO", "NOME_FANTASIA",
-            "ENDERECO_BAIRRO", "ENDERECO_LOGRADOURO", "ENDERECO_NUMERO",
+            "ENDERECO_BAIRRO", "ENDERECO_LOGRADOURO",
         )
         if any(not row[key] for key in required_values):
             raise ValueError(f"Linha {line_number}: campo público obrigatório vazio")
-        address = f'{row["ENDERECO_LOGRADOURO"]}, {row["ENDERECO_NUMERO"]}'
+        address = row["ENDERECO_LOGRADOURO"]
+        if row["ENDERECO_NUMERO"]:
+            address += f', {row["ENDERECO_NUMERO"]}'
         identity = "|".join((network, row["TIPO_SERVICO_DESCRICAO"], row["ESPECIALIDADE_DESCRICAO"], row["NOME_FANTASIA"], address))
         provider = {
             "id": hashlib.sha256(identity.encode("utf-8")).hexdigest()[:16],
@@ -82,6 +99,13 @@ def main(source: Path) -> None:
             provider["phone"] = row["TELEFONE"]
         if row.get("AREA_ATUACAO"):
             provider["area"] = row["AREA_ATUACAO"]
+        previous = by_id.get(provider["id"])
+        if previous is not None:
+            if previous != provider:
+                raise ValueError(f"Linha {line_number}: dados públicos conflitantes para o mesmo prestador")
+            duplicates += 1
+            continue
+        by_id[provider["id"]] = provider
         output.append(provider)
 
     ids = [provider["id"] for provider in output]
@@ -92,7 +116,7 @@ def main(source: Path) -> None:
 
     destination = Path(__file__).resolve().parents[1] / "src/data/provider-network.json"
     destination.write_text(json.dumps(output, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
-    print(f"Importados: {len(output)} registros; excluídos: {excluded}; arquivo: {destination}")
+    print(f"Importados: {len(output)} registros; excluídos: {excluded}; duplicados: {duplicates}; arquivo: {destination}")
 
 
 if __name__ == "__main__":
