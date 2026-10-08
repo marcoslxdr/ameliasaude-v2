@@ -15,8 +15,9 @@ export type Provider = {
   area?: string;
 };
 
-// Fonte: Guia Medico Atualizado.xlsx, recebido de Marcelo em 03/10/2026.
-// O importador exclui linhas fora do guia e prestadores com data de exclusão.
+// Fonte: Guia Médico Novo.xlsx, recebido em 08/10/2026.
+// Publica somente IE_GUIA_MEDICO = SIM e IE_GUIA_MEDICO_ESPEC = SIM,
+// sem DATA_EXCLUSAO. Linhas ocultas não são enviadas ao navegador.
 export const providers: Provider[] = networkData as Provider[];
 
-export const networkUpdatedAt = "3 de outubro de 2026";
+export const networkUpdatedAt = "8 de outubro de 2026";
