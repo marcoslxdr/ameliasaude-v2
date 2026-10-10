@@ -1,0 +1,345 @@
+{
+  "source": {
+    "url": "https://www.ameliasaude.com.br/rede-credenciada",
+    "snapshotDate": "2026-10-09",
+    "updatedAt": "2026-10-08",
+    "updatedLabel": "8 de outubro de 2026",
+    "grouping": "name + city",
+    "filter": "HOSPITAL | CASA DE SAÚDE | MATERNIDADE",
+    "selectionDate": "2026-10-09",
+    "selection": "Sequência de Marcelo no WhatsApp; Irajá com disponibilidade sob consulta"
+  },
+  "units": [
+    {
+      "name": "HOSPITAL QUALI IPANEMA",
+      "city": "RIO DE JANEIRO",
+      "neighborhood": "IPANEMA",
+      "services": [
+        "PRONTO SOCORRO"
+      ],
+      "product": "CARIOCA 10",
+      "networks": [
+        "CARIOCA 10 COM COPART",
+        "CARIOCA 10 SEM COPART"
+      ],
+      "displayName": "Hospital Quali Ipanema",
+      "specialties": [
+        "CLÍNICO GERAL"
+      ],
+      "photo": {
+        "src": "/assets/hospitais/quali-ipanema.webp",
+        "alt": "Fachada e entrada de emergência do Hospital Quali Ipanema",
+        "credit": "Fonte: Fundação Real Grandeza",
+        "sourceUrl": "https://www3.frg.com.br/quem-somos/comunicacao-e-informativos/noticias/salutem-e-salvus-novo-hospital-de-emergencia-credenciado-5767.html",
+        "width": 480,
+        "height": 640,
+        "objectPosition": "50% 70%"
+      }
+    },
+    {
+      "name": "HOSPITAL INTERMÉDICA JACAREPAGUÁ - GR.HAPVIDA",
+      "city": "RIO DE JANEIRO",
+      "neighborhood": "FREGUESIA (JACAREPAGUÁ)",
+      "services": [
+        "PRONTO SOCORRO"
+      ],
+      "product": "CARIOCA 10",
+      "networks": [
+        "CARIOCA 10 COM COPART",
+        "CARIOCA 10 SEM COPART"
+      ],
+      "displayName": "Hospital Intermédica Jacarepaguá",
+      "specialties": [
+        "PEDIATRIA"
+      ],
+      "photo": {
+        "src": "/assets/hospitais/intermedica-jacarepagua.webp",
+        "alt": "Fachada da unidade Intermédica Jacarepaguá na Estrada dos Três Rios",
+        "credit": "Fonte: NotreDame Intermédica",
+        "sourceUrl": "https://www2.gndi.com.br/pt/hospitaldamulherjacarepagua",
+        "width": 555,
+        "height": 226,
+        "objectPosition": "center"
+      }
+    },
+    {
+      "name": "HOSPITAL DE CLÍNICAS SÃO MATHEUS",
+      "city": "RIO DE JANEIRO",
+      "neighborhood": "BANGU",
+      "services": [
+        "PRONTO SOCORRO"
+      ],
+      "product": "CARIOCA 10",
+      "networks": [
+        "CARIOCA 10 COM COPART",
+        "CARIOCA 10 SEM COPART"
+      ],
+      "displayName": "Hospital de Clínicas São Matheus",
+      "specialties": [
+        "CLÍNICO GERAL",
+        "PEDIATRIA"
+      ],
+      "photo": {
+        "src": "/assets/hospitais/sao-matheus.webp",
+        "alt": "Fachada do Hospital São Matheus em Bangu, em fotografia publicada na Revista ASSIM Saúde de 2017",
+        "credit": "Fonte: Revista ASSIM Saúde",
+        "sourceUrl": "https://assim.com.br/site/revista-assim/edicao-16/documents/edicao-16/pdf/full.pdf",
+        "width": 888,
+        "height": 1445,
+        "objectPosition": "center top"
+      }
+    },
+    {
+      "name": "HOSPITAL IRAJÁ",
+      "city": "RIO DE JANEIRO",
+      "neighborhood": "IRAJÁ",
+      "services": [],
+      "product": null,
+      "networks": [],
+      "displayName": "Hospital Irajá",
+      "specialties": [],
+      "coverageVerified": false,
+      "selectionSource": "Lista de Marcelo, WhatsApp, 2026-10-09",
+      "photo": {
+        "src": "/assets/hospitais/iraja-entrada.webp",
+        "alt": "Entrada do Hospital Irajá, na Rua Pereira de Araújo, no Rio de Janeiro",
+        "credit": "Fonte: Hospital Irajá",
+        "sourceUrl": "https://hospitaliraja.com.br/",
+        "width": 720,
+        "height": 477
+      }
+    },
+    {
+      "name": "HOSPITAL NOTRECARE RIO - GR.HAPVIDA",
+      "city": "RIO DE JANEIRO",
+      "neighborhood": "ANDARAÍ",
+      "services": [
+        "INTERNAÇÃO"
+      ],
+      "product": "CARIOCA 10",
+      "networks": [
+        "CARIOCA 10 COM COPART",
+        "CARIOCA 10 SEM COPART"
+      ],
+      "displayName": "Hospital NotreCare Rio",
+      "specialties": [
+        "CIRURGIA GERAL",
+        "CLÍNICO GERAL"
+      ],
+      "photo": {
+        "src": "/assets/hospitais/notrecare-rio.webp",
+        "alt": "Fachada do Hospital NotreCare Rio, no Andaraí",
+        "credit": "Fonte: NotreDame Intermédica",
+        "sourceUrl": "https://www2.gndi.com.br/pt/hospitalnotrecarerio",
+        "width": 555,
+        "height": 226,
+        "objectPosition": "center"
+      }
+    },
+    {
+      "name": "CASA DE SAÚDE SAINT ROMAN",
+      "city": "RIO DE JANEIRO",
+      "neighborhood": "SANTA TERESA",
+      "services": [
+        "INTERNAÇÃO"
+      ],
+      "product": "CARIOCA 10",
+      "networks": [
+        "CARIOCA 10 COM COPART",
+        "CARIOCA 10 SEM COPART"
+      ],
+      "displayName": "Casa de Saúde Saint Roman",
+      "specialties": [
+        "PSIQUIATRIA"
+      ],
+      "photo": {
+        "src": "/assets/hospitais/saint-roman.webp",
+        "alt": "Área de convivência ao ar livre da Casa de Saúde Saint Roman",
+        "credit": "Fonte: Casa de Saúde Saint Roman",
+        "sourceUrl": "https://saintroman.com.br/",
+        "width": 1200,
+        "height": 800,
+        "objectPosition": "center"
+      }
+    },
+    {
+      "name": "CLINICA SAO CARLOS",
+      "city": "RIO DE JANEIRO",
+      "neighborhood": "HUMAITÁ",
+      "services": [
+        "INTERNAÇÃO"
+      ],
+      "product": "CARIOCA 10",
+      "networks": [
+        "CARIOCA 10 COM COPART",
+        "CARIOCA 10 SEM COPART"
+      ],
+      "displayName": "São Carlos Saúde Oncológica",
+      "specialties": [
+        "CIRURGIA GERAL",
+        "CLÍNICO GERAL"
+      ],
+      "photo": {
+        "src": "/assets/hospitais/sao-carlos-fachada.webp",
+        "alt": "Fachada da São Carlos Saúde Oncológica, na Rua Humaitá, no Rio de Janeiro",
+        "credit": "Fonte: São Carlos Saúde Oncológica",
+        "sourceUrl": "https://saocarlossaudeoncologica.com.br/quem-somos/",
+        "width": 500,
+        "height": 358
+      }
+    },
+    {
+      "name": "CALREN HOSPITAL DE URGÊNCIAS UROLÓGICAS LTDA",
+      "city": "RIO DE JANEIRO",
+      "neighborhood": "RECREIO DOS BANDEIRANTES",
+      "services": [
+        "PRONTO SOCORRO"
+      ],
+      "product": "CARIOCA 10",
+      "networks": [
+        "CARIOCA 10 COM COPART",
+        "CARIOCA 10 SEM COPART"
+      ],
+      "displayName": "CALREN Hospital de Urgências Urológicas",
+      "specialties": [
+        "UROLOGIA"
+      ],
+      "photo": {
+        "src": "/assets/hospitais/calren.webp",
+        "alt": "Profissional e instrumentos urológicos em fotografia publicada pelo CALREN Hospital",
+        "credit": "Fonte: CALREN Hospital",
+        "sourceUrl": "https://www.linkedin.com/company/hospital-calren",
+        "width": 1127,
+        "height": 191,
+        "objectPosition": "70% center"
+      }
+    },
+    {
+      "name": "CASA DE SAÚDE E MATERNIDADE SANTA MARTHA - GR.HAPVIDA",
+      "city": "NITERÓI",
+      "neighborhood": "SANTA ROSA",
+      "services": [
+        "PRONTO SOCORRO"
+      ],
+      "product": "CARIOCA 10",
+      "networks": [
+        "CARIOCA 10 COM COPART",
+        "CARIOCA 10 SEM COPART"
+      ],
+      "displayName": "Casa de Saúde e Maternidade Santa Martha",
+      "specialties": [
+        "CLÍNICO GERAL"
+      ],
+      "photo": {
+        "src": "/assets/hospitais/santa-martha.webp",
+        "alt": "Fachada da Casa de Saúde e Maternidade Santa Martha, em Niterói",
+        "credit": "Foto: Fabio F Goulart · Fonte: Hapvida",
+        "sourceUrl": "https://ri.hapvida.com.br/a-companhia/nossas-instalacoes/",
+        "width": 531,
+        "height": 354
+      }
+    },
+    {
+      "name": "HGP HOSPITAL GERAL PRONTONIL",
+      "city": "NOVA IGUAÇU",
+      "neighborhood": "CENTRO",
+      "services": [
+        "PRONTO SOCORRO"
+      ],
+      "product": "CARIOCA 10",
+      "networks": [
+        "CARIOCA 10 COM COPART",
+        "CARIOCA 10 SEM COPART"
+      ],
+      "displayName": "Hospital Geral Prontonil",
+      "specialties": [
+        "CLÍNICO GERAL",
+        "PEDIATRIA"
+      ],
+      "photo": {
+        "src": "/assets/hospitais/prontonil.webp",
+        "alt": "Fachada do Hospital Geral Prontonil com ambulância, em Nova Iguaçu",
+        "credit": "Fonte: Hospital Geral Prontonil",
+        "sourceUrl": "https://www.linkedin.com/company/prontonil",
+        "width": 1200,
+        "height": 430
+      }
+    },
+    {
+      "name": "CASA DE SAÚDE E MATERNIDADE TEREZINHA DE JESUS",
+      "city": "SÃO JOÃO DE MERITI",
+      "neighborhood": "CENTRO",
+      "services": [
+        "PRONTO SOCORRO"
+      ],
+      "product": "CARIOCA 10",
+      "networks": [
+        "CARIOCA 10 COM COPART",
+        "CARIOCA 10 SEM COPART"
+      ],
+      "displayName": "Casa de Saúde e Maternidade Terezinha de Jesus",
+      "specialties": [
+        "CLÍNICO GERAL"
+      ],
+      "photo": {
+        "src": "/assets/hospitais/terezinha-jesus.webp",
+        "alt": "Fachada da Casa de Saúde e Maternidade Terezinha de Jesus, em São João de Meriti",
+        "credit": "Fonte: Terezinha de Jesus",
+        "sourceUrl": "https://www.csmtj.com.br/frente-htj/",
+        "width": 691,
+        "height": 840
+      }
+    },
+    {
+      "name": "HOSPITAL DANIEL LIPP",
+      "city": "DUQUE DE CAXIAS",
+      "neighborhood": "CENTRO",
+      "services": [
+        "PRONTO SOCORRO"
+      ],
+      "product": "CARIOCA 10",
+      "networks": [
+        "CARIOCA 10 COM COPART",
+        "CARIOCA 10 SEM COPART"
+      ],
+      "displayName": "Hospital Daniel Lipp",
+      "specialties": [
+        "CLÍNICO GERAL",
+        "PEDIATRIA"
+      ],
+      "photo": {
+        "src": "/assets/hospitais/daniel-lipp.webp",
+        "alt": "Fachada vermelha do Hospital Daniel Lipp, em Duque de Caxias",
+        "credit": "Fonte: Hospital Daniel Lipp",
+        "sourceUrl": "https://www.daniellipp.com.br/",
+        "width": 1024,
+        "height": 1536
+      }
+    },
+    {
+      "name": "HOSPITAL DO CORAÇÃO DE DUQUE DE CAXIAS - GR.HAPVIDA",
+      "city": "DUQUE DE CAXIAS",
+      "neighborhood": "JARDIM VINTE E CINCO DE AGOSTO",
+      "services": [
+        "PRONTO SOCORRO"
+      ],
+      "product": "CARIOCA 10",
+      "networks": [
+        "CARIOCA 10 COM COPART",
+        "CARIOCA 10 SEM COPART"
+      ],
+      "displayName": "Hospital do Coração de Duque de Caxias",
+      "specialties": [
+        "CLÍNICO GERAL"
+      ],
+      "photo": {
+        "src": "/assets/hospitais/hospital-coracao-caxias.webp",
+        "alt": "Entrada do Hospital do Coração de Duque de Caxias à noite",
+        "credit": "Fonte: HSCOR / Endocurso",
+        "sourceUrl": "https://www.endocurso.com.br/endocurso",
+        "width": 1110,
+        "height": 600
+      }
+    }
+  ]
+}

@@ -1,25 +1,5 @@
-import { Navigation } from "@/components/Navigation";
-import { Hero } from "@/components/sections/Hero";
-import { BrandOrigin } from "@/components/sections/BrandOrigin";
-import { Network } from "@/components/sections/Network";
-import { Telemedicine } from "@/components/sections/Telemedicine";
-import { HealthExperience } from "@/components/sections/HealthExperience";
-import { Contact } from "@/components/sections/Contact";
-import { Footer } from "@/components/Footer";
+import { App } from "@/rebranding/App.jsx";
 
 export default function Home() {
-  return (
-    <div className="flex min-h-0 flex-1 flex-col">
-      <Navigation />
-      <main id="main-content" className="min-h-0 flex-1">
-        <Hero />
-        <BrandOrigin />
-        <HealthExperience />
-        <Network />
-        <Telemedicine />
-        <Contact />
-      </main>
-      <Footer />
-    </div>
-  );
+  return <App initialPath="/" />;
 }

@@ -8,6 +8,7 @@ const STATIC_PATHS: {
   changeFrequency: MetadataRoute.Sitemap[0]["changeFrequency"];
 }[] = [
   { path: "", priority: 1, changeFrequency: "weekly" },
+  { path: "/landing", priority: 0.8, changeFrequency: "monthly" },
   { path: "/planos", priority: 0.95, changeFrequency: "monthly" },
   { path: "/rede-credenciada", priority: 0.9, changeFrequency: "weekly" },
   { path: "/planos/empresarial", priority: 0.9, changeFrequency: "monthly" },

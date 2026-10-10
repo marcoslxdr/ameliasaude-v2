@@ -12,6 +12,8 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ## Gotchas & Convenções
 
+- **Rebranding autorizado em produção em 09/10/2026**: publicar a direção aprovada nesta conversa em `www.ameliasaude.com.br`, projeto Vercel verificado `atriahub/ameliasaude-v2` (`prj_Yj79gwjNkD8xydwPWcUeqnnss5NS`, raiz `web`). O time `insightfy` citado abaixo é histórico. Release isolado parte do SHA em produção `6d466d22bb4072793fe18c751b478e1e849bc202`; preservar o checkout original e as alterações locais da rede. Integrar os formulários à API existente, manter metadados/indexação/analytics e arquivos públicos. Hero frontal de braços cruzados (`Maria Padilha_0.png`), sem seção “A melhor experiência”; benefícios logo após a hero. Desenvolvimento continua no projeto separado `amelia-rebranding`.
+
 - **Deploy Vercel**: **dois projetos** no time `insightfy` — `ameliasaude-v2` (prod **www.ameliasaude.com.br**) e `amelia-saude-v2` (só `*.vercel.app`). `vercel link --project ameliasaude-v2` antes do deploy prod. `rootDirectory: web`. Comando: `vercel deploy --prod --yes --scope insightfy` na raiz.
 - **Limite 100MB no upload CLI**: assets grandes na raiz (ex. `amelia video.mp4` 133MB) quebram deploy. Manter exclusões em `.vercelignore` (só raiz — **não** ignorar `web/public/*.mp4` usados no site).
 - **Vídeos / Mídia**: Arquivos em `web/public/` devem ser comprimidos (abaixo de 100MB GitHub + load web). Originais grandes → `backups/videos/` (gitignored).

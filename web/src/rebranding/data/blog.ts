@@ -1,0 +1,1110 @@
+export interface BlogPost {
+  slug: string;
+  category: string;
+  title: string;
+  excerpt: string;
+  date: string;
+  publishAt?: string;
+  readTime: string;
+  image: string;
+  content: string[];
+  tags: string[];
+  author?: string;
+  reviewer?: string;
+  updatedAt?: string;
+  sources?: { label: string; url: string }[];
+  cta?: { label: string; href: string; event: string };
+}
+
+const image = (id: string) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1400&q=82`;
+const ans = { label: "Agência Nacional de Saúde Suplementar (ANS)", url: "https://www.gov.br/ans/pt-br" };
+const amelia = { label: "Amélia Saúde", url: "https://www.ameliasaude.com.br/" };
+
+const legacyPosts: BlogPost[] = [
+  { slug: "5-dicas-nutricao-dia-a-dia", category: "Nutrição", title: "5 dicas práticas de nutrição para o dia a dia", excerpt: "Alimentar-se bem não precisa ser complicado. Veja como incluir hábitos saudáveis na sua rotina.", date: "15 Mar 2026", readTime: "5 min", image: image("photo-1490645935967-10de6ba17061"), content: ["Ter uma alimentação balanceada é o pilar fundamental para uma vida longa e saudável."], tags: ["nutrição", "hábitos", "saúde"] },
+  { slug: "importancia-exercicio-fisico", category: "Exercícios", title: "A importância do exercício físico para a saúde mental", excerpt: "Descubra como movimentar o corpo pode reduzir o estresse e melhorar sua qualidade de vida.", date: "12 Mar 2026", readTime: "4 min", image: image("photo-1571019614242-c5c5dee9f50b"), content: ["A prática regular de exercícios vai muito além da estética. Ela é essencial para a saúde física e mental."], tags: ["exercícios", "saúde mental", "bem-estar"] },
+  { slug: "sono-e-bem-estar", category: "Bem-estar", title: "Como uma boa noite de sono transforma o seu corpo", excerpt: "Dormir bem é tão importante quanto uma boa alimentação e a prática de exercícios físicos.", date: "08 Mar 2026", readTime: "6 min", image: image("photo-1541480601022-2308c0f02487"), content: ["O sono de qualidade é essencial para a reparação celular e o equilíbrio do organismo."], tags: ["sono", "bem-estar", "saúde"] },
+  { slug: "hidratação-corporal", category: "Bem-estar", title: "A importância da hidratação para o organismo", excerpt: "A água é essencial para o funcionamento de todas as células do nosso corpo.", date: "05 Mar 2026", readTime: "3 min", image: image("photo-1548839140-29a749e1cf4d"), content: ["A hidratação adequada participa de inúmeras funções no organismo e deve fazer parte da rotina."], tags: ["hidratação", "bem-estar", "saúde"] },
+  { slug: "meditação-reduzir-ansiedade", category: "Bem-estar", title: "Meditação: uma aliada contra a ansiedade", excerpt: "Práticas de mindfulness podem ajudar a criar pausas e mais presença no dia a dia.", date: "01 Mar 2026", readTime: "5 min", image: image("photo-1506126613408-eca07ce68773"), content: ["A meditação pode ser uma prática simples de autocuidado, sem substituir avaliação profissional quando necessária."], tags: ["meditação", "saúde mental", "ansiedade"] },
+  { slug: "alimentos-anti-inflamatorios", category: "Nutrição", title: "Alimentos anti-inflamatórios que devem estar no seu prato", excerpt: "Conheça escolhas alimentares que podem compor uma rotina mais equilibrada.", date: "25 Fev 2026", readTime: "6 min", image: image("photo-1512621776951-a57141f2eefd"), content: ["Uma alimentação variada pode apoiar a saúde, mas não substitui diagnóstico ou tratamento individualizado."], tags: ["nutrição", "alimentação", "saúde"] },
+  { slug: "yoga-iniciantes", category: "Exercícios", title: "Yoga para iniciantes: por onde começar", excerpt: "Se você quer começar a praticar yoga, veja como dar os primeiros passos com segurança.", date: "20 Fev 2026", readTime: "5 min", image: image("photo-1544367567-0f2fcb009e0b"), content: ["A yoga une movimento, respiração e atenção. Comece respeitando seus limites e procure orientação quando necessário."], tags: ["yoga", "exercícios", "bem-estar"] },
+  { slug: "saúde-mental-trabalho", category: "Bem-estar", title: "Como cuidar da saúde mental no ambiente de trabalho", excerpt: "Dicas práticas para manter o equilíbrio emocional durante a jornada.", date: "15 Fev 2026", readTime: "4 min", image: image("photo-1499750310107-5fef28a66643"), content: ["Cuidar da saúde mental no trabalho envolve limites, pausas, apoio e atenção aos sinais persistentes de sofrimento."], tags: ["saúde mental", "trabalho", "bem-estar"] },
+  { slug: "benefícios-caminhada", category: "Exercícios", title: "Os benefícios da caminhada para a saúde", excerpt: "A caminhada é acessível e pode fazer parte de uma rotina ativa.", date: "10 Fev 2026", readTime: "4 min", image: image("photo-1476480862126-209bfaa8edc8"), content: ["A caminhada é uma atividade física acessível. Ajuste intensidade e duração à sua condição e procure orientação se houver sintomas."], tags: ["caminhada", "exercícios", "saúde"] },
+];
+
+const scheduledPosts: BlogPost[] = [
+  {
+    slug: "plano-de-saude-por-adesao-como-funciona-rj",
+    category: "Coletivo por adesão",
+    title: "Plano de saúde por adesão: como funciona e quem pode contratar no RJ",
+    excerpt:
+      "Entenda o que é o plano coletivo por adesão, quem pode contratar via entidade de classe, o que conferir antes de assinar e como a Amélia Saúde orienta no Rio de Janeiro.",
+    date: "27 Jul 2026",
+    publishAt: "2026-07-27T08:00:00-03:00",
+    readTime: "8 min",
+    image: image("photo-1454165804606-c3d57bc86b40"),
+    content: [
+      "## Resposta direta",
+      "O plano de saúde coletivo por adesão é uma modalidade em que a contratação acontece por meio de vínculo com sindicato, conselho, associação profissional ou entidade de classe aceita no produto. No Rio de Janeiro, a elegibilidade, a rede, a carência e o preço dependem do produto e da proposta vigentes — não de uma regra universal. Confirme sempre no contrato e no canal oficial da operadora.",
+      "## O que significa coletivo por adesão?",
+      "Na prática, você não contrata um plano individual aberto a qualquer pessoa: a adesão exige um vínculo com a entidade prevista no produto. A entidade intermedia a relação coletiva; a cobertura, a rede e as condições de uso ficam definidas no contrato do plano. Isso difere do individual/familiar e do empresarial, que seguem outras regras de elegibilidade e contratação.",
+      "## Quem pode contratar?",
+      "Pode contratar quem comprovar o vínculo aceito pela entidade e pelo produto (por exemplo, registro profissional, associação ativa ou categoria prevista). Dependentes só entram se o contrato permitir e se a documentação for aceita. A lista de entidades e categorias elegíveis da Amélia Saúde deve ser confirmada no atendimento comercial vigente — não publique nem aceite uma lista antiga como garantia.",
+      "## Como funciona a contratação?",
+      "1. Verifique se sua categoria ou entidade é elegível no produto.\n2. Reúna documentos de identificação, vínculo e, se houver, de dependentes.\n3. Analise proposta, rede, segmentação, carências e reajuste por escrito.\n4. Confirme cobertura e prestadores na consulta oficial de rede.\n5. Só assine após alinhar proposta e contrato.",
+      "## Quais documentos costumam ser pedidos?",
+      "Documentos variam por produto e entidade. Em geral, peçam identificação, comprovante de vínculo com a entidade ou categoria, dados de dependentes e formulários de adesão. Peça a lista oficial atualizada antes de iniciar o processo e guarde protocolos.",
+      "## Existe carência?",
+      "Pode existir. Carência, cobertura parcial temporária e portabilidade seguem regras do produto e da regulamentação da ANS. Não assuma “sem carência” com base em conversa informal. Confira prazos no contrato e, em troca de plano, avalie se há portabilidade de carências com base no Guia da ANS e na análise da operadora.",
+      "## Adesão x individual x empresarial",
+      "Adesão exige vínculo com entidade aceita. Individual/familiar tem regras próprias de contratação e reajuste. Empresarial depende de CNPJ, número de vidas e regras da empresa. Escolher “o mais barato” sem comparar modalidade, rede e carência costuma gerar frustração. Compare o custo total e a adequação ao seu perfil.",
+      "## Quando vale a pena?",
+      "Vale analisar o coletivo por adesão quando você tem vínculo elegível, precisa de rede na sua rotina no RJ/Grande Rio e quer condições coletivas sem abrir empresa. Só fecha sentido depois de confirmar elegibilidade, rede atualizada, carências e clareza contratual.",
+      "## Perguntas frequentes",
+      "Qualquer profissional pode aderir? Não — depende da entidade e do produto. A Amélia publica preço fixo no blog? Não; preço e condições saem da proposta vigente. Rede de um anúncio é garantia? Não; consulte o produto e o município no canal oficial. Posso incluir dependentes? Somente se o contrato permitir e a documentação for aceita.",
+      "## Próximo passo",
+      "Se você está no Rio de Janeiro e quer saber se pode contratar por adesão, fale com a Amélia Saúde para confirmar elegibilidade, rede e condições atuais — sem promessa genérica no lugar da proposta.",
+    ],
+    tags: ["plano por adesão", "coletivo por adesão", "Rio de Janeiro", "contratação"],
+    author: "Equipe Amélia Saúde",
+    reviewer: "Validação comercial e regulatória pendente",
+    updatedAt: "27 Jul 2026",
+    sources: [ans, amelia],
+    cta: { label: "Verifique sua elegibilidade", href: "/#contato", event: "blog_cta_elegibilidade" },
+  },
+  {
+    slug: "plano-saude-familia-o-que-avaliar-antes-de-incluir-dependentes",
+    category: "Planos de saúde",
+    title: "Plano de saúde para família: o que avaliar antes de incluir dependentes",
+    excerpt: "Um roteiro prático para comparar regras, cobertura, rede e documentos antes de incluir familiares em um plano de saúde.",
+    date: "27 Jul 2026", publishAt: "2026-07-27T10:00:00-03:00", readTime: "7 min",
+    image: image("photo-1492724441997-5dc865305da7"),
+    content: [
+      "## Resposta direta",
+      "Antes de incluir dependentes, confira quem pode ser incluído, quais documentos são exigidos, como funciona a cobertura, quais são as regras de carência e se a rede atende a rotina da família. Essas condições variam por produto e contrato; confirme a versão vigente diretamente com a operadora ou com o canal de orientação.",
+      "## O que avaliar primeiro?",
+      "Comece pela composição familiar e pela finalidade do plano. Uma família pode priorizar pediatria, acompanhamento de condições crônicas, acesso perto de casa ou previsibilidade de atendimento. Transforme essas prioridades em perguntas objetivas antes de comparar propostas.",
+      "## Checklist de contratação",
+      "- Quem pode entrar como titular e dependente?\n- Quais documentos comprovam o vínculo?\n- Há carência, cobertura parcial temporária ou regras específicas?\n- Como consultar a rede credenciada atualizada?\n- Qual canal confirma as condições do contrato?",
+      "## Perguntas frequentes",
+      "A inclusão de dependentes é automática? Não. Ela depende das regras do produto e da documentação exigida. É possível afirmar que um plano é melhor para toda família? Não sem conhecer necessidades, contrato e rede. A orientação segura é comparar condições por escrito e pedir esclarecimento antes da assinatura.",
+      "## Próximo passo",
+      "Se você está avaliando um plano no Rio de Janeiro, conheça a proposta da Amélia Saúde e confirme elegibilidade, rede e condições atuais antes de contratar.",
+    ],
+    tags: ["plano familiar", "dependentes", "contratação"], author: "Equipe Amélia Saúde", reviewer: "Validação comercial e regulatória pendente", updatedAt: "27 Jul 2026", sources: [ans, amelia], cta: { label: "Verifique sua elegibilidade", href: "/#contato", event: "blog_cta_elegibilidade" },
+  },
+  {
+    slug: "beneficiario-e-dependente-plano-de-saude-perguntas",
+    category: "Planos de saúde", title: "Beneficiário e dependente em plano de saúde: quais perguntas fazer?",
+    excerpt: "Entenda a diferença prática entre titular, beneficiário e dependente e leve as perguntas certas para a contratação.",
+    date: "27 Jul 2026", publishAt: "2026-07-27T18:00:00-03:00", readTime: "6 min", image: image("photo-1511895426328-dc8714191300"),
+    content: ["## Resposta direta", "Titular é a pessoa que contrata ou integra o vínculo principal do plano; dependente é quem pode ser incluído conforme as regras do produto. Ambos são beneficiários quando têm cobertura ativa. A definição documental e os vínculos aceitos precisam ser confirmados no contrato e na proposta.", "## O que perguntar antes de assinar?", "Pergunte quais vínculos são aceitos, quais documentos comprovam a relação, quando a cobertura começa, como ocorre a inclusão e o que acontece em caso de alteração familiar. Peça respostas por escrito quando a informação influenciar a decisão.", "## Checklist rápido", "- Quem será o titular?\n- Quais dependentes são elegíveis?\n- Quais documentos e prazos valem?\n- Como funciona a exclusão ou inclusão?\n- Onde consultar contrato e rede atualizados?", "## Atenção", "Não use uma explicação genérica como confirmação de elegibilidade. Produto, modalidade e contrato podem mudar a resposta. A informação comercial vigente é a que deve orientar a contratação.", "## Próximo passo", "Use este roteiro para conversar com a Amélia Saúde e esclarecer a modalidade adequada ao seu caso."],
+    tags: ["beneficiário", "dependente", "plano de saúde"], author: "Equipe Amélia Saúde", reviewer: "Validação comercial e regulatória pendente", updatedAt: "27 Jul 2026", sources: [ans, amelia], cta: { label: "Tire suas dúvidas", href: "/#contato", event: "blog_cta_duvidas" },
+  },
+  {
+    slug: "reajuste-plano-de-saude-o-que-entender", category: "Regras e direitos", title: "Reajuste de plano de saúde: o que você precisa entender", excerpt: "Saiba quais perguntas fazer sobre reajuste e onde conferir a regra aplicável ao seu contrato.",
+    date: "28 Jul 2026", publishAt: "2026-07-28T08:00:00-03:00", readTime: "7 min", image: image("photo-1450101499163-c8848c66ca85"),
+    content: ["## Resposta direta", "Reajuste é a alteração do valor da mensalidade conforme regras aplicáveis à modalidade e ao contrato. Não existe uma resposta única para todos os planos: o índice, a periodicidade, a comunicação e a necessidade de autorização variam conforme o caso. Consulte a ANS e os documentos do seu produto.", "## O que muda conforme a modalidade?", "Planos individuais ou familiares e planos coletivos podem seguir regras diferentes. Por isso, identifique a modalidade, leia a cláusula de reajuste e confira a comunicação recebida. Se houver dúvida, solicite memória de cálculo ou explicação formal ao canal responsável.", "## Perguntas para conferir", "- Qual é a modalidade do contrato?\n- Qual regra e período de aplicação foram informados?\n- O percentual foi comunicado corretamente?\n- Há mais de um componente de alteração?\n- Onde registrar uma contestação ou pedido de esclarecimento?", "## O que evitar", "Não compare apenas percentuais de contratos diferentes e não tome uma publicação antiga como regra atual. Reajuste é tema regulatório: confira a fonte oficial e a versão vigente do contrato.", "## Próximo passo", "Acesse a fonte oficial da ANS e peça orientação sobre o seu contrato antes de concluir que um reajuste está correto ou incorreto."],
+    tags: ["reajuste", "ANS", "direitos"], author: "Equipe Amélia Saúde", reviewer: "Validação regulatória pendente", updatedAt: "28 Jul 2026", sources: [ans], cta: { label: "Consulte as regras do plano", href: "https://www.gov.br/ans/pt-br", event: "blog_cta_regras" },
+  },
+  {
+    slug: "cobertura-plano-de-saude-como-conferir", category: "Regras e direitos", title: "Cobertura de plano de saúde: como conferir antes de contratar", excerpt: "Um método simples para ler cobertura, segmentação assistencial, Rol da ANS e limitações contratuais.",
+    date: "28 Jul 2026", publishAt: "2026-07-28T18:00:00-03:00", readTime: "8 min", image: image("photo-1576091160399-112ba8d25d1d"),
+    content: ["## Resposta direta", "Para conferir a cobertura, leia a segmentação assistencial, o contrato, o rol de procedimentos da ANS e as condições específicas do produto. A existência de um procedimento no rol não significa que todo plano ofereça a mesma cobertura: a segmentação, o contrato e as regras vigentes precisam ser considerados em conjunto.", "## Como fazer a conferência", "Liste o atendimento que você realmente precisa, localize a seção correspondente no contrato e confirme rede, autorização, prazos e eventuais limitações. Depois, valide a informação em canal oficial. Guarde a resposta e a versão dos documentos consultados.", "## Checklist antes da contratação", "- Segmentação assistencial do produto\n- Procedimentos e condições de cobertura\n- Rede disponível para sua região\n- Regras de autorização e reembolso, se houver\n- Carências e cobertura parcial temporária\n- Canais para obter a versão atualizada", "## Perguntas frequentes", "A cobertura é igual em todos os planos? Não. Posso confiar apenas em uma conversa informal? Não para uma decisão contratual. A resposta segura é consultar o documento vigente e confirmar com a operadora.", "## Próximo passo", "Compare a documentação com calma e peça orientação à Amélia Saúde sobre o produto que pretende avaliar."],
+    tags: ["cobertura", "Rol ANS", "contrato"], author: "Equipe Amélia Saúde", reviewer: "Validação regulatória pendente", updatedAt: "28 Jul 2026", sources: [ans, amelia], cta: { label: "Confira as condições", href: "/#contato", event: "blog_cta_cobertura" },
+  },
+  {
+    slug: "plano-saude-rio-grande-rio-como-escolher", category: "Rede e território", title: "Plano de saúde no Rio e Grande Rio: como escolher uma opção perto de você", excerpt: "Veja como transformar localização, rotina e acesso em critérios objetivos para avaliar um plano de saúde.",
+    date: "29 Jul 2026", publishAt: "2026-07-29T08:00:00-03:00", readTime: "7 min", image: image("photo-1519494026892-80bbd2d6fd0d"),
+    content: ["## Resposta direta", "Escolher um plano no Rio e Grande Rio começa por mapear onde você mora, trabalha e costuma buscar atendimento. Em seguida, confira a rede credenciada atualizada, a segmentação do produto, os canais de acesso e as regras contratuais. A localização sozinha não confirma disponibilidade de um prestador.", "## Como montar seu mapa de necessidades", "Anote três pontos: residência, trabalho ou estudo e locais onde sua família costuma circular. Depois, priorize especialidades e serviços relevantes. Esse mapa ajuda a fazer perguntas melhores e evita escolher apenas pelo nome da operadora.", "## O que comparar", "- Municípios e regiões atendidos no produto\n- Hospitais, clínicas e laboratórios da rede vigente\n- Forma de consulta e autorização\n- Atendimento presencial e canais digitais\n- Regras de cobertura, carência e contrato", "## Cuidado com a rede", "A rede pode ser atualizada e um resultado de busca não substitui a consulta oficial. Confirme o prestador, o endereço, o produto e a data da informação antes de contar com aquele atendimento.", "## Próximo passo", "Conheça a atuação da Amélia Saúde no Rio de Janeiro e consulte a rede atualizada para sua necessidade."],
+    tags: ["Rio de Janeiro", "Grande Rio", "rede credenciada"], author: "Equipe Amélia Saúde", reviewer: "Validação comercial pendente", updatedAt: "29 Jul 2026", sources: [amelia, ans], cta: { label: "Confira a rede", href: "/rede-credenciada", event: "blog_cta_rede" },
+  },
+  {
+    slug: "amelia-saude-conheca-operadora-carioca", category: "Amélia Saúde", title: "Amélia Saúde: conheça a operadora carioca de planos de saúde", excerpt: "Conheça a proposta, o território e as modalidades de contratação da Amélia Saúde sem confundir informação institucional com promessa contratual.",
+    date: "29 Jul 2026", publishAt: "2026-07-29T18:00:00-03:00", readTime: "6 min", image: image("photo-1517245386807-bb43f82c33c4"),
+    content: ["## Resposta direta", "A Amélia Saúde é uma operadora de planos de saúde com atuação no Rio de Janeiro. A empresa apresenta modalidades voltadas a contratação coletiva por adesão e a planos empresariais, conforme o produto disponível. Elegibilidade, rede, cobertura e condições devem ser confirmadas na proposta e no contrato vigentes.", "## Qual é a proposta?", "A proposta institucional combina atendimento humanizado, tecnologia e orientação mais clara para quem está comparando opções. Isso não substitui a leitura das condições contratuais: o que vale para cada beneficiário é o produto efetivamente contratado.", "## Para quem está avaliando", "Quem busca um plano deve começar pela modalidade, pelo perfil de uso e pela região de atendimento. Em vez de escolher por uma promessa genérica, peça informações sobre elegibilidade, rede, cobertura, carências, canais de atendimento e documentação.", "## Perguntas frequentes", "A Amélia atende todo o Brasil? A presença e a rede devem ser confirmadas para o produto consultado. Qualquer pessoa pode contratar por adesão? A elegibilidade depende do vínculo aceito e das regras vigentes. Existe uma condição única para todos? Não; consulte a proposta específica.", "## Próximo passo", "Conheça a Amélia Saúde e converse com a equipe para entender qual modalidade faz sentido para o seu caso."],
+    tags: ["Amélia Saúde", "operadora", "Rio de Janeiro"], author: "Equipe Amélia Saúde", reviewer: "Validação comercial pendente", updatedAt: "29 Jul 2026", sources: [amelia, ans], cta: { label: "Conheça a Amélia", href: "/#origem", event: "blog_cta_marca" },
+  },
+  {
+    slug: "como-consultar-rede-credenciada-plano-saude", category: "Rede e território", title: "Como conferir a rede do seu plano de saúde antes de contratar", excerpt: "Aprenda a consultar a rede credenciada sem depender de listas antigas ou resultados fora do produto escolhido.",
+    date: "30 Jul 2026", publishAt: "2026-07-30T08:00:00-03:00", readTime: "7 min", image: image("photo-1551076805-e1869033e561"),
+    content: ["## Resposta direta", "Consulte a rede no canal oficial da operadora, selecione o produto correto, informe a região e confirme o prestador antes de contratar. Nome, endereço, especialidade e disponibilidade podem mudar; por isso, a data da consulta e a versão da lista importam.", "## Passo a passo", "1. Identifique o produto e a segmentação.\n2. Acesse o canal oficial de consulta.\n3. Filtre por município, especialidade ou tipo de serviço.\n4. Confirme endereço e vínculo com o produto.\n5. Salve a informação e peça confirmação quando a decisão depender dela.", "## O que perguntar", "Pergunte se o prestador atende o produto que está sendo ofertado, se é necessário autorização, quais horários e canais estão disponíveis e como a operadora comunica alterações. Não aceite uma lista sem identificação do produto ou da data.", "## Erro comum", "Encontrar um hospital em uma busca pública não prova que ele está disponível no seu plano. Rede credenciada é uma informação contextual: produto, local, especialidade e vigência precisam coincidir.", "## Próximo passo", "Consulte a rede atualizada da Amélia Saúde e tire dúvidas antes de tomar uma decisão."],
+    tags: ["rede credenciada", "consulta", "contratação"], author: "Equipe Amélia Saúde", reviewer: "Validação comercial pendente", updatedAt: "30 Jul 2026", sources: [amelia, ans], cta: { label: "Consulte a rede", href: "/rede-credenciada", event: "blog_cta_rede" },
+  },
+  {
+    slug: "plano-saude-pequenas-empresas-o-que-comparar", category: "Planos empresariais", title: "Plano de saúde para pequenas empresas: o que comparar antes de decidir", excerpt: "Um checklist para PME comparar elegibilidade, rede, cobertura, custos e suporte sem contratar no escuro.",
+    date: "30 Jul 2026", publishAt: "2026-07-30T18:00:00-03:00", readTime: "8 min", image: image("photo-1556761175-b413da4baf72"),
+    content: ["## Resposta direta", "Uma pequena empresa deve comparar a modalidade disponível, o número de beneficiários, as regras de inclusão, a rede, a cobertura, a carência, o reajuste e os canais de suporte. O preço é apenas um item: a proposta precisa ser lida junto com o contrato e com a necessidade real da equipe.", "## O que colocar lado a lado", "Organize uma tabela com produto, elegibilidade, faixa de vidas, rede por região, segmentação, coparticipação se houver, carências, reajuste, documentos e prazo de implantação. Isso revela diferenças que uma cotação resumida costuma esconder.", "## Perguntas para a empresa", "- Quem pode entrar como beneficiário?\n- Como dependentes são tratados?\n- Como ocorre movimentação cadastral?\n- Qual rede atende os municípios da equipe?\n- Quais canais resolvem dúvidas de implantação?", "## O que não presumir", "MEI, PME e empresa com poucos funcionários não têm necessariamente a mesma regra de contratação. Não publique ou aceite preço, quantidade mínima ou benefício sem validação da proposta atual.", "## Próximo passo", "Se sua empresa está no Rio de Janeiro, fale com a Amélia Saúde para confirmar as opções empresariais vigentes."],
+    tags: ["PME", "plano empresarial", "empresa"], author: "Equipe Amélia Saúde", reviewer: "Validação comercial pendente", updatedAt: "30 Jul 2026", sources: [amelia, ans], cta: { label: "Fale com a Amélia", href: "/#contato", event: "blog_cta_empresarial" },
+  },
+  {
+    slug: "como-ler-contrato-plano-saude-checklist", category: "Regras e direitos", title: "Como ler contrato de plano de saúde: checklist para não perder pontos importantes", excerpt: "Um guia de leitura para identificar modalidade, cobertura, rede, carência, reajuste, cancelamento e canais de atendimento.",
+    date: "31 Jul 2026", publishAt: "2026-07-31T08:00:00-03:00", readTime: "9 min", image: image("photo-1450101499163-c8848c66ca85"),
+    content: ["## Resposta direta", "Leia o contrato por blocos: modalidade, cobertura, rede, carência, reajuste, vigência, movimentação, cancelamento e atendimento. Marque termos que não entende e peça esclarecimento antes da assinatura. A proposta comercial e o contrato precisam ser coerentes.", "## Checklist de leitura", "- Quem é o contratante e quem são os beneficiários?\n- Qual é a segmentação e a abrangência?\n- Quais coberturas e exclusões estão descritas?\n- Como funcionam carências e autorizações?\n- Como a rede é consultada e atualizada?\n- Qual regra de reajuste se aplica?\n- Como pedir cancelamento ou alteração?", "## Como registrar dúvidas", "Faça uma lista numerada e solicite resposta pelo canal oficial. Guarde proposta, contrato, anexos, protocolos e data da consulta. Em temas regulatórios, compare a explicação com a fonte da ANS.", "## Sinais de alerta", "Desconfie de promessa verbal sem documento, urgência para assinar, preço sem validade, rede sem identificação do produto e respostas que misturam produtos diferentes. Esses atalhos custam caro depois.", "## Próximo passo", "Peça orientação à Amélia Saúde e só avance quando as condições relevantes estiverem claras."],
+    tags: ["contrato", "checklist", "plano de saúde"], author: "Equipe Amélia Saúde", reviewer: "Validação comercial e regulatória pendente", updatedAt: "31 Jul 2026", sources: [ans, amelia], cta: { label: "Peça orientação", href: "/#contato", event: "blog_cta_orientacao" },
+  },
+  {
+    slug: "amelia-saude-perguntas-frequentes-planos-rede-contratacao", category: "Amélia Saúde", title: "Amélia Saúde: perguntas frequentes sobre planos, rede e contratação", excerpt: "Respostas iniciais para as dúvidas mais comuns sobre modalidades, rede, cobertura e contratação na Amélia Saúde.",
+    date: "31 Jul 2026", publishAt: "2026-07-31T18:00:00-03:00", readTime: "9 min", image: image("photo-1576091160550-2173dba999ef"),
+    content: ["## Resposta direta", "A contratação depende do produto, da modalidade, da elegibilidade e das condições vigentes. Este FAQ ajuda a organizar perguntas, mas não substitui a proposta, o contrato, a consulta da rede ou a orientação oficial da Amélia Saúde e da ANS.", "## Quem pode contratar?", "Depende da modalidade. No coletivo por adesão, é necessário verificar o vínculo aceito com a entidade de classe ou categoria profissional. No empresarial, confira as regras para a empresa e os beneficiários. A resposta final deve vir do canal comercial oficial.", "## Como conferir a rede?", "Use o canal de consulta da operadora e filtre pelo produto e município. Confirme a informação antes de usar o serviço, pois rede, endereço e disponibilidade podem ser atualizados.", "## Como saber a cobertura?", "Leia a segmentação, o contrato e as condições do produto. Use a ANS como fonte regulatória e peça esclarecimentos sobre autorizações, carências e limitações antes da contratação.", "## A Amélia informa preço, carência e elegibilidade no blog?", "Não de forma universal. Esses dados dependem do produto e do perfil analisado. Publicar uma condição sem validação seria irresponsável; por isso, o blog explica critérios e direciona para o atendimento.", "## Próximo passo", "Conheça a Amélia Saúde e envie suas dúvidas para receber orientação sobre a opção adequada."],
+    tags: ["Amélia Saúde", "FAQ", "contratação"], author: "Equipe Amélia Saúde", reviewer: "Validação comercial e regulatória pendente", updatedAt: "31 Jul 2026", sources: [amelia, ans], cta: { label: "Conheça a Amélia", href: "/#contato", event: "blog_cta_marca" },
+  },
+  {
+    slug: "plano-saude-empresarial-como-funciona",
+    category: "Planos empresariais",
+    title: "Plano de saúde empresarial: como funciona, carências e quem pode contratar",
+    excerpt: "Entenda como funciona o plano de saúde coletivo empresarial, quem pode contratar, as regras de carência e quem paga a mensalidade. Guia prático para MEI, micro e pequenas empresas.",
+    date: "01 Aug 2026",
+    readTime: "8 min",
+    image: image("photo-1454165804606-c3d57bc86b40"),
+    content: [
+      "## Resposta direta",
+      "O plano de saúde coletivo empresarial é um benefício contratado por uma empresa com CNPJ ativo para sócios e funcionários. A operadora exige um número mínimo de vidas — normalmente duas ou três, variando por produto. A empresa pode subsidiar parte ou toda a mensalidade, e em contratações com 30 ou mais vidas a carência pode ser integralmente isenta, conforme previsto nas regras da ANS.",
+
+      "## O que é plano de saúde coletivo empresarial?",
+      "É a modalidade em que uma empresa — pessoa jurídica com CNPJ ativo — contrata o plano de saúde para um grupo de beneficiários vinculados a ela: sócios, administradores e funcionários com vínculo empregatício. A operadora firma contrato com a empresa, não com cada beneficiário individualmente. Por isso, as condições, a rede e o reajuste são negociados no contrato coletivo, e não seguem as mesmas regras do plano individual ou familiar.",
+
+      "## Quem pode contratar?",
+      "Qualquer empresa com CNPJ ativo pode contratar plano empresarial. As regras de elegibilidade variam conforme a operadora e o produto:",
+
+      "- **MEI (Microempreendedor Individual):** algumas operadoras aceitam a partir de 1 ou 2 vidas — o titular e, se houver, um dependente ou funcionário.",
+      "- **Micro e pequenas empresas:** a partir de 2 ou 3 vidas, com mixes entre sócios e colaboradores.",
+      "- **Médias e grandes empresas:** negociação ampla, com contratos customizados e pool de risco próprio.",
+
+      "O essencial é que a empresa exista formalmente e que os beneficiários tenham vínculo comprovado com o CNPJ contratante.",
+
+      "## Como funciona a contratação?",
+      "O processo segue etapas definidas pela operadora e pela ANS:",
+
+      "1. **Solicitação de proposta:** a empresa informa o perfil dos beneficiários (quantidade, faixa etária, tipo de cobertura desejada).",
+      "2. **Análise e precificação:** a operadora avalia o risco da carteira e apresenta as condições comerciais — mensalidade, coparticipação, rede e carências aplicáveis.",
+      "3. **Documentação da empresa:** contrato social, CNPJ, comprovante de endereço e, em alguns casos, comprovante de faturamento.",
+      "4. **Documentação dos beneficiários:** RG, CPF e comprovante de vínculo com a empresa (pró-labore, holerite ou declaração).",
+      "5. **Assinatura do contrato e início da vigência:** após aprovação da documentação e pagamento da primeira mensalidade.",
+
+      "Todo o processo deve ser documentado. Guarde proposta, contrato, comprovantes e protocolos de comunicação com a operadora.",
+
+      "## Plano empresarial tem carência?",
+      "Depende do tamanho do grupo contratante e das condições negociadas. A regra geral da ANS para planos novos prevê:",
+
+      "| Tipo de cobertura | Carência máxima |",
+      "|---|---|",
+      "| Urgência e emergência | 24 horas |",
+      "| Consultas e exames simples | 180 dias |",
+      "| Cirurgias e internações | 180 dias |",
+      "| Parto | 300 dias |",
+
+      "**Isenção possível:** se a empresa contratar com 30 ou mais beneficiários desde o início da vigência, a carência pode ser integralmente dispensada. Algumas operadoras estendem a isenção para grupos a partir de 10 vidas — é ponto de negociação contratual.",
+
+      "Importante: doença ou lesão preexistente declarada pode ter carência específica de até 24 meses, conforme avaliação da operadora e regras da ANS.",
+
+      "## Quem paga a mensalidade?",
+      "A empresa é a contratante e a responsável financeira perante a operadora. Como o custo chega a cada beneficiário depende da política interna:",
+
+      "- **Subsídio total:** a empresa paga 100% da mensalidade de todos os beneficiários.",
+      "- **Subsídio parcial:** a empresa paga uma parte e o beneficiário complementa (modelo mais comum).",
+      "- **Sem subsídio:** o beneficiário paga integralmente, mas o contrato segue em nome da empresa.",
+
+      "No caso do MEI, é comum o titular arcar com o custo integral, descontando do pró-labore.",
+
+      "## Checklist: documentos para contratar",
+      "Antes de abrir uma proposta, organize:",
+
+      "- CNPJ ativo e regular",
+      "- Contrato social (ou certificado MEI)",
+      "- Relação de beneficiários com nome, CPF e data de nascimento",
+      "- Comprovante de vínculo de cada beneficiário com a empresa",
+      "- Definição de quem será subsidiado e em qual proporção",
+      "- Orçamento mensal disponível para o benefício",
+
+      "## FAQ",
+      "**MEI pode contratar plano empresarial com uma vida só?** Depende da operadora. Algumas aceitam 1 vida (o titular), outras exigem 2 ou mais. Consulte a condição vigente.",
+
+      "**Tem carência para doença preexistente?** Sim. Doenças ou lesões declaradas no ato da contratação podem ter carência de até 24 meses, conforme avaliação da operadora.",
+
+      "**Funcionário demitido perde o plano?** O ex-empregado tem direito de manter o plano por um período proporcional ao tempo de contribuição (Lei 9.656/98, art. 30 e 31), arcando com o custo integral.",
+
+      "**Dá para incluir dependente no plano empresarial?** Sim. Cônjuge, filhos, enteados e, em alguns planos, pais. As regras e o custo adicional dependem do contrato.",
+
+      "**Quanto tempo até começar a usar?** Após a assinatura e pagamento, a vigência começa na data contratada. As carências passam a contar da data de início da vigência.",
+
+      "## Próximo passo",
+      "Conheça as condições do plano empresarial da Amélia Saúde para o seu negócio."
+    ],
+    tags: ["plano empresarial", "carência", "MEI", "PME", "contratação"],
+    author: "Equipe Amélia Saúde",
+    reviewer: "Validação comercial e regulatória pendente",
+    updatedAt: "01 Aug 2026",
+    sources: [ans, amelia],
+    cta: { label: "Fale com a Amélia", href: "/#contato", event: "blog_cta_empresarial" },
+  },
+  {
+    slug: "plano-saude-empresarial-rj-precos-reajuste-comparar",
+    category: "Planos empresariais",
+    title: "Plano de saúde empresarial no RJ: preços, reajuste e como comparar propostas",
+    excerpt: "Saiba como o preço do plano empresarial é formado, como funciona o reajuste e quais os 8 critérios para comparar propostas no Rio de Janeiro e Grande Rio.",
+    date: "01 Aug 2026",
+    readTime: "7 min",
+    image: image("photo-1554224155-6726b3ff858f"),
+    content: [
+      "## Resposta direta",
+      "O preço do plano empresarial no Rio de Janeiro depende de quatro fatores: número de vidas, faixa etária dos beneficiários, segmentação contratada (ambulatorial, hospitalar com ou sem obstetrícia) e rede credenciada. O reajuste anual é negociado entre a operadora e a empresa contratante — não segue o teto da ANS aplicável aos planos individuais. Comparar propostas exige olhar além da mensalidade e considerar carência, coparticipação, rede disponível e metodologia de reajuste.",
+
+      "## Como o preço de um plano empresarial é formado?",
+      "A precificação do plano empresarial segue a lógica de mutualismo: o risco é calculado sobre o grupo de beneficiários como um todo, não por pessoa. Os componentes principais são:",
+
+      "- **Número de vidas:** quanto maior o grupo, mais o risco se dilui — o preço por vida tende a cair.",
+      "- **Faixa etária:** a distribuição de idades do grupo impacta diretamente a sinistralidade esperada.",
+      "- **Segmentação:** ambulatorial (consultas e exames), hospitalar sem obstetrícia e hospitalar com obstetrícia têm custos progressivos.",
+      "- **Rede credenciada:** hospitais, clínicas e laboratórios incluídos — quanto mais abrangente, maior o custo.",
+      "- **Coparticipação:** fator de desconto sobre a mensalidade em troca de pagamento por evento utilizado.",
+
+      "A operadora cruza essas variáveis com a sinistralidade histórica da carteira para chegar ao valor final.",
+
+      "## Quantas vidas mudam o preço?",
+      "O número de vidas é o fator que mais altera o preço por beneficiário. Em termos práticos:",
+
+      "| Faixa de vidas | Comportamento do preço |",
+      "|---|---|",
+      "| 2 a 9 vidas | Preço por vida mais alto. Risco concentrado. |",
+      "| 10 a 29 vidas | Redução sensível. Diluição começa a operar. |",
+      "| 30 a 99 vidas | Possibilidade de isenção de carência e desconto maior. |",
+      "| 100+ vidas | Negociação corporativa. Contrato customizado. |",
+
+      "A diferença entre uma empresa de 3 vidas e uma de 30 pode representar redução significativa no custo por beneficiário — é por isso que PMEs em crescimento renegociam o contrato quando a equipe aumenta.",
+
+      "## Como funciona o reajuste no plano empresarial?",
+      "Ao contrário do plano individual (cujo reajuste anual tem teto definido pela ANS), o plano empresarial tem reajuste negociado entre empresa e operadora. A metodologia padrão considera:",
+
+      "- **Sinistralidade:** relação entre o valor pago em mensalidades e o custo dos serviços utilizados pelo grupo no período.",
+      "- **Inflação médica (VCMH):** variação do custo dos procedimentos, materiais e serviços de saúde — historicamente acima da inflação geral.",
+      "- **Faixa etária:** mudanças na pirâmide etária do grupo impactam o risco e o reajuste.",
+
+      "O contrato deve especificar a metodologia de cálculo, a periodicidade e o índice de referência. Empresas com mais vidas têm mais poder de barganha para negociar tetos e condições de reajuste.",
+
+      "## Coparticipação: reduz a mensalidade, mas exige atenção",
+      "A coparticipação é um mecanismo em que o beneficiário paga um valor fixo ou um percentual por cada evento utilizado (consulta, exame, internação). Em troca, a mensalidade é reduzida.",
+
+      "Exemplo conceitual: um plano com mensalidade de R$ 400 sem coparticipação pode custar R$ 280 com coparticipação de R$ 40 por consulta. Se o beneficiário faz 2 consultas/mês, o custo total sobe para R$ 360 — ainda abaixo do plano sem coparticipação. Mas se faz 5 consultas, o custo efetivo sobe para R$ 480.",
+
+      "Antes de optar pela coparticipação, projete o uso esperado: quantas consultas, exames e procedimentos o grupo utiliza por mês?",
+
+      "## Como comparar propostas de plano empresarial no RJ: 8 critérios",
+      "Use este checklist ao avaliar propostas de operadoras diferentes:",
+
+      "1. **Vidas mínimas:** qual o número exigido e ele se mantém? Se um funcionário sair e o grupo cair abaixo do mínimo, o contrato pode ser rescindido?",
+      "2. **Carência:** há isenção? Em qual condição? Se não houver isenção, quais os prazos exatos?",
+      "3. **Coparticipação:** valor fixo ou percentual? Há teto mensal ou anual de coparticipação?",
+      "4. **Reajuste:** qual a metodologia? Há teto? O índice é composto (sinistralidade + VCMH) ou simples?",
+      "5. **Rede no RJ e Grande Rio:** quantos hospitais, clínicas e laboratórios? Em quais bairros e municípios? A rede cobre deslocamentos rotineiros?",
+      "6. **Segmentação:** ambulatorial, hospitalar sem obstetrícia ou hospitalar com obstetrícia? Qual atende o perfil do grupo?",
+      "7. **Dependentes:** cônjuge, filhos, enteados e pais são aceitos? Qual o custo adicional por dependente?",
+      "8. **Rescisão:** qual o prazo de aviso? Há multa? O contrato prevê portabilidade para os beneficiários?",
+
+      "Compare as propostas lado a lado usando esses 8 critérios — a mensalidade é o ponto de partida, não o critério único.",
+
+      "## FAQ",
+      "**Plano empresarial é sempre mais barato que individual?** Não necessariamente. Grupos pequenos (2-3 vidas) podem ter custo próximo ao individual. A vantagem de preço aparece com 10+ vidas e na possibilidade de isenção de carência.",
+
+      "**Dá para trocar de plano empresarial depois de contratar?** Sim, respeitando o prazo de aviso contratual. A portabilidade de carências pode ser exercida se os requisitos da ANS forem atendidos.",
+
+      "**O que acontece com o preço se um funcionário sair?** A saída de um beneficiário reduz a receita do contrato, podendo impactar o reajuste no ciclo seguinte. Se o grupo cair abaixo do mínimo contratual, a operadora pode rescindir o contrato — verifique essa cláusula.",
+
+      "**Reajuste por sinistralidade pode ser contestado?** Sim. A empresa tem direito de solicitar o demonstrativo de sinistralidade e auditar os números apresentados pela operadora.",
+
+      "## Próximo passo",
+      "Conheça as condições do plano empresarial da Amélia Saúde para o seu negócio no Rio de Janeiro."
+    ],
+    tags: ["plano empresarial", "preços", "reajuste", "Rio de Janeiro", "PME"],
+    author: "Equipe Amélia Saúde",
+    reviewer: "Validação comercial e regulatória pendente",
+    updatedAt: "01 Aug 2026",
+    sources: [ans, amelia],
+    cta: { label: "Peça uma análise", href: "/#contato", event: "blog_cta_empresarial_precos" },
+  },
+  {
+    slug: "plano-empresarial-ou-adesao-qual-escolher",
+    category: "Planos empresariais",
+    title: "Plano empresarial ou coletivo por adesão: qual faz sentido para sua empresa?",
+    excerpt: "Comparação prática entre plano de saúde empresarial e coletivo por adesão. Entenda as diferenças de contratação, carência, reajuste e descubra qual faz sentido para o seu negócio.",
+    date: "03 Aug 2026",
+    readTime: "8 min",
+    image: image("photo-1600880292203-757bb62b4baf"),
+    content: [
+      "## Resposta direta",
+      "A escolha entre plano empresarial e coletivo por adesão depende do seu CNPJ. Se você tem empresa ativa com 2 ou mais vidas, o empresarial costuma ser o caminho mais direto — permite negociar carência, reajuste e subsídio da mensalidade. Se você é profissional autônomo sem CNPJ ou busca um custo mais previsível atrelado à sua categoria profissional, o plano por adesão pode ser a melhor alternativa. Abaixo, os critérios que decidem.",
+
+      "## Tabela comparativa: empresarial x adesão",
+      "| Critério | Empresarial | Coletivo por adesão |",
+      "|---|---|---|",
+      "| Quem contrata? | Pessoa jurídica (CNPJ ativo) | Pessoa física vinculada a entidade de classe |",
+      "| Vínculo exigido | Trabalhista ou societário com a empresa | Associativo com sindicato, conselho ou associação |",
+      "| Vidas mínimas | 2 a 3 (varia por operadora) | Normalmente 1 (o titular) |",
+      "| Carência | Pode ser isenta com 30+ vidas | Segue regras padrão da ANS |",
+      "| Reajuste | Negociado entre empresa e operadora | Regulado pela ANS (teto anual) |",
+      "| Quem paga? | Empresa pode subsidiar parcial ou total | Beneficiário paga integralmente |",
+      "| Portabilidade | Sim, respeitando prazos contratuais | Sim, com regras ANS facilitadas |",
+      "| Coparticipação | Comum e negociável | Presente na maioria dos produtos |",
+      "| Rede | Definida no contrato empresarial | Definida no contrato da entidade |",
+
+      "## Quando o plano empresarial faz mais sentido",
+      "O plano empresarial é vantajoso em cenários específicos:",
+
+      "- **Retenção de talentos:** oferecer plano de saúde como benefício melhora a atratividade da empresa no mercado de trabalho.",
+      "- **Subsídio flexível:** a empresa decide se paga 100%, 50% ou 0% da mensalidade de cada beneficiário — e pode variar por cargo ou tempo de casa.",
+      "- **Isenção de carência:** com 30 ou mais vidas, a carência padrão pode ser dispensada — o grupo começa a usar o plano de imediato.",
+      "- **Negociação direta:** reajuste, rede e coparticipação são negociados com a operadora, o que dá mais controle à empresa, especialmente a partir de 100 vidas.",
+      "- **CNPJ ativo com 2+ pessoas:** se você já tem empresa com sócios ou funcionários, o empresarial é o encaixe natural.",
+
+      "## Quando o coletivo por adesão é melhor",
+      "O plano por adesão resolve situações que o empresarial não alcança:",
+
+      "- **Autônomo sem CNPJ:** advogados, médicos, engenheiros e outros profissionais liberais que atuam como pessoa física podem contratar via OAB, CRM, CREA e outras entidades.",
+      "- **Previsibilidade de reajuste:** o reajuste anual segue as regras da ANS, com teto regulado — previsível, sem surpresas de sinistralidade.",
+      "- **Sem burocracia empresarial:** não exige contrato social, comprovante de faturamento ou vínculo trabalhista — basta ser associado à entidade.",
+      "- **Portabilidade simplificada:** as regras de portabilidade para planos por adesão tendem a ser mais simples e com prazos mais curtos.",
+      "- **Custo estável:** sem a variação de sinistralidade que impacta contratos empresariais pequenos, o custo tende a ser mais estável ano a ano.",
+
+      "## MEI: pode escolher qualquer um?",
+      "O MEI ocupa uma posição híbrida interessante. Por ter CNPJ, pode contratar o plano empresarial. Mas se tiver apenas 1 vida (o titular), nem toda operadora aceita. Nesse caso, o plano por adesão da categoria profissional é uma alternativa a considerar.",
+
+      "A decisão do MEI passa por três perguntas:",
+      "1. A operadora aceita MEI com 1 ou 2 vidas no empresarial?",
+      "2. Minha categoria profissional tem entidade com plano por adesão vigente?",
+      "3. Prefiro negociar reajuste direto com a operadora (empresarial) ou ter teto ANS (adesão)?",
+
+      "## 5 perguntas para decidir",
+      "Responda antes de abrir propostas:",
+
+      "1. **Tenho CNPJ ativo e quantos beneficiários?** Se 2+ e todos têm vínculo comprovado, empresarial é a rota principal.",
+      "2. **Quero subsidiar o custo para a equipe?** Se sim, empresarial. No plano por adesão, cada beneficiário paga o seu.",
+      "3. **Minha categoria profissional tem entidade com plano vigente?** Se sim, peça a tabela e compare com o empresarial.",
+      "4. **Prefiro negociar reajuste ou ter teto ANS?** Empresarial = negociação. Adesão = teto regulado.",
+      "5. **A rede que me interessa está disponível em qual modalidade?** Confira a rede de cada produto antes de decidir — o hospital ou clínica que você prefere pode estar em um e não no outro.",
+
+      "## FAQ",
+      "**Posso migrar do empresarial para adesão depois?** Sim. A portabilidade de carências permite a migração entre modalidades, desde que atendidos os requisitos da ANS (prazo mínimo no plano atual, compatibilidade de segmentação e prazo de solicitação).",
+
+      "**Qual costuma ter rede maior?** Não há regra fixa. A rede depende da operadora e do produto. Um plano empresarial premium pode ter rede maior que um plano por adesão básico, e vice-versa. Consulte a rede de cada proposta.",
+
+      "**Empresarial sem carência é sempre possível?** Não. A isenção de carência exige 30+ vidas (regra ANS) ou condição negociada com a operadora. Grupos menores enfrentam as carências padrão.",
+
+      "**Coparticipação existe nos dois?** Sim. Tanto planos empresariais quanto por adesão podem ter coparticipação. O percentual ou valor fixo depende do produto e da negociação.",
+
+      "**Qual é mais barato?** Depende. Um empresarial de 2-3 vidas pode custar próximo de um plano por adesão. A diferença de preço aparece na escala: empresarial com 30+ vidas tende a ser mais barato por beneficiário, e o subsídio da empresa reduz o custo percebido por cada um.",
+
+      "## Próximo passo",
+      "Fale com a Amélia Saúde. Explique o perfil do seu negócio ou da sua categoria profissional e receba orientação sobre a modalidade mais adequada."
+    ],
+    tags: ["plano empresarial", "plano por adesão", "comparação", "MEI", "PME", "adesão"],
+    author: "Equipe Amélia Saúde",
+    reviewer: "Validação comercial e regulatória pendente",
+    updatedAt: "03 Aug 2026",
+    sources: [ans, amelia],
+    cta: { label: "Fale com a Amélia", href: "/#contato", event: "blog_cta_empresarial_adesao" },
+  },
+  {
+    slug: "plano-saude-empresarial-carencias-guia-completo",
+    category: "Planos empresariais",
+    title: "Plano de saúde empresarial: guia completo de carências, prazos e isenções",
+    excerpt: "Entenda os prazos de carência no plano empresarial, quando a isenção é possível e como funciona a regra para doenças preexistentes. Guia atualizado com as normas da ANS.",
+    date: "01 Aug 2026",
+    readTime: "8 min",
+    image: image("photo-1576091160399-112ba8d25d1d"),
+    content: [
+      "## Resposta direta",
+      "No plano de saúde empresarial, os prazos máximos de carência são definidos pela ANS: 24 horas para urgência e emergência, 180 dias para consultas, exames e cirurgias, e 300 dias para parto. A grande vantagem do empresarial é que, em contratações com 30 ou mais vidas, a carência pode ser integralmente isenta. Em grupos menores, a isenção parcial pode ser negociada contratualmente. Já doenças preexistentes declaradas podem ter cobertura parcial temporária de até 24 meses.",
+
+      "## O que é carência e por que ela existe?",
+      "Carência é o período que o beneficiário precisa esperar após a contratação para usar determinadas coberturas. Ela existe para proteger o equilíbrio financeiro do plano: sem carência, pessoas contratariam o plano já doentes, usariam serviços caros e cancelariam em seguida — o que inviabilizaria o sistema de mutualismo.",
+
+      "## Prazos máximos de carência (ANS)",
+      "A Lei 9.656/98 e as resoluções da ANS estabelecem os prazos máximos. Nenhum plano pode exceder esses limites:",
+      "",
+      "| Cobertura | Prazo máximo |",
+      "|---|---|",
+      "| Urgência e emergência | 24 horas |",
+      "| Consultas médicas | 180 dias |",
+      "| Exames simples | 180 dias |",
+      "| Internações clínicas e cirúrgicas | 180 dias |",
+      "| Procedimentos de alta complexidade | 180 dias |",
+      "| Parto | 300 dias |",
+      "| Doenças preexistentes (CPT) | Até 24 meses |",
+
+      "## Quando a carência pode ser isenta no empresarial?",
+      "A isenção de carência no plano empresarial não é automática — depende de condições específicas:",
+      "",
+      "**Grupo com 30 ou mais vidas:** a ANS prevê isenção total de carências. A operadora é obrigada a dispensar os prazos se o contrato for firmado nessa condição.",
+      "**Grupo entre 10 e 29 vidas:** a isenção total ou parcial pode ser negociada entre a empresa e a operadora. Depende da política comercial e do perfil do grupo.",
+      "**Grupo com menos de 10 vidas:** a isenção é rara e geralmente limitada a consultas eletivas. O mais comum é cumprimento integral dos prazos.",
+      "",
+      "Importante: a isenção só vale para o grupo inicial. Novos beneficiários que entrarem depois podem ter que cumprir carência, a menos que o contrato preveja o contrário.",
+
+      "## Carência para doenças e lesões preexistentes (DLP)",
+      "Se o beneficiário declarar uma condição de saúde prévia na contratação, a operadora pode aplicar a Cobertura Parcial Temporária (CPT):",
+      "",
+      "- Prazo máximo: 24 meses",
+      "- Durante a CPT, apenas procedimentos relacionados àquela condição específica ficam suspensos",
+      "- Após os 24 meses, a cobertura passa a ser integral",
+      "- A operadora não pode recusar o beneficiário — só aplicar a CPT",
+      "",
+      "Dica prática: nunca omita condição prévia na declaração de saúde. Fraude contratual pode levar à suspensão total da cobertura ou rescisão do contrato.",
+
+      "## Portabilidade: como trocar de plano sem cumprir nova carência",
+      "Se você já tem um plano de saúde há pelo menos 2 anos (ou 3 anos se tiver cumprido CPT), pode exercer a portabilidade de carências:",
+      "",
+      "- O novo plano não pode exigir novos prazos de carência",
+      "- A portabilidade vale para planos compatíveis (mesma segmentação e faixa de preço)",
+      "- É preciso estar em dia com a mensalidade e dentro do prazo de permanência mínima",
+      "- O processo é regulado pela ANS e pode ser consultado no Guia ANS de Planos de Saúde",
+
+      "## Checklist: o que perguntar sobre carência antes de contratar",
+      "- Qual o prazo de carência para cada tipo de cobertura?",
+      "- Existe isenção de carência? Em que condições?",
+      "- Novos funcionários que entrarem depois terão que cumprir carência?",
+      "- Como funciona a CPT para quem tem condição preexistente?",
+      "- Se eu trocar de plano depois de 2 anos, consigo portar a carência?",
+      "- O contrato tem cláusula de carência para rescisão e nova contratação?",
+
+      "## FAQ",
+      "**Plano empresarial sempre tem carência?** Não. Grupos com 30+ vidas têm isenção garantida pela ANS. Grupos menores podem negociar isenção parcial.",
+      "**Carência conta a partir da assinatura ou da vigência?** A partir do início da vigência do contrato, que pode ser alguns dias após a assinatura.",
+      "**Se eu sair da empresa e entrar em outra, cumpro carência de novo?** Sim, a menos que você exerça portabilidade de carências entre os planos.",
+      "**Cirurgia de urgência durante a carência — é coberta?** Sim. Urgência e emergência têm carência máxima de 24 horas.",
+
+      "## Próximo passo",
+      "Fale com a Amélia Saúde para entender as condições de carência do plano empresarial adequado à sua empresa."
+    ],
+    tags: ["plano empresarial", "carência", "ANS", "isenção", "portabilidade"],
+    author: "Equipe Amélia Saúde",
+    reviewer: "Validação comercial e regulatória pendente",
+    updatedAt: "01 Aug 2026",
+    sources: [ans],
+    cta: { label: "Fale com a Amélia", href: "/#contato", event: "blog_cta_carencia_empresarial" },
+  },
+  {
+    slug: "plano-saude-mei-pequenas-empresas-rj",
+    category: "Planos empresariais",
+    title: "Plano de saúde para MEI e pequenas empresas no RJ: quantas vidas, preço e como contratar",
+    excerpt: "Guia prático para MEI e pequenas empresas contratarem plano de saúde empresarial no Rio de Janeiro. Entenda quantas vidas são exigidas, como o preço é calculado e o passo a passo da contratação.",
+    date: "01 Aug 2026",
+    readTime: "8 min",
+    image: image("photo-1556761175-b413da4baf72"),
+    content: [
+      "## Resposta direta",
+      "MEIs e pequenas empresas com CNPJ ativo podem contratar plano de saúde empresarial a partir de 1 ou 2 vidas, dependendo da operadora. O MEI titular conta como 1 vida; se houver um funcionário registrado ou um dependente, fecha as 2 vidas exigidas por muitas operadoras. O preço segue a lógica do grupo: quanto mais vidas, menor o custo por beneficiário. A contratação exige CNPJ ativo, documento dos beneficiários e, em alguns casos, comprovação de faturamento.",
+
+      "## MEI pode contratar plano empresarial com 1 vida só?",
+      "Depende da operadora e do produto. Algumas aceitam MEI com apenas o titular (1 vida), especialmente em produtos voltados para o microempreendedor. Outras exigem no mínimo 2 vidas — o titular mais um dependente, sócio ou funcionário.",
+      "",
+      "Na prática:",
+      "- **1 vida:** produtos específicos para MEI, com cobertura enxuta e rede regional. Disponibilidade menor.",
+      "- **2 vidas:** o titular + cônjuge, filho(a) ou um funcionário registrado. Já abre um leque maior de operadoras.",
+      "- **3 vidas ou mais:** acesso à maioria dos produtos empresariais do mercado, com melhores condições de preço e rede.",
+
+      "## Quantas vidas são exigidas para cada porte?",
+      "| Porte da empresa | Vidas mínimas típicas | Observação |",
+      "|---|---|---|",
+      "| MEI (1 pessoa) | 1 a 2 | Operadoras que aceitam 1 vida são minoria |",
+      "| Microempresa (até 9 funcionários) | 2 a 3 | Com 3 vidas, acesso à maioria dos produtos |",
+      "| Pequena empresa (10 a 49) | 3 a 5 | Negociação de isenção de carência possível |",
+      "| Média empresa (50 a 99) | 5 a 10 | Pool de risco próprio, preços mais competitivos |",
+
+      "## Como o preço é calculado para MEI e pequenas empresas?",
+      "O preço por vida no plano empresarial segue uma lógica inversa ao número de beneficiários:",
+      "",
+      "- **2 a 9 vidas:** preço por vida mais alto. O risco é concentrado em poucas pessoas.",
+      "- **10 a 29 vidas:** preço começa a cair. A diluição do risco melhora a condição.",
+      "- **30 ou mais vidas:** preço mais competitivo + isenção de carência.",
+      "",
+      "Além do número de vidas, pesam no preço: faixa etária média do grupo, segmentação (ambulatorial, hospitalar, com/sem obstetrícia), coparticipação e rede credenciada.",
+
+      "## Passo a passo para contratar",
+      "1. **Reúna os documentos:** CNPJ ativo, contrato social (ou certificado MEI), comprovante de endereço da empresa, RG e CPF dos beneficiários.",
+      "2. **Defina o perfil do grupo:** quantas vidas, faixas etárias, tipo de cobertura desejada.",
+      "3. **Solicite propostas:** peça cotações para 2 ou 3 operadoras. Compare além do preço: carência, coparticipação, reajuste e rede.",
+      "4. **Analise as condições:** confira rede credenciada no Rio de Janeiro e Grande Rio, regras de reajuste, carência e inclusão futura de dependentes.",
+      "5. **Formalize o contrato:** a empresa assina como contratante. Cada beneficiário preenche a declaração de saúde individual.",
+      "6. **Aguarde a vigência:** após análise e aprovação da operadora, o plano entra em vigor na data contratual.",
+
+      "## Cuidados específicos para MEI",
+      "- **Vínculo trabalhista não é obrigatório:** o MEI titular pode incluir a si mesmo como beneficiário sem ter funcionários.",
+      "- **Dependentes contam como vidas:** cônjuge e filhos podem ser incluídos e contam para o número mínimo de vidas.",
+      "- **Faturamento pode ser exigido:** algumas operadoras pedem comprovante dos últimos meses para validar a capacidade de pagamento.",
+      "- **Pró-labore não é obrigatório:** você pode pagar o plano como despesa da empresa, não precisa ter pró-labore formal.",
+
+      "## Checklist: o que comparar entre propostas",
+      "- Número mínimo de vidas exigido",
+      "- Carência: há isenção? Em que condição?",
+      "- Coparticipação: valor por consulta/exame e teto mensal",
+      "- Reajuste: metodologia (sinistralidade, VCMH, IPCA) e teto contratual",
+      "- Rede no RJ: hospitais, laboratórios e clínicas na sua região",
+      "- Inclusão de dependentes: regras, carência extra e custo adicional",
+      "- Rescisão: prazo de aviso, multa e condições de saída",
+
+      "## FAQ",
+      "**MEI paga mais caro que empresa maior?** Em geral, sim — por vida. Grupos pequenos têm menos poder de negociação e o risco é mais concentrado.",
+      "**Dá para contratar só para o sócio e não para os funcionários?** Não. Se a empresa tem funcionários, todos devem ser incluídos ou a operadora pode recusar. O plano é do grupo, não individual.",
+      "**Posso trocar de operadora depois de contratado?** Sim, respeitando o prazo contratual de aviso prévio. Se tiver mais de 2 anos de plano, pode usar portabilidade de carências.",
+      "**MEI sem faturamento consegue contratar?** Improvável. A operadora avalia risco de inadimplência.",
+
+      "## Próximo passo",
+      "Envie o perfil da sua empresa para a Amélia Saúde e receba orientação sobre as opções disponíveis para MEI e pequenas empresas no Rio de Janeiro."
+    ],
+    tags: ["MEI", "pequena empresa", "plano empresarial", "Rio de Janeiro", "contratação"],
+    author: "Equipe Amélia Saúde",
+    reviewer: "Validação comercial e regulatória pendente",
+    updatedAt: "01 Aug 2026",
+    sources: [ans, amelia],
+    cta: { label: "Peça uma análise", href: "/#contato", event: "blog_cta_mei_pequenas" },
+  },
+  {
+    slug: "como-funciona-coparticipacao-plano-empresarial",
+    category: "Planos empresariais",
+    title: "Coparticipação no plano empresarial: como funciona e quando vale a pena",
+    excerpt:
+      "Entenda o que é coparticipação em plano empresarial, como ela afeta o custo da empresa e do funcionário, quais os limites contratuais e quando essa modalidade faz sentido para o seu grupo.",
+    date: "16 Aug 2026",
+    readTime: "8 min",
+    image: image("photo-1554224155-6726b3ff858f"),
+    content: [
+      "## Resposta direta",
+      "Coparticipação em plano empresarial é a modalidade em que o beneficiário paga uma parte de cada atendimento (consulta, exame ou internação) além da mensalidade, e a empresa banca o restante. O percentual, o valor por evento e o teto mensal são definidos no contrato e na proposta — não em regra universal. Quando bem desenhada, reduz o custo fixo da empresa e incentiva uso consciente; mal desenhada, vira surpresa de fatura. Confirme sempre os valores vigentes no contrato.",
+      "## O que é coparticipação no plano empresarial?",
+      "Na coparticipação, o custo do plano é dividido entre a empresa (que paga a mensalidade total ou parcial) e o beneficiário (que arca com um valor a cada utilização). Ela difere da franquia, em que o beneficiário paga até um teto por período. No plano com coparticipação, o valor por consulta ou exame costuma ser um percentual do evento ou um valor fixo, sempre limitado por um teto mensal definido em contrato.",
+      "## Coparticipação x mensalidade integral: qual a diferença?",
+      "| Critério | Mensalidade integral | Com coparticipação |",
+      "|---|---|---|",
+      "| Mensalidade da empresa | Mais alta | Mais baixa (custo fixo menor) |",
+      "| Custo do beneficiário por evento | Não paga além da mensalidade | Paga valor por consulta/exame |",
+      "| Previsibilidade de custo | Alta | Média (depende do uso) |",
+      "| Teto por beneficiário | Não se aplica | Previsto em contrato |",
+      "A escolha entre as duas depende do perfil de uso do grupo e do quanto a empresa quer transferir de risco variável para o funcionário.",
+      "## Quem paga o quê na coparticipação?",
+      "A divisão exata depende da proposta negociada:",
+      "- **Empresa:** arca com a mensalidade do plano e, em muitos contratos, com a maior parte dos custos assistenciais.",
+      "- **Beneficiário:** paga a coparticipação por cada atendimento utilizado, limitada pelo teto mensal ou anual do contrato.",
+      "- **Regra de fatura:** a coparticipação costuma ser cobrada na fatura seguinte à utilização do serviço, com detalhamento dos eventos.",
+      "Nunca assuma percentuais ou tetos com base em conversa informal — eles variam por produto e por negociação de grupo.",
+      "## Passo a passo para avaliar coparticipação no seu grupo",
+      "1. **Liste o perfil de uso:** frequência de consultas, exames e internações do grupo atual.",
+      "2. **Compare propostas:** peça a mesma cobertura com e sem coparticipação e compare o custo total anual projetado.",
+      "3. **Confira o contrato:** percentual por evento, valor mínimo, teto mensal/anual e se há exceções (urgência, pré-natal, internação).",
+      "4. **Avalie o impacto no funcionário:** valor médio que ele pagará por mês e percepção de benefício.",
+      "5. **Alinhe a comunicação:** informe claramente a regra para evitar reclamações de fatura.",
+      "## Quando a coparticipação vale a pena para a empresa?",
+      "Vale avaliar quando o objetivo é reduzir o custo fixo mensal e o grupo tem uso moderado de serviços. Ela tende a ser menos interessante quando há muitos atendimentos de alta frequência (como terapias ou consultas recorrentes) sem teto bem definido, pois o funcionário pode sentir o peso na fatura. A decisão deve equilibrar custo da empresa, previsibilidade e percepção de valor do benefício.",
+      "## Quais cuidados tomar antes de contratar?",
+      "Checklist antes de assinar com coparticipação:",
+      "- Teto mensal e anual por beneficiário explícitos no contrato",
+      "- Percentual ou valor fixo por consulta, exame e procedimento",
+      "- Regra para urgência, emergência, pré-natal e internação (se houver exceção)",
+      "- Política de reajuste e como a coparticipação entra no cálculo",
+      "- Forma e periodicidade de cobrança da coparticipação",
+      "- Obrigações de comunicação ao beneficiário na contratação",
+      "## FAQ",
+      "**Coparticipação é a mesma coisa que franquia?** Não. Na franquia o beneficiário paga até um teto por período; na coparticipação ele paga uma parte de cada evento, com teto próprio.",
+      "**Quem define o valor da coparticipação?** O contrato e a proposta negociada entre empresa e operadora. Não há um percentual único obrigatório.",
+      "**O funcionário pode recusar a coparticipação?** A adesão ao plano segue as regras do contrato coletivo. A modalidade é definida na proposta, não pelo funcionário isoladamente.",
+      "**Coparticipação reduz a mensalidade da empresa?** Costuma reduzir o custo fixo, mas o custo total depende do uso do grupo. Compare projeções antes de decidir.",
+      "## Próximo passo",
+      "Fale com a Amélia Saúde para comparar propostas com e sem coparticipação para o seu grupo e entender, por escrito, tetos e condições vigentes.",
+    ],
+    tags: ["coparticipação", "plano empresarial", "custo benefício", "ANS"],
+    author: "Equipe Amélia Saúde",
+    reviewer: "Validação comercial e regulatória pendente",
+    updatedAt: "16 Aug 2026",
+    sources: [ans, amelia],
+    cta: { label: "Compare condições para o seu grupo", href: "/#contato", event: "blog_cta_coparticipacao" },
+  },
+  {
+    slug: "reajuste-anual-plano-saude-empresarial-como-se-preparar",
+    category: "Planos empresariais",
+    title: "Plano de saúde empresarial: o que muda no reajuste anual e como se preparar",
+    excerpt:
+      "Entenda como funciona o reajuste anual do plano de saúde empresarial, por que ele não segue a mesma regra do individual, o que conferir no contrato e como a empresa pode se preparar para o impacto.",
+    date: "16 Aug 2026",
+    readTime: "8 min",
+    image: image("photo-1554224155-8d04cb21cd63"),
+    content: [
+      "## Resposta direta",
+      "O reajuste anual do plano de saúde empresarial (coletivo) é definido no contrato e costuma ser baseado na sinistralidade do grupo — a relação entre o que se gasta em saúde e o que se arrecada em mensalidades. Diferente do plano individual, não há um percentual máximo fixado pela ANS de forma automática; a metodologia e o teto são pactuados e devem estar escritos na proposta. A empresa deve conferir a cláusula de reajuste antes de assinar e acompanhar os índices ao longo do contrato.",
+      "## Por que o reajuste do plano empresarial é diferente do individual?",
+      "No plano individual, a ANS define regras e tetos de reajuste. No plano coletivo empresarial, o reajuste é negociado entre a empresa contratante e a operadora, com base na experiência de utilização do próprio grupo. Isso dá mais flexibilidade, mas também exige que a empresa leia a cláusula contratual com atenção, porque não existe percentual universal que proteja o grupo automaticamente.",
+      "## Como o reajuste anual é calculado no empresarial?",
+      "A principal referência é a sinistralidade do grupo, comumente combinada a índices de variação de custos médico-hospitalares. O cálculo considera:",
+      "- Gasto assistencial do grupo no período",
+      "- Arrecadação de mensalidades no mesmo período",
+      "- Variação de custos de serviços de saúde",
+      "- Cláusula de teto (limite máximo de reajuste) negociada no contrato",
+      "Cada operadora adota metodologia própria, que deve estar descrita na proposta e no contrato. Não confie em explicações verbais — peça a fórmula e o teto por escrito.",
+      "## O que a ANS regula no reajuste empresarial?",
+      "A ANS regula a comunicação e a transparência, mas não define um teto único para planos coletivos como faz para o individual. A operadora deve notificar o reajuste e, em caso de discordância, o beneficiário pode buscar orientação na ANS. O que protege a empresa é o contrato: metodologia clara, teto pactuado e histórico de aplicação. Registre sempre o percentual aplicado e o período de vigência.",
+      "## Checklist: o que conferir no contrato sobre reajuste",
+      "- Metodologia de cálculo (sinistralidade, VCMH, índice de custos)",
+      "- Teto máximo de reajuste por ano",
+      "- Periodicidade do reajuste (aniversário do contrato, ano-calendário)",
+      "- Regra para reajuste por mudança de faixa etária do grupo",
+      "- Como o reajuste é comunicado e com quanto de antecedência",
+      "- Cláusula de revisão e possibilidade de renegociação",
+      "- Impacto de inclusão/exclusão de vidas na sinistralidade",
+      "## Como a empresa se prepara para o reajuste anual?",
+      "1. **Leia o contrato antes de assinar** e entenda a metodologia e o teto.",
+      "2. **Acompanhe a sinistralidade ao longo do ano** — ela é o principal motor do reajuste.",
+      "3. **Renegocie condições** (rede, cobertura, coparticipação) se o uso estiver alto.",
+      "4. **Compare com o mercado** periodicamente para saber se a condição segue competitiva.",
+      "5. **Comunique o time** com transparência quando o reajuste for aplicado.",
+      "6. **Guarde o histórico** de percentuais aplicados para embasar negociações futuras.",
+      "## FAQ",
+      "**Existe teto de reajuste para plano empresarial?** Não há um teto único automático definido pela ANS para coletivos; o limite é o que estiver pactuado no contrato.",
+      "**O reajuste pode ser maior que o do plano individual?** Pode, porque a base é a experiência do próprio grupo. Por isso o contrato com metodologia e teto claros é essencial.",
+      "**A empresa pode renegociar o reajuste?** Sim. O reajuste coletivo é negociável entre contratante e operadora, principalmente com histórico de uso e alternativas de mercado.",
+      "**Reajuste por faixa etária é a mesma coisa que reajuste anual?** Não. São cláusulas distintas; o anual refere-se à variação do contrato, o etário à mudança de faixa do beneficiário.",
+      "## Próximo passo",
+      "Envie o contrato atual e o histórico do grupo para a Amélia Saúde revisar a cláusula de reajuste e orientar sobre opções de condição mais previsível.",
+    ],
+    tags: ["reajuste", "plano empresarial", "sinistralidade", "ANS", "contrato"],
+    author: "Equipe Amélia Saúde",
+    reviewer: "Validação comercial e regulatória pendente",
+    updatedAt: "16 Aug 2026",
+    sources: [ans, amelia],
+    cta: { label: "Revise a cláusula do seu contrato", href: "/#contato", event: "blog_cta_reajuste_empresarial" },
+  },
+  {
+    slug: "quanto-custa-plano-saude-rio-de-janeiro-2026",
+    category: "Planos de saúde",
+    title: "Quanto custa um plano de saúde no Rio de Janeiro em 2026?",
+    excerpt:
+      "Não existe um preço único: o custo de um plano de saúde no Rio de Janeiro em 2026 depende da modalidade, da segmentação, da faixa etária, da abrangência e da rede. Veja o que define o valor e como comparar propostas por escrito antes de assinar.",
+    date: "17 Aug 2026",
+    readTime: "8 min",
+    image: image("photo-1576091160399-112ba8d25d1d"),
+    content: [
+      "## Resposta direta",
+      "O custo de um plano de saúde no Rio de Janeiro em 2026 não tem valor único: depende da modalidade (individual, coletivo por adesão ou empresarial), da segmentação (ambulatorial ou hospitalar, com ou sem obstetrícia), da faixa etária, da abrangência e da rede credenciada. O valor exato só aparece na proposta vigente de cada operadora — não há tabela pública universal. Para comparar com segurança, peça propostas por escrito e confirme mensalidade, reajuste, carência e coparticipação antes de assinar.",
+      "## O que determina o preço de um plano no Rio de Janeiro?",
+      "O valor da mensalidade é calculado por operadora a partir de um conjunto de variáveis que mudam por produto e por perfil de contratante:",
+      "- **Modalidade de contratação:** individual/familiar, coletivo por adesão ou empresarial. Cada uma segue regras de reajuste e precificação diferentes.",
+      "- **Segmentação assistencial:** ambulatorial, hospitalar com ou sem obstetrícia, ou referência. Quanto maior a cobertura, maior a mensalidade.",
+      "- **Faixa etária:** planos têm faixas etárias e o preço cresce com a idade, com regras próprias de variação.",
+      "- **Abrangência:** regional, estadual ou nacional. Rede maior costuma custar mais.",
+      "- **Rede credenciada:** a disponibilidade de hospitais, laboratórios e clínicas na região onde você mora e trabalha influencia o produto.",
+      "Essas variáveis se combinam na proposta; por isso dois beneficiários com perfil parecido podem receber valores diferentes de operadoras distintas.",
+      "## Individual x coletivo por adesão x empresarial: o que muda no custo?",
+      "| Modalidade | Quem contrata | Reajuste | Preço tende a ser |",
+      "|---|---|---|---|",
+      "| Individual/familiar | A própria pessoa | Regulado pela ANS (teto anual) | Mais estável, sem negociação por grupo |",
+      "| Coletivo por adesão | Entidade de classe/sindicato | Negociado, com regras de comunicação | Depende do contrato do grupo |",
+      "| Empresarial | Empresa com CNPJ | Negociado entre empresa e operadora | Menor por beneficiário em grupos maiores |",
+      "No empresarial, quanto maior o grupo de vidas, menor tende a ser o custo por beneficiário — a lógica do risco coletivo. Mas o valor exato sempre vem da proposta.",
+      "## Passo a passo para saber quanto custa o plano que você quer",
+      "1. **Defina o perfil:** modalidade, segmentação, abrangência e quantas pessoas serão incluídas.",
+      "2. **Levante a região:** liste os municípios onde o atendimento precisa estar disponível (casa, trabalho, estudo).",
+      "3. **Peça propostas por escrito** para 2 ou 3 operadoras, com o mesmo escopo de cobertura — só assim a comparação é justa.",
+      "4. **Compare além da mensalidade:** carência, coparticipação, metodologia de reajuste e rede credenciada.",
+      "5. **Confirme na consulta oficial de rede** se os prestadores que você mais usa estão no produto.",
+      "6. **Guarde a proposta e o contrato** com os valores e as condições vigentes.",
+      "## Checklist para não fechar no escuro",
+      "- Valor da mensalidade por faixa etária de cada beneficiário",
+      "- Segmentação e abrangência contratadas",
+      "- Regra e histórico de reajuste (teto ANS ou negociação de grupo)",
+      "- Carências aplicáveis e possibilidade de isenção ou portabilidade",
+      "- Coparticipação ou franquia, com tetos por escrito",
+      "- Rede credenciada conferida no canal oficial, não em lista antiga",
+      "## FAQ",
+      "**Existe uma tabela oficial de preços de plano no RJ?** Não. A ANS não publica preços únicos; cada operadora precifica seus produtos com base nas regras da agência e em sua própria política comercial.",
+      "**Plano empresarial é sempre mais barato que o individual?** Não é garantia. Costuma ser mais competitivo por beneficiário em grupos maiores, mas o valor depende do contrato, da rede e do perfil do grupo.",
+      "**Por que recebo valores diferentes de operadoras diferentes?** Porque a precificação considera perfil, rede, segmentação e política comercial de cada operadora. Por isso a comparação deve ser feita com propostas equivalentes.",
+      "**O preço muda se eu mudar de faixa etária?** Sim. A mensalidade acompanha faixas etárias conforme regras do produto e da regulação; confira a tabela por faixa na proposta.",
+      "## Próximo passo",
+      "Fale com a Amélia Saúde para mapear a modalidade e a rede mais adequadas à sua realidade no Rio de Janeiro e solicitar propostas por escrito — os valores e as condições vigentes são confirmados na proposta, sem promessa genérica.",
+    ],
+    tags: ["plano de saúde", "Rio de Janeiro", "quanto custa", "preço plano de saúde"],
+    author: "Equipe Amélia Saúde",
+    reviewer: "Validação comercial e regulatória pendente",
+    updatedAt: "17 Aug 2026",
+    sources: [ans, amelia],
+    cta: { label: "Solicite uma proposta e confirme as condições atuais", href: "/#contato", event: "blog_cta_quanto_custa_rj" },
+  },
+  {
+    slug: "portabilidade-plano-empresarial-sem-carencia",
+    category: "Regras e direitos",
+    title: "Portabilidade de plano empresarial: como trocar sem cumprir nova carência",
+    excerpt:
+      "Entenda como funciona a portabilidade de carências no contexto do plano empresarial, quando ela se aplica, o que é negociado no novo contrato e como evitar cumprir nova carência sem assumir informação errada.",
+    date: "17 Aug 2026",
+    readTime: "8 min",
+    image: image("photo-1505751172876-fa1923c5c528"),
+    content: [
+      "## Resposta direta",
+      "No plano empresarial não existe portabilidade automática de carências como no individual: a troca de operadora pelo empregador ou a entrada em um novo contrato coletivo seguem as regras do novo contrato. Os caminhos para evitar nova carência são a isenção negociada no novo contrato (garantida para grupos com 30 ou mais vidas e negociável a partir de 10) e, quando o beneficiário vem de plano individual ou por adesão elegível, a portabilidade prevista na regulamentação da ANS. Confirme sempre no contrato e na operadora.",
+      "## O que é portabilidade de carências?",
+      "A portabilidade de carências é o direito de trocar de plano ou operadora sem cumprir novos prazos de carência, dentro das condições previstas na regulamentação da ANS. Ela foi desenhada para quem mantém o próprio vínculo com o plano — ou seja, planos individual/familiar e, nas condições da regra vigente, coletivos por adesão. No plano empresarial, a relação é diferente: quem contrata é a empresa, e a carência do grupo é definida no contrato coletivo.",
+      "## Portabilidade se aplica a plano empresarial?",
+      "Aqui está o ponto que gera mais confusão. A portabilidade de carências da ANS não se transfere automaticamente quando um funcionário troca de plano empresarial ou quando a empresa muda de operadora. Nesses casos, as carências do novo contrato coletivo são negociadas entre a empresa e a operadora — não há um direito automático de \"portar\" como no plano individual. O que existe são instrumentos específicos:",
+      "- **Isenção de carência no novo contrato:** grupos com 30 ou mais vidas têm isenção garantida; entre 10 e 29 vidas, pode ser negociada.",
+      "- **Portabilidade por quem migra de individual/adesão:** o beneficiário que tem direito à portabilidade e vai para um produto empresarial compatível pode exercê-la, conforme a regra vigente e a aceitação da operadora.",
+      "- **Continuidade de contrato:** em algumas trocas de operadora pelo empregador, há negociação de manutenção de carências entre as operadoras — é condição contratual, não direito automático.",
+      "Nunca assuma \"sem carência\" com base em conversa informal: a regra aplicável ao seu caso precisa ser confirmada no contrato e na operadora.",
+      "## Como evitar nova carência ao trocar de plano: passo a passo",
+      "1. **Identifique a origem do vínculo:** você vem de plano individual, por adesão ou empresarial? Isso define se há portabilidade aplicável.",
+      "2. **Consulte o Guia da ANS** e as condições da regra de portabilidade vigente antes de qualquer decisão.",
+      "3. **No caso de troca de operadora pela empresa,** leve ao comitê de negociação a pauta de manutenção de carências e isenção para o grupo.",
+      "4. **Peça por escrito** a posição da nova operadora sobre carências, isenção e portabilidade.",
+      "5. **Confirme a compatibilidade** do produto novo (segmentação e faixa de preço) quando a portabilidade se aplicar.",
+      "6. **Guarde proposta, contrato e protocolos** da comunicação com a operadora.",
+      "## Checklist: o que confirmar antes de trocar",
+      "- Origem do vínculo e direito à portabilidade, se houver",
+      "- Compatibilidade do produto novo (segmentação, abrangência, faixa de preço)",
+      "- Isenção de carência para o grupo no novo contrato coletivo",
+      "- Posição por escrito da nova operadora sobre carências",
+      "- Estar em dia com a mensalidade (condição para portabilidade)",
+      "- Prazos de permanência e aviso prévio do contrato atual",
+      "## FAQ",
+      "**Funcionário troca de plano empresarial e porta a carência automaticamente?** Não. No empresarial não há portabilidade automática; as carências seguem as regras do novo contrato coletivo, com isenção negociada conforme o tamanho do grupo.",
+      "**Quem vem de plano individual pode ir para o empresarial sem carência?** Pode, se tiver direito à portabilidade e o produto empresarial for compatível e aceito pela operadora — confirme pela regra da ANS e pela posição da operadora.",
+      "**Grupo pequeno consegue isenção de carência?** A isenção é garantida para 30+ vidas e negociável a partir de 10. Grupos menores dependem da política comercial da operadora.",
+      "**Onde confirmo se tenho direito à portabilidade?** No contrato atual, na operadora e no Guia da ANS, com a regra de portabilidade vigente.",
+      "## Próximo passo",
+      "Se você vai trocar de plano ou operadora e quer entender se pode evitar nova carência, fale com a Amélia Saúde para revisar seu caso com base no contrato atual e nas condições vigentes — sem promessa genérica no lugar da proposta.",
+    ],
+    tags: ["portabilidade", "plano empresarial", "carência", "ANS", "trocar de plano"],
+    author: "Equipe Amélia Saúde",
+    reviewer: "Validação comercial e regulatória pendente",
+    updatedAt: "17 Aug 2026",
+    sources: [ans, amelia],
+    cta: { label: "Confirme como funciona a portabilidade no seu caso", href: "/#contato", event: "blog_cta_portabilidade_empresarial" },
+  },
+  {
+    slug: "plano-saude-zona-oeste-rio-o-que-considerar",
+    category: "Rede e território",
+    title: "Plano de saúde na Zona Oeste do Rio: o que considerar antes de contratar",
+    excerpt:
+      "Barra, Jacarepaguá, Recreio, Campo Grande e Santa Cruz têm perfis de deslocamento e oferta de serviços muito diferentes. Veja como avaliar abrangência e rede credenciada antes de contratar um plano na Zona Oeste do Rio.",
+    date: "18 Aug 2026",
+    readTime: "8 min",
+    image: image("photo-1519501025264-65ba15a82390"),
+    content: [
+      "## Resposta direta",
+      "Escolher plano de saúde na Zona Oeste do Rio exige avaliar onde você mora, trabalha e estuda: a cobertura é definida pela abrangência do produto e pela rede credenciada contratada. Bairros como Barra da Tijuca, Jacarepaguá, Recreio, Campo Grande e Santa Cruz têm perfis de deslocamento e oferta de serviços diferentes. Antes de contratar, confira abrangência, rede ambulatorial e hospitalar e horários de atendimento na consulta oficial do produto; sem isso, a escolha é no escuro.",
+      "## Por que a Zona Oeste merece uma análise própria?",
+      "A Zona Oeste é a região mais extensa e populosa do Rio: reúne bairros com grande concentração residencial, polos comerciais e áreas com deslocamento diário intenso. O que funciona para quem mora na Barra pode não funcionar para quem vive em Campo Grande ou Santa Cruz. Por isso, a escolha do plano deve começar pelo mapa da sua rotina — casa, trabalho, escola dos filhos e os lugares por onde você circula — e não por uma comparação genérica de preços.",
+      "## Como escolher plano de saúde na Zona Oeste: passo a passo",
+      "1. **Mapeie sua rotina:** anote os bairros de casa, trabalho, estudo e família onde o atendimento precisa estar disponível.",
+      "2. **Defina a abrangência necessária:** o plano pode ter abrangência municipal, estadual ou nacional; quanto mais ampla, maior tende a ser o custo — escolha a que cobre sua rotina real.",
+      "3. **Confira a rede na consulta oficial:** busque no canal oficial do produto se os hospitais, clínicas e laboratórios da sua região estão credenciados — não use listas antigas.",
+      "4. **Avalie urgência e emergência:** verifique onde ficam os serviços de pronto atendimento da rede e o que o contrato prevê para esses casos.",
+      "5. **Compare propostas equivalentes:** mesmo escopo de cobertura, segmentação e abrangência — só assim o comparativo é justo.",
+      "6. **Peça por escrito:** proposta, carências, coparticipação e a confirmação da rede na vigência atual.",
+      "## Checklist: o que confirmar antes de fechar",
+      "- Bairros da sua rotina cobertos pela abrangência do produto",
+      "- Hospitais e clínicas que você já usa listados na consulta oficial da rede",
+      "- Distância e horários dos atendimentos de urgência e emergência",
+      "- Segmentação contratada (ambulatorial, hospitalar com ou sem obstetrícia)",
+      "- Carências, coparticipação e regra de reajuste por escrito",
+      "- Possibilidade de incluir dependentes e regras para mudanças futuras",
+      "## Abrangência e rede credenciada: como funcionam?",
+      "A abrangência define a área geográfica em que o plano garante atendimento; a rede credenciada é o conjunto de prestadores contratados dentro dessa área. Os dois pontos andam juntos: um plano com abrangência municipal, por exemplo, pode não atender fora dos limites do município contratado. Na Zona Oeste — região enorme e com trânsito intenso — o teste prático é perguntar: o hospital ou a clínica mais próximos da minha rotina estão na rede do produto que estou avaliando?",
+      "## O que muda entre os bairros?",
+      "A oferta e a facilidade de acesso variam bastante dentro da própria Zona Oeste. Barra e Jacarepaguá concentram grande oferta de serviços; Campo Grande e Santa Cruz têm perfil mais residencial, com deslocamentos maiores para alguns atendimentos; Recreio e Vargens cresceram com oferta própria, mas o acesso a serviços mais especializados pode depender de outras regiões. Nada disso substitui a consulta oficial da rede do produto: é ela que diz o que está acessível de fato para o seu plano.",
+      "## FAQ",
+      "**Preciso de um plano com abrangência nacional morando na Zona Oeste?** Depende da sua rotina. Se o atendimento é concentrado no Rio, um plano com abrangência adequada à sua região pode bastar; se você trabalha ou viaja com frequência para outras cidades, a abrangência maior faz sentido. Confirme no contrato.",
+      "**Como saber se o meu hospital preferido está na rede?** Pela consulta oficial de rede do produto, que mostra os prestadores credenciados na vigência — evite listas antigas ou indicações informais.",
+      "**Urgência e emergência estão sempre cobertas na Zona Oeste?** A cobertura de urgência e emergência é regra dos planos, mas a rede, os locais e as condições de atendimento variam por produto — confirme o que o contrato e a rede vigente preveem.",
+      "**Plano municipal cobre atendimento fora do Rio?** Não necessariamente. A abrangência municipal limita o atendimento ao município contratado, salvo situações previstas no contrato; por isso a abrangência deve ser escolhida conforme a sua rotina.",
+      "**Como comparar planos na Zona Oeste sem me perder?** Use propostas equivalentes: mesma segmentação, abrangência e escopo de cobertura. Compare rede, carências, coparticipação e regra de reajuste — não apenas o valor da mensalidade.",
+      "## Próximo passo",
+      "Fale com a Amélia Saúde para avaliar a abrangência e a rede mais adequadas à sua rotina na Zona Oeste do Rio — os prestadores credenciados e as condições vigentes são confirmados na consulta oficial do produto, sem promessa genérica.",
+    ],
+    tags: ["plano de saúde", "Zona Oeste", "Rio de Janeiro", "rede credenciada", "abrangência"],
+    author: "Equipe Amélia Saúde",
+    reviewer: "Validação comercial e regulatória pendente",
+    updatedAt: "18 Aug 2026",
+    sources: [ans, amelia],
+    cta: { label: "Confirme a rede adequada à sua rotina na Zona Oeste", href: "/#contato", event: "blog_cta_zona_oeste" },
+  },
+  {
+    slug: "rol-ans-cobertura-plano-empresarial",
+    category: "Regras e direitos",
+    title: "Rol da ANS: o que o plano empresarial deve cobrir obrigatoriamente",
+    excerpt:
+      "O Rol de Procedimentos e Eventos em Saúde é a lista mínima de cobertura obrigatória dos planos de saúde — incluindo os empresariais. Veja como conferir o que o seu plano deve cobrir e o que fazer quando o procedimento está fora do Rol.",
+    date: "18 Aug 2026",
+    readTime: "8 min",
+    image: image("photo-1538108149393-fbbd81895907"),
+    content: [
+      "## Resposta direta",
+      "O Rol de Procedimentos e Eventos em Saúde da ANS é a lista mínima de cobertura obrigatória que todo plano de saúde deve respeitar, inclusive os empresariais. O plano é obrigado a cobrir os procedimentos do Rol dentro da segmentação contratada (ambulatorial, hospitalar, com ou sem obstetrícia, odontológica), e a lista é atualizada periodicamente pela ANS. Para saber o que o seu plano deve cobrir, confira o Rol vigente no site da agência e a segmentação do contrato.",
+      "## O que é o Rol de Procedimentos da ANS?",
+      "O Rol é a lista de consultas, exames, terapias, cirurgias e tratamentos que os planos de saúde devem garantir como cobertura mínima. Ele é definido pela ANS e atualizado periodicamente, com participação técnica e consultas públicas. O Rol vigente é a referência para saber o que é cobertura obrigatória: o plano pode oferecer mais do que o Rol, mas não pode entregar menos do que ele para a segmentação contratada.",
+      "## O que o plano empresarial deve cobrir?",
+      "O plano empresarial segue as mesmas regras de cobertura mínima dos demais planos: tudo o que está no Rol deve ser coberto, na medida da segmentação contratada. A diferença prática está no contrato coletivo — escopo de cobertura, rede, carências e coparticipação são negociados entre empresa e operadora, sempre respeitando o piso do Rol. Procedimentos fora do Rol são analisados caso a caso, conforme as condições previstas em lei e a política da operadora.",
+      "## O Rol cobre tudo? O que fica fora dele?",
+      "Não. O Rol é a cobertura mínima obrigatória, não uma lista de tudo que existe na medicina. Em situações previstas na regra de exceção do Rol, um procedimento fora da lista pode ser reconhecido como cobertura — quando há comprovação de eficácia e ausência de alternativa no Rol, por exemplo. Isso não é automático: cada caso é analisado com a documentação adequada, e a negativa da operadora precisa ser formal e fundamentada.",
+      "## Como conferir o que o seu plano deve cobrir: passo a passo",
+      "1. **Identifique a segmentação do seu plano** no contrato ou na carteirinha (ambulatorial, hospitalar, com ou sem obstetrícia, odontológica).",
+      "2. **Consulte o Rol vigente** no site da ANS e filtre a segmentação do seu plano.",
+      "3. **Compare com o procedimento que você precisa:** verifique se ele está no Rol e em qual segmentação.",
+      "4. **Se estiver fora do Rol,** reúna documentos (indicação médica, laudos) para a análise do caso.",
+      "5. **Formalize o pedido à operadora** por escrito e guarde protocolo e resposta.",
+      "6. **Em divergência, procure a ANS** pelos canais oficiais de atendimento.",
+      "## Checklist: o que conferir no contrato do plano empresarial",
+      "- Segmentação registrada: ambulatorial, hospitalar, obstétrica ou odontológica",
+      "- Escopo de cobertura e abrangência contratados",
+      "- Carências aplicáveis e possibilidade de isenção ou portabilidade",
+      "- Coparticipação ou franquia, com tetos por escrito",
+      "- Rede credenciada conferida no canal oficial",
+      "- Regra de reajuste e comunicação de mudanças de cobertura",
+      "## FAQ",
+      "**Plano empresarial pode cobrir menos que o Rol?** Não. O Rol é o piso de cobertura obrigatória para todos os planos de saúde, incluindo os empresariais, dentro da segmentação contratada.",
+      "**Procedimento fora do Rol nunca é coberto?** Pode ser coberto quando a operadora reconhece as condições previstas na regra de exceção do Rol, com comprovação de eficácia e ausência de alternativa no Rol; não é automático e depende da análise do caso com documentação.",
+      "**Onde consulto o Rol em vigor?** No site da ANS (gov.br/ans), na seção do Rol de Procedimentos e Eventos em Saúde, sempre com a versão vigente e a segmentação do seu plano.",
+      "**A cobertura muda quando a ANS atualiza o Rol?** A atualização do Rol pode ampliar ou ajustar as coberturas obrigatórias; acompanhe as publicações da ANS e os comunicados da operadora para saber quando novas coberturas passam a valer.",
+      "**Minha empresa pode negociar cobertura acima do Rol?** Sim. O contrato coletivo pode prever coberturas adicionais além do piso do Rol, desde que isso esteja descrito na proposta e no contrato — a negociação é entre empresa e operadora.",
+      "## Próximo passo",
+      "Se você quer entender o que o contrato do seu plano empresarial cobre e como a segmentação e o Rol se aplicam ao seu caso, a Amélia Saúde pode revisar as condições com você — a confirmação de cobertura depende do contrato vigente e da regra da ANS aplicável, sem promessa genérica.",
+    ],
+    tags: ["Rol ANS", "cobertura", "plano empresarial", "ANS", "procedimentos"],
+    author: "Equipe Amélia Saúde",
+    reviewer: "Validação comercial e regulatória pendente",
+    updatedAt: "18 Aug 2026",
+    sources: [ans, amelia],
+    cta: { label: "Confirme a cobertura do seu plano com a Amélia", href: "/#contato", event: "blog_cta_rol_ans" },
+  },
+  {
+    slug: "plano-saude-rio-de-janeiro-rede-credenciada",
+    category: "Rede e território",
+    title: "Plano de saúde no Rio de Janeiro: como escolher pela rede credenciada e região",
+    excerpt:
+      "Rede credenciada e região definem o uso real do plano: onde você mora, trabalha e circula precisa estar coberto. Veja como comparar abrangência, rede por bairro e urgência/emergência antes de contratar no Rio.",
+    date: "20 Aug 2026",
+    readTime: "8 min",
+    image: image("photo-1519501025264-65ba15a82390"),
+    content: [
+      "## Resposta direta",
+      "Escolher plano de saúde no Rio de Janeiro pela rede credenciada e região significa comparar onde o plano atende contra onde você mora, trabalha, estuda e circula. O primeiro passo é verificar a abrangência do produto e consultar a rede oficial da operadora por bairro e especialidade antes de pedir proposta. Regiões com oferta alta, como Zona Sul e Barra, têm mais opções; outras exigem conferir deslocamento e urgência/emergência próximas. Nada substitui a consulta oficial e o contrato.",
+      "## Por que a rede credenciada importa tanto quanto o preço?",
+      "O preço aparece na proposta; a rede credenciada aparece no uso. Um plano com mensalidade atraente, mas com lista de prestadores longe de casa, vira custo escondido: deslocamento, filas em regiões saturadas e dependência de transporte para consulta ou exame. No Rio, a distância entre bairros é grande e o trânsito muda o cálculo — um hospital de referência na Zona Norte pode estar a uma hora do Recreio. Por isso, a pergunta certa não é só “quanto custa”, mas “onde esse plano me atende na minha rotina?”.",
+      "## O que é abrangência e como ela limita a rede?",
+      "Abrangência é o território definido no contrato onde o plano garante atendimento. Produtos municipais cobrem apenas a cidade contratada; os regionais cobrem um conjunto de municípios, como a Grande Rio; os nacionais cobrem todo o país. Se você mora no Rio, mas trabalha em Niterói ou Duque de Caxias, confira se o produto cobre os dois lados. A rede credenciada existe dentro da abrangência: um prestador fora da área contratada pode ser atendido só em situação de urgência/emergência, conforme a regra da ANS e as condições do contrato.",
+      "## Como saber se a rede atende a sua região: passo a passo",
+      "1. **Liste onde a família vive e circula:** moradia, trabalho, escola e atividades dos dependentes.",
+      "2. **Consulte a abrangência do produto** na proposta e no contrato: municipal, regional ou nacional.",
+      "3. **Acesse a rede oficial da operadora** no canal de consulta por produto — nunca por listas antigas ou materiais de terceiros.",
+      "4. **Filtre por especialidade e bairro:** clínico, pediatra, ginecologista, cardiologista e exames de imagem são os usos mais frequentes.",
+      "5. **Confira urgência e emergência:** onde fica o serviço mais próximo e em que horários há atendimento.",
+      "6. **Salve a data da verificação da rede** para comparar com o que a proposta promete.",
+      "## Checklist: o que comparar entre regiões antes de contratar",
+      "- Consultas e exames perto de casa ou do trabalho",
+      "- Hospital de referência a uma distância viável na sua região",
+      "- Urgência e emergência cobrindo a área onde você mais passa tempo",
+      "- Abrangência do produto: só a cidade do Rio ou também a Grande Rio",
+      "- Especialidades que a família mais usa disponíveis na rede",
+      "- Confirmação da rede no canal oficial na data da contratação",
+      "## Rede credenciada muda depois que eu contrato?",
+      "Sim, a rede pode mudar: prestadores entram e saem, e a operadora deve comunicar as alterações pelos canais oficiais. Antes de cada atendimento, o caminho seguro é consultar a rede vigente para o seu produto. A mudança de rede não altera o piso de cobertura do contrato — o que muda é onde e como você acessa os serviços. Em caso de mudança relevante na região, questione a operadora formalmente e guarde o protocolo.",
+      "## FAQ",
+      "**Como consulto a rede credenciada de um plano no Rio?** No canal oficial da operadora, filtrando pelo produto específico e pela abrangência contratada, de preferência por bairro e especialidade — evite listas genéricas ou de terceiros.",
+      "**Abrangência regional cobre Niterói e a Baixada?** Depende do produto. Cada contrato define a abrangência (municipal, regional ou nacional) e a rede dentro dela; confirme na proposta e no contrato antes de contratar.",
+      "**Preciso de plano com abrangência nacional para viajar?** Urgência e emergência fora da área de abrangência seguem regras próprias da ANS; para atendimento eletivo fora da região, o ideal é verificar se o produto tem rede no destino. Avalie conforme a sua rotina de viagens.",
+      "**A rede de um bairro é igual para todos os produtos da mesma operadora?** Não. Cada produto tem a sua rede contratada; a consulta deve ser feita para o produto específico que você está avaliando.",
+      "## Próximo passo",
+      "Se você quer comparar planos pelo critério certo — rede credenciada e região onde você realmente vive — a Amélia Saúde pode te ajudar a revisar abrangência, rede e condições vigentes, sem promessa genérica e sem divulgar valores que dependem de proposta.",
+    ],
+    tags: ["plano de saúde", "rede credenciada", "Rio de Janeiro", "abrangência", "região"],
+    author: "Equipe Amélia Saúde",
+    reviewer: "Validação comercial e regulatória pendente",
+    sources: [ans, amelia],
+    cta: { label: "Confira a rede certa para a sua região com a Amélia", href: "/#contato", event: "blog_cta_rede_credenciada_rio" },
+  },
+  {
+    slug: "plano-saude-pequenas-empresas-estruturar-beneficio",
+    category: "Planos empresariais",
+    title: "Plano de saúde para pequenas empresas: como estruturar o benefício",
+    excerpt:
+      "Estruturar o benefício de plano de saúde exige decidir vidas elegíveis, modelo de custeio, inclusão de dependentes e comunicação com o time. Veja um roteiro para a sua pequena empresa.",
+    date: "20 Aug 2026",
+    readTime: "8 min",
+    image: image("photo-1600880292203-757bb62b4baf"),
+    content: [
+      "## Resposta direta",
+      "Estruturar o benefício de plano de saúde para pequenas empresas é definir, antes da contratação, quantas vidas entram, quem paga o que, como dependentes são incluídos e como o benefício é comunicado ao time. Os modelos mais comuns são custeio integral pela empresa, custeio compartilhado previsto em acordo coletivo e coparticipação. Não há fórmula única: cada formato muda custo, adesão e retenção. A proposta precisa descrever condições vigentes, elegibilidade e regras do contrato coletivo.",
+      "## O que significa estruturar o benefício?",
+      "Estruturar é planejar o benefício antes de assinar: definir quem tem direito, quanto a empresa paga, como o custo é distribuído e como o time entende o que ganhou. Sem essa definição, o plano vira despesa sem comunicação e sem adesão — funcionários podem nem saber como usar a rede. Estruturar bem o benefício é transformar um custo fixo em ferramenta de atração e retenção, com regras claras para todo mundo.",
+      "## Quem pode entrar no plano empresarial?",
+      "A elegibilidade é definida por você: a empresa decide se o benefício vale para todos os funcionários ou para grupos específicos, e se dependentes entram. A regra da ANS para plano coletivo empresarial exige vínculo com a empresa — funcionário ativo, sócio, diretor ou aposentado da empresa, conforme o contrato. A lista exata de quem entra e as condições de cada vínculo devem estar escritas no contrato coletivo.",
+      "## Como definir o modelo de custeio",
+      "| Modelo | Como funciona | Efeito típico |",
+      "|---|---|---|",
+      "| **Custeio integral** | A empresa paga 100% da mensalidade das vidas elegíveis | Custo fixo maior, adesão e percepção de valor altas |",
+      "| **Compartilhado** | Mensalidade dividida entre empresa e funcionário, conforme acordo coletivo | Reduz o custo da empresa, exige comunicação clara do desconto |",
+      "| **Coparticipação** | Mensalidade menor; o funcionário paga parte do uso (consulta, exame) | Alinha uso ao custo, mas exige tetos por escrito e transparência |",
+      "Não há modelo “certo” universal: a escolha depende do orçamento, do tamanho do grupo e da cultura da empresa. Qualquer modelo precisa ter regras por escrito — valores, percentuais, tetos e quem paga o quê — para evitar retrabalho no reajuste ou na inclusão de vidas.",
+      "## Como incluir dependentes e definir regras",
+      "Se a empresa quer incluir dependentes, é preciso definir quem: cônjuge, filhos, enteados e outros vínculos previstos no contrato. Cada operadora pode ter políticas específicas para a inclusão e para prazos, como nascimento ou casamento, e a carência do dependente segue as condições do contrato coletivo. Decisões como “plano de família vai até filhos de 21 anos” devem estar documentadas e comunicadas no momento da adesão.",
+      "## Que documentação e fluxo a empresa precisa montar",
+      "1. **Defina a política do benefício** por escrito: elegibilidade, custeio, dependentes e entrada de novos funcionários.",
+      "2. **Elabore um documento de adesão** com as regras e a coleta de informações das vidas, sem dados sensíveis além do necessário para o contrato.",
+      "3. **Revise a proposta da operadora:** compare rede, cobertura, carências, reajuste e regras de coparticipação.",
+      "4. **Documente tudo:** proposta, contrato, acordos coletivos e comunicações.",
+      "5. **Defina quem administra:** RH interno ou agente da operadora para inclusão, exclusão e dúvidas do time.",
+      "## Checklist para comunicar o benefício ao time",
+      "- Explique o modelo de custeio e o que muda no holerite",
+      "- Mostre como consultar a rede credenciada",
+      "- Esclareça carências, coparticipação e urgência/emergência",
+      "- Crie um canal de dúvidas (e-mail, grupo, reunião)",
+      "- Atualize a comunicação quando a rede ou as regras mudarem",
+      "## FAQ",
+      "**Pequena empresa com quantas vidas consegue plano empresarial?** Não há um número único: a contratação coletiva empresarial exige o vínculo empregatício, e a política comercial da operadora define o tamanho mínimo de grupo viável. Confirme com a operadora e na ANS.",
+      "**Empresa pode escolher modelo de custeio diferente por funcionário?** A regra do contrato coletivo precisa ser uniforme para o grupo definido; variações por funcionário dependem do que o contrato prevê e da política da operadora — tudo deve estar por escrito.",
+      "**Coparticipação é sempre mais barata?** A mensalidade costuma ser menor, mas o custo total depende do uso. Compare proposta com e sem coparticipação e confira tetos e limites por escrito.",
+      "**Como incluir um funcionário novo no meio do contrato?** A inclusão segue o fluxo definido pela política da empresa e pela operadora, com prazos e documentação do vínculo — consulte o contrato e a operadora para o procedimento exato.",
+      "## Próximo passo",
+      "Se a sua pequena empresa quer estruturar o benefício de plano de saúde com regras claras e proposta adequada ao grupo, a Amélia Saúde pode revisar elegibilidade, modelo de custeio e condições vigentes com você — sem promessa de preço antes da proposta e sem generalização para o seu caso.",
+    ],
+    tags: ["plano de saúde", "pequenas empresas", "benefício", "plano empresarial", "PME"],
+    author: "Equipe Amélia Saúde",
+    reviewer: "Validação comercial e regulatória pendente",
+    sources: [ans, amelia],
+    cta: { label: "Estruture o benefício do seu time com a Amélia", href: "/#contato", event: "blog_cta_estruturar_beneficio_pme" },
+  },
+  {
+    slug: "plano-de-saude-por-adesao-perguntas-antes-de-contratar",
+    category: "Coletivo por adesão",
+    title: "Plano de saúde coletivo por adesão: perguntas antes de contratar",
+    excerpt: "Saiba o que perguntar sobre elegibilidade, cobertura, rede, carências e reajuste antes de contratar um plano coletivo por adesão.",
+    date: "21 Aug 2026",
+    readTime: "7 min",
+    image: image("photo-1556761175-b413da4baf72"),
+    content: [
+      "Antes de contratar um plano de saúde coletivo por adesão, confirme cinco pontos por escrito: se você é elegível, qual é a cobertura, qual rede atende ao produto, quais são as carências e como funciona o reajuste. A entidade de vínculo, a operadora e o contrato definem as condições; não trate uma informação genérica ou antiga como garantia para o seu caso.",
+      "## Eu sou elegível para este plano por adesão?",
+      "Pergunte qual vínculo profissional, associativo ou de classe é aceito e qual documento comprova essa condição. A elegibilidade depende do produto e da entidade responsável pela contratação. Se houver inclusão de dependentes, confirme também quais vínculos são aceitos e quais documentos serão necessários.",
+      "## O que exatamente o contrato cobre?",
+      "Confira a segmentação assistencial, a área de abrangência, as coberturas previstas e as exclusões. A referência é a proposta e o contrato do produto, além das regras aplicáveis da ANS. Não confunda a divulgação de uma modalidade com a cobertura efetivamente contratada.",
+      "## Como posso verificar a rede credenciada?",
+      "Solicite a consulta da rede para o produto específico, na cidade e nas especialidades que você realmente utiliza. A rede pode variar entre produtos da mesma operadora e pode sofrer alterações. Confirme a disponibilidade no canal oficial antes da contratação e antes de agendar atendimentos importantes.",
+      "## Quais carências e regras de portabilidade se aplicam?",
+      "Pergunte quais carências, cobertura parcial temporária e condições de portabilidade constam da proposta. Não aceite a expressão “sem carência” sem documento que a sustente. Em caso de troca de plano, consulte as regras e o Guia de Planos da ANS e confirme a análise do seu caso.",
+      "## O reajuste está explicado?",
+      "Peça que expliquem o critério de reajuste previsto para o contrato coletivo, a data de aplicação e quem é responsável pela negociação. Não é seguro antecipar percentual ou valor: compare a redação contratual e confirme as condições vigentes com a operadora ou administradora.",
+      "## Checklist: o que confirmar antes de assinar?",
+      "1. **Elegibilidade:** vínculo aceito e documentação exigida.\n2. **Cobertura:** segmentação, abrangência e exclusões descritas.\n3. **Rede:** hospitais, clínicas e profissionais do produto consultado.\n4. **Custos:** mensalidade, coparticipação e demais condições da proposta.\n5. **Carências e reajuste:** regras registradas no contrato.\n6. **Atendimento:** canais oficiais e forma de solicitar protocolo.",
+      "## FAQ",
+      "**Plano por adesão é igual a plano individual?** Não. O coletivo por adesão exige vínculo com entidade elegível e tem contrato coletivo; o individual/familiar tem outra forma de contratação e regras próprias.",
+      "**Posso contratar sem vínculo com entidade?** Em regra, a contratação depende do vínculo aceito pelo produto. Confirme a elegibilidade no canal oficial, sem presumir que qualquer associação seja válida.",
+      "**A rede informada na apresentação é definitiva?** A referência deve ser a rede do produto específico e a consulta oficial vigente. Peça confirmação por escrito quando a rede for decisiva para a contratação.",
+      "**Quem informa as carências?** A proposta e o contrato devem apresentar as condições aplicáveis. A operadora, a administradora e a entidade podem orientar o processo, mas confirme a regra documentalmente.",
+      "## Próximo passo",
+      "Se você quer avaliar um plano coletivo por adesão, fale com a Amélia Saúde para confirmar elegibilidade, rede e condições vigentes antes de decidir.",
+      "**Fontes e transparência:** Agência Nacional de Saúde Suplementar (ANS), https://www.gov.br/ans/pt-br, e informações institucionais da Amélia Saúde. As condições dependem do produto, da proposta e do contrato vigentes. A Amélia Saúde atua na orientação comercial; confirme cobertura e regras com a operadora e nos canais oficiais.",
+    ],
+    tags: ["plano de saúde por adesão", "dúvidas plano por adesão", "coletivo por adesão", "contratação"],
+    author: "Equipe Amélia Saúde",
+    reviewer: "Validação comercial e regulatória pendente",
+    sources: [ans, amelia],
+    cta: { label: "Confirme sua elegibilidade para adesão", href: "/#contato", event: "blog_cta_adesao_perguntas" },
+  },
+  {
+    slug: "migrar-plano-individual-para-empresarial",
+    category: "Planos empresariais",
+    title: "Como migrar do plano individual para o empresarial",
+    excerpt: "Entenda o que avaliar ao trocar um plano individual por um plano empresarial, incluindo vínculo, cobertura, carências, rede e contrato.",
+    date: "21 Aug 2026",
+    readTime: "8 min",
+    image: image("photo-1551836022-d5d88e9218df"),
+    content: [
+      "Migrar de um plano individual para um plano empresarial não é apenas trocar a forma de pagamento: é uma nova contratação coletiva, vinculada à empresa e sujeita às condições da proposta e do contrato. Antes de cancelar o plano atual, compare cobertura, rede, carências, abrangência, reajuste e regras de permanência. Confirme a elegibilidade e a possibilidade de portabilidade com a operadora e a ANS.",
+      "## O que muda quando troco o plano individual pelo empresarial?",
+      "O contrato passa a ser coletivo empresarial, com participação vinculada à empresa, ao sócio ou a outro vínculo previsto. Mudam a forma de contratação, a negociação, o grupo de beneficiários e as regras contratuais. Isso não significa automaticamente cobertura melhor, menor custo ou isenção de carência.",
+      "## A empresa precisa comprovar o vínculo?",
+      "Sim, a contratação empresarial exige vínculo elegível e documentação da empresa e das pessoas incluídas, conforme o produto. O responsável deve confirmar quem pode entrar, se dependentes são aceitos e quais documentos e prazos o contrato exige.",
+      "## Posso aproveitar o tempo do plano individual?",
+      "Não presuma aproveitamento automático. A portabilidade de carências depende dos requisitos e da análise aplicáveis ao caso, enquanto uma nova contratação pode ter condições próprias. Consulte o Guia de Planos da ANS, reúna os documentos e obtenha a confirmação formal antes de cancelar o contrato atual.",
+      "## Como comparar os dois planos?",
+      "| Critério | O que verificar |\n|---|---|\n| Cobertura | Segmentação, exclusões e acomodação |\n| Rede | Prestadores e unidades realmente utilizados |\n| Abrangência | Região de atendimento e rotina de deslocamento |\n| Carências | Prazos, cobertura parcial e portabilidade |\n| Reajuste | Critério previsto no contrato coletivo |\n| Custeio | Participação da empresa, funcionário e dependentes |",
+      "## Qual é a ordem segura para fazer a troca?",
+      "1. Levante as condições e o histórico do plano atual.\n2. Confirme que a empresa e os beneficiários são elegíveis.\n3. Compare proposta, rede, cobertura, carências e reajuste.\n4. Consulte as regras de portabilidade na ANS e na operadora.\n5. Aguarde a confirmação documental da nova contratação.\n6. Só então avalie o cancelamento do plano anterior e registre os protocolos.",
+      "## FAQ",
+      "**Migrar para o empresarial garante preço menor?** Não. O valor depende do produto, do grupo e das condições vigentes; compare propostas sem assumir economia.",
+      "**Posso manter o plano individual e contratar o empresarial?** Em princípio, são contratos distintos, mas a decisão deve considerar orçamento, cobertura e regras de cancelamento. Confirme as condições com as operadoras.",
+      "**A empresa pode incluir minha família?** Depende do contrato coletivo e dos vínculos de dependência aceitos. Verifique a regra e a documentação antes da adesão.",
+      "**Devo cancelar o plano atual antes da aprovação do novo?** Não. Espere a confirmação da contratação e da cobertura, evitando ficar sem assistência durante a transição.",
+      "## Próximo passo",
+      "Se a sua empresa está avaliando a troca, a Amélia Saúde pode ajudar a comparar elegibilidade, rede e condições vigentes antes de você decidir.",
+      "**Fontes e transparência:** Agência Nacional de Saúde Suplementar (ANS), https://www.gov.br/ans/pt-br, e site da Amélia Saúde. Portabilidade, cobertura e carências dependem dos requisitos oficiais e do contrato. A Amélia Saúde não substitui a confirmação da operadora nem promete condições antes da proposta.",
+    ],
+    tags: ["migrar plano individual empresarial", "plano empresarial", "portabilidade de carências", "plano de saúde"],
+    author: "Equipe Amélia Saúde",
+    reviewer: "Validação comercial e regulatória pendente",
+    sources: [ans, amelia],
+    cta: { label: "Compare sua migração com a Amélia", href: "/#contato", event: "blog_cta_migrar_empresarial" },
+  },
+];
+
+export const blogPosts: BlogPost[] = [...legacyPosts, ...scheduledPosts];
+
+const MONTH_MAP: Record<string, string> = {
+  Jan: "01", Feb: "02", Mar: "03", Apr: "04", May: "05", Jun: "06",
+  Jul: "07", Aug: "08", Sep: "09", Oct: "10", Nov: "11", Dec: "12",
+};
+
+/** Timestamp for sorting/sitemap — prefers publishAt, then human date field. */
+export function getPostTimestamp(post: BlogPost): number {
+  if (post.publishAt) return new Date(post.publishAt).getTime();
+  const [day, mon, year] = post.date.split(" ");
+  const month = MONTH_MAP[mon];
+  if (day && month && year) {
+    return new Date(`${year}-${month}-${day.padStart(2, "0")}T12:00:00-03:00`).getTime();
+  }
+  return 0;
+}
+
+export function getPostIsoDate(post: BlogPost): string {
+  const ts = getPostTimestamp(post);
+  return ts ? new Date(ts).toISOString() : new Date().toISOString();
+}
+
+export function isPostPublished(post: BlogPost, now = new Date()): boolean {
+  return !post.publishAt || new Date(post.publishAt).getTime() <= now.getTime();
+}
+
+export function getPublishedPosts(now = new Date()): BlogPost[] {
+  return blogPosts
+    .filter((post) => isPostPublished(post, now))
+    .sort((a, b) => getPostTimestamp(b) - getPostTimestamp(a));
+}
+
+export function getPostBySlug(slug: string, now = new Date()): BlogPost | undefined {
+  const post = blogPosts.find((item) => item.slug === slug);
+  return post && isPostPublished(post, now) ? post : undefined;
+}
+
+export function getAllSlugs(now = new Date()): string[] {
+  return getPublishedPosts(now).map((post) => post.slug);
+}
+
+export function getPostsByCategory(category: string, now = new Date()): BlogPost[] {
+  return getPublishedPosts(now).filter((post) => post.category === category);
+}
+
+export function getPostsByTag(tag: string, now = new Date()): BlogPost[] {
+  return getPublishedPosts(now).filter((post) => post.tags.includes(tag));
+}
+
+export function searchPosts(query: string, now = new Date()): BlogPost[] {
+  const lowerQuery = query.toLowerCase();
+  return getPublishedPosts(now).filter((post) => post.title.toLowerCase().includes(lowerQuery) || post.excerpt.toLowerCase().includes(lowerQuery) || post.content.some((p) => p.toLowerCase().includes(lowerQuery)));
+}
+
+export function getAllTags(now = new Date()): string[] {
+  const tagsSet = new Set<string>();
+  getPublishedPosts(now).forEach((post) => post.tags.forEach((tag) => tagsSet.add(tag)));
+  return Array.from(tagsSet).sort();
+}
+
+export function getCategories(now = new Date()): { name: string; count: number }[] {
+  const categories: Record<string, number> = {};
+  getPublishedPosts(now).forEach((post) => { categories[post.category] = (categories[post.category] || 0) + 1; });
+  return Object.entries(categories).map(([name, count]) => ({ name, count }));
+}

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { PlanosContent } from "@/components/planos/PlanosContent";
+import { App } from "@/rebranding/App.jsx";
 import { planosItemListSchema, SITE_URL } from "@/lib/planos-schema";
 
 const PAGE_URL = `${SITE_URL}/planos`;
@@ -78,7 +78,7 @@ export default function PlanosPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
       />
-      <PlanosContent />
+      <App initialPath="/planos" />
     </>
   );
 }

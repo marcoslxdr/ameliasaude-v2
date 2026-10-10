@@ -27,3 +27,6 @@ web/.next
 .git
 .DS_Store
 *.tsbuildinfo
+.vercel
+.env*
+web/.env*

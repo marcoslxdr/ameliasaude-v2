@@ -80,19 +80,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
-      <OrganizationSchema />
-      <WebSiteSchema />
-      <LocalBusinessSchema />
       <html
       lang="pt-BR"
       className={`${instrumentSerif.variable} ${dmSans.variable} h-full`}
     >
       <body className="min-h-full flex flex-col antialiased">
+        <OrganizationSchema />
+        <WebSiteSchema />
+        <LocalBusinessSchema />
         <GoogleTag />
         <CotacaoModalProvider>{children}</CotacaoModalProvider>
       </body>
     </html>
-    </>
   );
 }

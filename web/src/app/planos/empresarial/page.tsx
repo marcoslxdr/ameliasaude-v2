@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ProductHubContent } from "@/components/planos/ProductHubContent";
+import { App } from "@/rebranding/App.jsx";
 import { serviceSchema, SITE_URL } from "@/lib/planos-schema";
 
 const PAGE_URL = `${SITE_URL}/planos/empresarial`;
@@ -76,7 +76,7 @@ export default function PlanosEmpresarialPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
-      <ProductHubContent variant="empresarial" />
+      <App initialPath="/planos/empresarial" />
     </>
   );
 }
