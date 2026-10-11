@@ -185,7 +185,7 @@
 .landing-page .lp-coverage-band .lp-eyebrow{margin-bottom:17px}
 .landing-page .lp-coverage-band p{font-size:14px;margin-top:18px}
 .landing-page .lp-coverage-band .lp-city-list{margin:0;gap:9px}
-.landing-page .lp-network-cta{display:flex;align-items:center;justify-content:space-between;gap:22px;padding:27px 8px 0;margin-bottom:66px}
+.landing-page .lp-network-cta{display:flex;align-items:center;justify-content:space-between;gap:22px;padding:0;margin-bottom:48px}
 .landing-page .lp-network-cta p{font-size:14px;color:var(--lp-deep)}
 .landing-page .lp-faq-section{display:grid;grid-template-columns:.85fr 1.15fr;gap:76px;align-items:start;margin-bottom:70px}
 .landing-page .lp-faq-section h2{font-size:44px;max-width:390px}
@@ -245,7 +245,7 @@
  .landing-page .lp-coverage-band{padding:31px 26px;border-radius:21px;gap:26px;margin-bottom:26px}
  .landing-page .lp-coverage-band h2{font-size:34px}
  .landing-page .lp-coverage-band p{font-size:14px}
- .landing-page .lp-network-cta{align-items:flex-start;flex-direction:column;padding:24px 13px 0;gap:18px;margin-bottom:46px}
+ .landing-page .lp-network-cta{align-items:flex-start;flex-direction:column;padding:0;gap:18px;margin-bottom:32px}
  .landing-page .lp-network-cta p{font-size:13px;max-width:270px}
  .landing-page .lp-faq-section{grid-template-columns:1fr;gap:30px;margin-bottom:47px;padding:0 13px}
  .landing-page .lp-faq-section h2{font-size:36px;max-width:420px}

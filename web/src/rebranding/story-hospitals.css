@@ -21,9 +21,9 @@
 .story-editorial h2{font-size:38px}
 .story-editorial-inner>p{font-size:15px}}
 
-.hospital-section{margin:8px;border:1px solid #e7e0ee;border-radius:24px;background:#f7f5fa;color:var(--ink,#382348);padding:80px clamp(30px,6.6vw,100px) 72px}
-.hospital-section .hs-shell{max-width:1320px;margin:auto}
-.landing-page .hospital-section{margin-bottom:76px}
+.hospital-section{margin:0;background:linear-gradient(180deg,#f2eef7,#faf9fb 320px);color:var(--ink,#382348);padding:var(--section-spacing,80px) var(--section-gutter,clamp(24px,5vw,80px))}
+.hospital-section .hs-shell{max-width:var(--section-content-width,1280px);margin:auto}
+.landing-page .hospital-section{--section-gutter:48px;--section-content-width:1264px;padding-top:64px;padding-bottom:40px;margin-bottom:24px}
 .hospital-section .hs-intro{margin-bottom:44px}
 .hospital-section .hs-intro h2{font-family:'DM Sans',Arial,sans-serif;font-weight:300;font-size:clamp(40px,4.6vw,66px);line-height:1.08;letter-spacing:-.05em;max-width:1010px;margin:0;text-wrap:balance}
 .hospital-section .hs-intro h2 span{color:var(--purple,#7b6db2)}
@@ -32,8 +32,8 @@
 .hospital-section .hs-card-photo{display:flex;flex-direction:column;height:100%;margin:0;border:1px solid #dfd7e9;border-radius:18px;overflow:hidden;background:#fff;box-shadow:0 3px 12px rgba(56,35,72,.035)}
 .hospital-section .hs-card-photo>img{display:block;flex-shrink:0;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;background:#eeebf5}
 .hospital-section .hs-card-photo>figcaption{padding:14px 16px;color:var(--ink,#382348);font-size:clamp(13px,1.15vw,16px);font-weight:500;line-height:1.45;letter-spacing:-.015em;overflow-wrap:break-word}
-@media(min-width:1600px){.hospital-section{max-width:1584px;margin-left:auto;margin-right:auto}}
-@media(max-width:1100px){.hospital-section{padding-top:66px;padding-bottom:58px}.hospital-section .hs-grid{gap:14px}.hospital-section .hs-card-photo{border-radius:15px}}
-@media(max-width:800px){.hospital-section{padding:58px 34px 46px}.hospital-section .hs-intro{margin-bottom:32px}.hospital-section .hs-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:640px){.landing-page .hospital-section{margin-bottom:47px}.hospital-section{margin:6px;border-radius:21px;padding:44px 22px 32px}.hospital-section .hs-intro{margin-bottom:27px}.hospital-section .hs-intro h2{font-size:clamp(33px,8.8vw,46px);line-height:1.1;letter-spacing:-.05em}.hospital-section .hs-grid{gap:12px}.hospital-section .hs-card-photo{border-radius:12px}.hospital-section .hs-card-photo>figcaption{padding:11px 12px;font-size:13px;line-height:1.4}}
-@media(max-width:374px){.hospital-section{padding-left:18px;padding-right:18px}.hospital-section .hs-intro h2{font-size:31px}.hospital-section .hs-grid{gap:10px}}
+@media(max-width:1150px){.landing-page .hospital-section{--section-gutter:32px}}
+@media(max-width:1100px){.hospital-section .hs-grid{gap:14px}.hospital-section .hs-card-photo{border-radius:15px}}
+@media(max-width:800px){.hospital-section .hs-intro{margin-bottom:32px}.hospital-section .hs-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.landing-page .hospital-section{--section-gutter:14px;padding-top:44px;padding-bottom:32px;margin-bottom:16px}.hospital-section .hs-intro{margin-bottom:27px}.hospital-section .hs-intro h2{font-size:clamp(33px,8.8vw,46px);line-height:1.1;letter-spacing:-.05em}.hospital-section .hs-grid{gap:12px}.hospital-section .hs-card-photo{border-radius:12px}.hospital-section .hs-card-photo>figcaption{padding:11px 12px;font-size:13px;line-height:1.4}}
+@media(max-width:374px){.hospital-section .hs-intro h2{font-size:31px}.hospital-section .hs-grid{gap:10px}}
