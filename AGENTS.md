@@ -30,3 +30,9 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - **Favicon**: Ícones em `web/public/` (`favicon.svg`, `favicon-32.png`, `favicon.ico`, `apple-touch-icon.png`) + `metadata.icons` em `layout.tsx` com `?v=N` pra cache-bust. Evitar `app/favicon.ico` — Next injeta na frente e browser cacheia forte; hard refresh / aba anônima se localhost não atualizar.
 - **Órbita (`CoverageOrbital.tsx`)**: Marcador = box do avatar com `-translate-x/y-1/2` (tamanho explícito). Label sempre `absolute` embaixo. Quebra forçada via `MARKER_LABEL_LINES` (ex. São João / de Meriti). Nunca `translate(-50%)` num pai com `width:0` (vira 0 no X e empurra o círculo pra direita — quebra espelho L↔R).
 - **Subtítulo de seção**: lead sob o `h2` = `font-sans font-light leading-relaxed text-[var(--amelia-body)]` + `fontSize: clamp(1.1rem, 1.9vw, 1.35rem)` (ref. `Network.tsx`). Não misturar com eyebrow (`text-[11px]` tracking) nem body de card.
+
+## Revisão de Marcelo — 11 de outubro de 2026
+
+- Manter a composição da REDE atual em dois painéis: fotografia do Rio à esquerda no desktop e acima no celular. O painel de conteúdo usa roxo escuro coerente com a hero. Manter o título “Ampla rede credenciada pertinho de você”, identificar como REDE e usar o texto solicitado. Nove municípios com fotografia e nome na ordem definida, sem órbita nem hub.
+- Destaques mantêm os 13 prestadores e nomes da lista atual, com passagem lateral em carrossel como a versão anterior; não reintroduzir filtros ou descrições.
+- Marcos autorizou acompanhar o WhatsApp de Marcelo, enviar a versão final para revisão e publicar no domínio oficial somente após aprovação explícita dessa versão. As confirmações anteriores da especificação não autorizam a publicação da prévia final. Estado/evidências do acompanhamento em reports/marcelo-revisao-2026-10-11 do workspace externo.
