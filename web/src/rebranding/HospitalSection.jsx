@@ -20,6 +20,7 @@ export function HospitalSection({ id = 'hospitais' }) {
               loading="lazy"
               decoding="async"
             />
+            <figcaption>{unit.displayName}</figcaption>
           </figure>
         </li>)}
       </ul>
