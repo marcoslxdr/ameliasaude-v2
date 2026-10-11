@@ -45,6 +45,8 @@ main:focus{outline:none}
 .hero{position:relative;margin:8px;border-radius:24px;overflow:hidden;height:92svh;min-height:660px;max-height:1000px;color:#fff;background:linear-gradient(115deg,#2d173e 0%,#452758 52%,#644783 100%)}
 .hero-person{position:absolute;top:10%;right:5%;height:min(137%,85vw);width:auto;max-width:none;object-fit:contain;pointer-events:none}
 .hero-person-name{position:absolute;z-index:3;top:65%;right:clamp(24px,4.5vw,68px);padding:6px 10px;border:1px solid rgba(255,255,255,.18);border-radius:7px;background:rgba(45,23,62,.78);color:#f3edf7;font-size:11px;font-weight:400;letter-spacing:.025em;line-height:1.4}
+.hero-person-name>span{display:block}
+.hero-person-role{margin-top:2px;font-size:9px;letter-spacing:.14em;color:#e8dfee}
 .hero-content{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:flex-end;gap:65px;height:100%;padding:118px clamp(30px,5vw,76px) 46px}
 .hero h1{font-size:clamp(40px,4.2vw,62px);line-height:1.1;max-width:48%;font-weight:300;letter-spacing:-.055em}
 .hero-bottom{border-top:1px solid rgba(255,255,255,.22);padding-top:32px;display:flex;align-items:flex-end;justify-content:space-between;gap:32px}

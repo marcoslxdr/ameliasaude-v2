@@ -5,9 +5,10 @@
     "updatedAt": "2026-10-08",
     "updatedLabel": "8 de outubro de 2026",
     "grouping": "name + city",
-    "filter": "HOSPITAL | CASA DE SAÚDE | MATERNIDADE",
-    "selectionDate": "2026-10-09",
-    "selection": "Sequência de Marcelo no WhatsApp; Irajá com disponibilidade sob consulta"
+    "filter": "Seleção editorial de hospitais, clínicas e laboratórios; não altera o guia médico.",
+    "selectionDate": "2026-10-11",
+    "selection": "Galeria institucional na ordem solicitada; fotografias identificam as instituições e não afirmam cobertura de unidades ou serviços.",
+    "identityConfirmation": "Santa Teresinha corresponde à Casa de Saúde e Maternidade Terezinha de Jesus, em São João de Meriti, conforme confirmação direta na revisão de 2026-10-11."
   },
   "units": [
     {
@@ -33,81 +34,10 @@
         "sourceUrl": "https://www3.frg.com.br/quem-somos/comunicacao-e-informativos/noticias/salutem-e-salvus-novo-hospital-de-emergencia-credenciado-5767.html",
         "width": 480,
         "height": 640,
-        "objectPosition": "50% 70%"
-      }
-    },
-    {
-      "name": "HOSPITAL INTERMÉDICA JACAREPAGUÁ - GR.HAPVIDA",
-      "city": "RIO DE JANEIRO",
-      "neighborhood": "FREGUESIA (JACAREPAGUÁ)",
-      "services": [
-        "PRONTO SOCORRO"
-      ],
-      "product": "CARIOCA 10",
-      "networks": [
-        "CARIOCA 10 COM COPART",
-        "CARIOCA 10 SEM COPART"
-      ],
-      "displayName": "Hospital Intermédica Jacarepaguá",
-      "specialties": [
-        "PEDIATRIA"
-      ],
-      "photo": {
-        "src": "/assets/hospitais/intermedica-jacarepagua.webp",
-        "alt": "Fachada da unidade Intermédica Jacarepaguá na Estrada dos Três Rios",
-        "credit": "Fonte: NotreDame Intermédica",
-        "sourceUrl": "https://www2.gndi.com.br/pt/hospitaldamulherjacarepagua",
-        "width": 555,
-        "height": 226,
-        "objectPosition": "center"
-      }
-    },
-    {
-      "name": "HOSPITAL DE CLÍNICAS SÃO MATHEUS",
-      "city": "RIO DE JANEIRO",
-      "neighborhood": "BANGU",
-      "services": [
-        "PRONTO SOCORRO"
-      ],
-      "product": "CARIOCA 10",
-      "networks": [
-        "CARIOCA 10 COM COPART",
-        "CARIOCA 10 SEM COPART"
-      ],
-      "displayName": "Hospital de Clínicas São Matheus",
-      "specialties": [
-        "CLÍNICO GERAL",
-        "PEDIATRIA"
-      ],
-      "photo": {
-        "src": "/assets/hospitais/sao-matheus.webp",
-        "alt": "Fachada do Hospital São Matheus em Bangu, em fotografia publicada na Revista ASSIM Saúde de 2017",
-        "credit": "Fonte: Revista ASSIM Saúde",
-        "sourceUrl": "https://assim.com.br/site/revista-assim/edicao-16/documents/edicao-16/pdf/full.pdf",
-        "width": 888,
-        "height": 1445,
-        "objectPosition": "center top"
-      }
-    },
-    {
-      "name": "HOSPITAL IRAJÁ",
-      "city": "RIO DE JANEIRO",
-      "neighborhood": "IRAJÁ",
-      "services": [],
-      "product": null,
-      "networks": [],
-      "displayName": "Hospital Irajá",
-      "specialties": [],
-      "coverageVerified": false,
-      "selectionSource": "Lista de Marcelo, WhatsApp, 2026-10-09",
-      "photo": {
-        "src": "/assets/hospitais/iraja-entrada.webp",
-        "alt": "Entrada do Hospital Irajá, na Rua Pereira de Araújo, no Rio de Janeiro",
-        "credit": "Fonte: Hospital Irajá",
-        "sourceUrl": "https://hospitaliraja.com.br/",
-        "width": 720,
-        "height": 477
-      }
+        "objectPosition": "50% 68%"
+      },
+      "coverageVerified": true,
+      "selectionSource": "Lista de destaques solicitada em 2026-10-11"
     },
     {
       "name": "HOSPITAL NOTRECARE RIO - GR.HAPVIDA",
@@ -134,64 +64,14 @@
         "width": 555,
         "height": 226,
         "objectPosition": "center"
-      }
+      },
+      "coverageVerified": true,
+      "selectionSource": "Lista de destaques solicitada em 2026-10-11"
     },
     {
-      "name": "CASA DE SAÚDE SAINT ROMAN",
+      "name": "HOSPITAL DE CLÍNICAS SÃO MATHEUS",
       "city": "RIO DE JANEIRO",
-      "neighborhood": "SANTA TERESA",
-      "services": [
-        "INTERNAÇÃO"
-      ],
-      "product": "CARIOCA 10",
-      "networks": [
-        "CARIOCA 10 COM COPART",
-        "CARIOCA 10 SEM COPART"
-      ],
-      "displayName": "Casa de Saúde Saint Roman",
-      "specialties": [
-        "PSIQUIATRIA"
-      ],
-      "photo": {
-        "src": "/assets/hospitais/saint-roman.webp",
-        "alt": "Área de convivência ao ar livre da Casa de Saúde Saint Roman",
-        "credit": "Fonte: Casa de Saúde Saint Roman",
-        "sourceUrl": "https://saintroman.com.br/",
-        "width": 1200,
-        "height": 800,
-        "objectPosition": "center"
-      }
-    },
-    {
-      "name": "CLINICA SAO CARLOS",
-      "city": "RIO DE JANEIRO",
-      "neighborhood": "HUMAITÁ",
-      "services": [
-        "INTERNAÇÃO"
-      ],
-      "product": "CARIOCA 10",
-      "networks": [
-        "CARIOCA 10 COM COPART",
-        "CARIOCA 10 SEM COPART"
-      ],
-      "displayName": "São Carlos Saúde Oncológica",
-      "specialties": [
-        "CIRURGIA GERAL",
-        "CLÍNICO GERAL"
-      ],
-      "photo": {
-        "src": "/assets/hospitais/sao-carlos-fachada.webp",
-        "alt": "Fachada da São Carlos Saúde Oncológica, na Rua Humaitá, no Rio de Janeiro",
-        "credit": "Fonte: São Carlos Saúde Oncológica",
-        "sourceUrl": "https://saocarlossaudeoncologica.com.br/quem-somos/",
-        "width": 500,
-        "height": 358
-      }
-    },
-    {
-      "name": "CALREN HOSPITAL DE URGÊNCIAS UROLÓGICAS LTDA",
-      "city": "RIO DE JANEIRO",
-      "neighborhood": "RECREIO DOS BANDEIRANTES",
+      "neighborhood": "BANGU",
       "services": [
         "PRONTO SOCORRO"
       ],
@@ -200,43 +80,41 @@
         "CARIOCA 10 COM COPART",
         "CARIOCA 10 SEM COPART"
       ],
-      "displayName": "CALREN Hospital de Urgências Urológicas",
+      "displayName": "Hospital de Clínicas São Matheus",
       "specialties": [
-        "UROLOGIA"
+        "CLÍNICO GERAL",
+        "PEDIATRIA"
       ],
       "photo": {
-        "src": "/assets/hospitais/calren.webp",
-        "alt": "Profissional e instrumentos urológicos em fotografia publicada pelo CALREN Hospital",
-        "credit": "Fonte: CALREN Hospital",
-        "sourceUrl": "https://www.linkedin.com/company/hospital-calren",
-        "width": 1127,
-        "height": 191,
-        "objectPosition": "70% center"
-      }
+        "src": "/assets/hospitais/sao-matheus.webp",
+        "alt": "Fachada do Hospital São Matheus em Bangu, em fotografia publicada na Revista ASSIM Saúde de 2017",
+        "credit": "Fonte: Revista ASSIM Saúde",
+        "sourceUrl": "https://assim.com.br/site/revista-assim/edicao-16/documents/edicao-16/pdf/full.pdf",
+        "width": 888,
+        "height": 1445,
+        "objectPosition": "center top"
+      },
+      "coverageVerified": true,
+      "selectionSource": "Lista de destaques solicitada em 2026-10-11"
     },
     {
-      "name": "CASA DE SAÚDE E MATERNIDADE SANTA MARTHA - GR.HAPVIDA",
-      "city": "NITERÓI",
-      "neighborhood": "SANTA ROSA",
-      "services": [
-        "PRONTO SOCORRO"
-      ],
-      "product": "CARIOCA 10",
-      "networks": [
-        "CARIOCA 10 COM COPART",
-        "CARIOCA 10 SEM COPART"
-      ],
-      "displayName": "Casa de Saúde e Maternidade Santa Martha",
-      "specialties": [
-        "CLÍNICO GERAL"
-      ],
+      "name": "HOSPITAL IRAJÁ",
+      "city": "RIO DE JANEIRO",
+      "neighborhood": "IRAJÁ",
+      "services": [],
+      "product": null,
+      "networks": [],
+      "displayName": "Hospital Irajá",
+      "specialties": [],
+      "coverageVerified": false,
+      "selectionSource": "Lista de destaques solicitada em 2026-10-11",
       "photo": {
-        "src": "/assets/hospitais/santa-martha.webp",
-        "alt": "Fachada da Casa de Saúde e Maternidade Santa Martha, em Niterói",
-        "credit": "Foto: Fabio F Goulart · Fonte: Hapvida",
-        "sourceUrl": "https://ri.hapvida.com.br/a-companhia/nossas-instalacoes/",
-        "width": 531,
-        "height": 354
+        "src": "/assets/hospitais/iraja-entrada.webp",
+        "alt": "Entrada do Hospital Irajá, na Rua Pereira de Araújo, no Rio de Janeiro",
+        "credit": "Fonte: Hospital Irajá",
+        "sourceUrl": "https://hospitaliraja.com.br/",
+        "width": 720,
+        "height": 477
       }
     },
     {
@@ -263,32 +141,9 @@
         "sourceUrl": "https://www.linkedin.com/company/prontonil",
         "width": 1200,
         "height": 430
-      }
-    },
-    {
-      "name": "CASA DE SAÚDE E MATERNIDADE TEREZINHA DE JESUS",
-      "city": "SÃO JOÃO DE MERITI",
-      "neighborhood": "CENTRO",
-      "services": [
-        "PRONTO SOCORRO"
-      ],
-      "product": "CARIOCA 10",
-      "networks": [
-        "CARIOCA 10 COM COPART",
-        "CARIOCA 10 SEM COPART"
-      ],
-      "displayName": "Casa de Saúde e Maternidade Terezinha de Jesus",
-      "specialties": [
-        "CLÍNICO GERAL"
-      ],
-      "photo": {
-        "src": "/assets/hospitais/terezinha-jesus.webp",
-        "alt": "Fachada da Casa de Saúde e Maternidade Terezinha de Jesus, em São João de Meriti",
-        "credit": "Fonte: Terezinha de Jesus",
-        "sourceUrl": "https://www.csmtj.com.br/frente-htj/",
-        "width": 691,
-        "height": 840
-      }
+      },
+      "coverageVerified": true,
+      "selectionSource": "Lista de destaques solicitada em 2026-10-11"
     },
     {
       "name": "HOSPITAL DANIEL LIPP",
@@ -313,13 +168,18 @@
         "credit": "Fonte: Hospital Daniel Lipp",
         "sourceUrl": "https://www.daniellipp.com.br/",
         "width": 1024,
-        "height": 1536
-      }
+        "height": 1536,
+        "objectPosition": "50% 46%"
+      },
+      "coverageVerified": true,
+      "selectionSource": "Lista de destaques solicitada em 2026-10-11",
+      "requestedName": "Daniel Lipe",
+      "identityNote": "Grafia institucional Daniel Lipp, fotografada com o nome da instituição."
     },
     {
-      "name": "HOSPITAL DO CORAÇÃO DE DUQUE DE CAXIAS - GR.HAPVIDA",
-      "city": "DUQUE DE CAXIAS",
-      "neighborhood": "JARDIM VINTE E CINCO DE AGOSTO",
+      "name": "CASA DE SAÚDE E MATERNIDADE TEREZINHA DE JESUS",
+      "city": "SÃO JOÃO DE MERITI",
+      "neighborhood": "CENTRO",
       "services": [
         "PRONTO SOCORRO"
       ],
@@ -328,17 +188,184 @@
         "CARIOCA 10 COM COPART",
         "CARIOCA 10 SEM COPART"
       ],
-      "displayName": "Hospital do Coração de Duque de Caxias",
+      "displayName": "Casa de Saúde e Maternidade Terezinha de Jesus",
       "specialties": [
         "CLÍNICO GERAL"
       ],
       "photo": {
-        "src": "/assets/hospitais/hospital-coracao-caxias.webp",
-        "alt": "Entrada do Hospital do Coração de Duque de Caxias à noite",
-        "credit": "Fonte: HSCOR / Endocurso",
-        "sourceUrl": "https://www.endocurso.com.br/endocurso",
-        "width": 1110,
-        "height": 600
+        "src": "/assets/hospitais/terezinha-jesus.webp",
+        "alt": "Fachada da Casa de Saúde e Maternidade Terezinha de Jesus, em São João de Meriti",
+        "credit": "Fonte: Terezinha de Jesus",
+        "sourceUrl": "https://www.csmtj.com.br/frente-htj/",
+        "width": 691,
+        "height": 840,
+        "objectPosition": "50% 38%"
+      },
+      "coverageVerified": true,
+      "selectionSource": "Lista de destaques solicitada em 2026-10-11",
+      "requestedName": "Santa Teresinha",
+      "identityNote": "Correspondência com Terezinha de Jesus, São João de Meriti, confirmada diretamente na revisão de 2026-10-11."
+    },
+    {
+      "name": "CASA DE SAÚDE E MATERNIDADE SANTA MARTHA - GR.HAPVIDA",
+      "city": "NITERÓI",
+      "neighborhood": "SANTA ROSA",
+      "services": [
+        "PRONTO SOCORRO"
+      ],
+      "product": "CARIOCA 10",
+      "networks": [
+        "CARIOCA 10 COM COPART",
+        "CARIOCA 10 SEM COPART"
+      ],
+      "displayName": "Casa de Saúde e Maternidade Santa Martha",
+      "specialties": [
+        "CLÍNICO GERAL"
+      ],
+      "photo": {
+        "src": "/assets/hospitais/santa-martha.webp",
+        "alt": "Fachada da Casa de Saúde e Maternidade Santa Martha, em Niterói",
+        "credit": "Foto: Fabio F Goulart · Fonte: Hapvida",
+        "sourceUrl": "https://ri.hapvida.com.br/a-companhia/nossas-instalacoes/",
+        "width": 531,
+        "height": 354
+      },
+      "coverageVerified": true,
+      "selectionSource": "Lista de destaques solicitada em 2026-10-11",
+      "requestedName": "Santa Marta",
+      "identityNote": "Grafia institucional Santa Martha, Niterói."
+    },
+    {
+      "name": "PROCEM CENTRO DE ESPECIALIDADES MÉDICAS",
+      "displayName": "PROCEM Centro de Especialidades Médicas",
+      "city": "NITERÓI",
+      "neighborhood": "INGÁ",
+      "services": [
+        "PRONTO SOCORRO"
+      ],
+      "specialties": [
+        "PEDIATRIA"
+      ],
+      "product": "CARIOCA 10",
+      "networks": [
+        "CARIOCA 10 COM COPART",
+        "CARIOCA 10 SEM COPART"
+      ],
+      "coverageVerified": true,
+      "selectionSource": "Lista de destaques solicitada em 2026-10-11",
+      "photo": {
+        "src": "/assets/hospitais/procem-fachada.webp",
+        "alt": "Fachada do PROCEM Centro de Especialidades Médicas, no Ingá, Niterói",
+        "credit": "Fonte: PROCEM",
+        "sourceUrl": "https://clinicaprocem.com.br/",
+        "originalUrl": "https://clinicaprocem.com.br/site/wp-content/uploads/2020/09/procem-fachada.jpg",
+        "width": 852,
+        "height": 774,
+        "objectPosition": "center",
+        "verifiedAt": "2026-10-11"
+      }
+    },
+    {
+      "name": "UNIDADE AVANÇADA CIDADE NOVA - GR.HAPVIDA",
+      "displayName": "Unidade Avançada Cidade Nova",
+      "city": "RIO DE JANEIRO",
+      "neighborhood": "CIDADE NOVA",
+      "services": [
+        "PRONTO ATENDIMENTO"
+      ],
+      "specialties": [
+        "CLÍNICO GERAL",
+        "PEDIATRIA"
+      ],
+      "product": "CARIOCA 10",
+      "networks": [
+        "CARIOCA 10 COM COPART",
+        "CARIOCA 10 SEM COPART"
+      ],
+      "coverageVerified": true,
+      "selectionSource": "Lista de destaques solicitada em 2026-10-11",
+      "photo": {
+        "src": "/assets/hospitais/cidade-nova.webp",
+        "alt": "Vista externa da Unidade Avançada Cidade Nova, na Rua Pinto de Azevedo, Rio de Janeiro",
+        "credit": "Fonte: NotreDame Intermédica",
+        "sourceUrl": "https://www2.gndi.com.br/pt/unidadeavancadacidadenova",
+        "originalUrl": "https://www2.gndi.com.br/documents/20182/186190705/UA+Cidade+Nova_360x300.jpg/b634c41a-4823-1f24-8761-e606d2b0ec4d?version=1.0&t=1656504347728",
+        "width": 360,
+        "height": 300,
+        "objectPosition": "center",
+        "verifiedAt": "2026-10-11"
+      }
+    },
+    {
+      "name": "CLÍNICA TOTAL KIDS",
+      "displayName": "Total Kids",
+      "city": null,
+      "neighborhood": null,
+      "services": [],
+      "specialties": [],
+      "product": null,
+      "networks": [],
+      "coverageVerified": false,
+      "selectionSource": "Lista de destaques solicitada em 2026-10-11",
+      "selectionNote": "Instituição solicitada sem unidade específica. Foto oficial da unidade Olaria; não representa cobertura universal das filiais.",
+      "photo": {
+        "src": "/assets/hospitais/total-kids-olaria.webp",
+        "alt": "Fachada da Clínica Total Kids Olaria, em fotografia publicada pela instituição",
+        "credit": "Fonte: Clínica Total Kids",
+        "sourceUrl": "https://www.clinicatotalkids.com.br/pediatra/rj/olaria/",
+        "originalUrl": "https://clinicatotalkids.com.br/wp-content/uploads/2026/09/Clinica-Total-Kids-Olaria-02.png",
+        "width": 416,
+        "height": 263,
+        "objectPosition": "42% center",
+        "verifiedAt": "2026-10-11"
+      }
+    },
+    {
+      "name": "RIOLABOR MEDICINA DIAGNÓSTICA",
+      "displayName": "Riolabor",
+      "city": null,
+      "neighborhood": null,
+      "services": [],
+      "specialties": [],
+      "product": null,
+      "networks": [],
+      "coverageVerified": false,
+      "selectionSource": "Lista de destaques solicitada em 2026-10-11",
+      "selectionNote": "Instituição solicitada sem unidade específica. Foto institucional publicada pela Dimagem, com letreiro Riolabor no edifício da Taquara. A foto identifica a instituição; a disponibilidade desta unidade não foi validada.",
+      "photo": {
+        "src": "/assets/hospitais/riolabor-taquara.webp",
+        "alt": "Fachada do edifício com o letreiro Riolabor na Taquara, em fotografia institucional publicada pela Dimagem",
+        "credit": "Fonte: Dimagem Diagnóstico",
+        "sourceUrl": "https://www.dimagem.net/unidades",
+        "originalUrl": "https://static.wixstatic.com/media/6065d8_5a453d8073d24a83ba9703c355bb379d~mv2.jpeg",
+        "width": 1000,
+        "height": 666,
+        "objectPosition": "center 70%",
+        "verifiedAt": "2026-10-11"
+      }
+    },
+    {
+      "name": "DIMAGEM DIAGNÓSTICO POR IMAGEM",
+      "displayName": "Dimagem",
+      "city": null,
+      "neighborhood": null,
+      "services": [],
+      "specialties": [],
+      "product": null,
+      "networks": [],
+      "coverageVerified": false,
+      "selectionSource": "Lista de destaques solicitada em 2026-10-11",
+      "selectionNote": "Instituição do Rio/Grande Rio identificada pelo site oficial dimagem.net. Fotografia institucional da unidade Nova Iguaçu. Ausente na base pública de 710 registros; cobertura não confirmada.",
+      "photo": {
+        "src": "/assets/hospitais/dimagem-nova-iguacu.webp",
+        "alt": "Fachada da Dimagem Diagnóstico, unidade Nova Iguaçu, em fotografia publicada pela instituição",
+        "credit": "Fonte: Dimagem Diagnóstico",
+        "sourceUrl": "https://www.dimagem.net/unidades",
+        "originalUrl": "https://static.wixstatic.com/media/6065d8_6107ed4da1534ca2944a2c4b72b2c68e~mv2.jpg",
+        "width": 1000,
+        "height": 667,
+        "objectPosition": "center",
+        "verifiedAt": "2026-10-11"
       }
     }
   ]
