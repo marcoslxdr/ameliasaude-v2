@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { MessageCircle, Send, X, ArrowLeft, Headphones, Sparkles } from "lucide-react";
 import type { ChatRequest, ChatResponse, Department, ChatMessage } from "@/lib/chat";
 
@@ -25,7 +26,9 @@ function terminalError(error: unknown) {
   return error instanceof Error && ["session_closed", "session_expired"].includes(error.message);
 }
 
-export function AmeliaChatWidget() {
+type AmeliaChatWidgetProps = { children?: ReactNode; launcherClassName?: string; initialDepartment?: Department };
+
+export function AmeliaChatWidget({ children, launcherClassName, initialDepartment }: AmeliaChatWidgetProps = {}) {
   const [open, setOpen] = useState(false);
   const [department, setDepartment] = useState<Department | null>(null);
   const [sessions, setSessions] = useState<Record<Department, Session>>({ sales: fresh(), service: fresh() });
@@ -39,8 +42,14 @@ export function AmeliaChatWidget() {
   const active = department ? sessions[department] : null;
 
   useEffect(() => {
-    if (open && !dialog.current?.open) dialog.current?.showModal();
-    if (!open && dialog.current?.open) dialog.current?.close();
+    if (!open) return;
+    const element = dialog.current;
+    const trigger = launcher.current;
+    if (!element?.open) element?.showModal();
+    return () => {
+      element?.close();
+      trigger?.focus({ preventScroll: true });
+    };
   }, [open]);
 
   useEffect(() => { end.current?.scrollIntoView({ block: "nearest" }); }, [active?.messages.length, open]);
@@ -123,13 +132,13 @@ export function AmeliaChatWidget() {
   const canType = Boolean(active?.token && !active.terminal && active.input && !["none", "choice"].includes(active.input.kind));
 
   return <>
-    <button ref={launcher} type="button" onClick={() => setOpen(true)} aria-haspopup="dialog" aria-controls="amelia-chat" aria-expanded={open} className="fixed bottom-5 right-5 z-[90] flex min-h-12 items-center gap-2 rounded-full bg-[var(--amelia-deep)] px-5 py-3 font-sans text-sm text-white shadow-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--amelia-purple)]">
-      <MessageCircle size={21} aria-hidden="true" /> Fale com a Amélia
+    <button ref={launcher} type="button" onClick={() => { setOpen(true); if (initialDepartment) void start(initialDepartment); }} aria-haspopup="dialog" aria-controls="amelia-chat" aria-expanded={open} className={launcherClassName ?? "fixed bottom-5 right-5 z-[90] flex min-h-12 items-center gap-2 rounded-full bg-[var(--amelia-deep)] px-5 py-3 font-sans text-sm text-white shadow-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--amelia-purple)]"}>
+      {children ?? <><MessageCircle size={21} aria-hidden="true" /> Fale com a Amélia</>}
     </button>
-    <dialog ref={dialog} id="amelia-chat" aria-labelledby="amelia-chat-title" onCancel={event => { event.preventDefault(); setOpen(false); }} onClose={() => { if (!dialog.current?.open) launcher.current?.focus(); }} className="ph-no-capture ph-no-autocapture m-auto h-[min(680px,calc(100dvh-2rem))] w-[calc(100%-2rem)] max-w-[420px] overflow-hidden rounded-3xl border-0 p-0 text-[var(--amelia-deep)] shadow-2xl backdrop:bg-black/35 sm:mb-5 sm:mr-5">
+    {open ? createPortal(<dialog ref={dialog} id="amelia-chat" aria-labelledby="amelia-chat-title" onCancel={event => { event.preventDefault(); setOpen(false); }} onClose={() => { if (!dialog.current?.open) launcher.current?.focus({ preventScroll: true }); }} className="ph-no-capture ph-no-autocapture m-auto h-[min(680px,calc(100dvh-2rem))] w-[calc(100%-2rem)] max-w-[420px] overflow-hidden rounded-3xl border-0 p-0 text-[var(--amelia-deep)] shadow-2xl backdrop:bg-black/35 sm:mb-5 sm:mr-5">
       <div className="flex h-full flex-col bg-white font-sans">
         <header className="flex items-center gap-3 bg-[var(--amelia-deep)] px-4 py-4 text-white">
-          {department && <button type="button" disabled={busy} aria-label="Escolher vendas ou atendimento" onClick={() => { setDepartment(null); setDraft(""); }} className="rounded-lg p-2 focus-visible:outline-2"><ArrowLeft size={20} /></button>}
+          {department && !initialDepartment && <button type="button" disabled={busy} aria-label="Escolher vendas ou atendimento" onClick={() => { setDepartment(null); setDraft(""); }} className="rounded-lg p-2 focus-visible:outline-2"><ArrowLeft size={20} /></button>}
           <div className="min-w-0 flex-1"><h2 id="amelia-chat-title" className="text-base font-medium">Amélia Saúde</h2><p className="text-xs text-white/80">{department ? names[department] : "Como podemos ajudar?"}</p></div>
           <button type="button" aria-label="Fechar chat" onClick={() => setOpen(false)} className="rounded-lg p-2 focus-visible:outline-2"><X size={22} /></button>
         </header>
@@ -153,11 +162,11 @@ export function AmeliaChatWidget() {
           {active?.error && <div role="alert" className="border-t bg-amber-50 px-4 py-3 text-sm"><p>{active.error}</p><button type="button" disabled={busy} onClick={() => void start(department, true)} className="mt-2 underline">Iniciar nova conversa</button></div>}
           {canType && <form onSubmit={submit} className="flex items-end gap-2 border-t p-3">
             <div className="flex-1"><label htmlFor="amelia-chat-message" className="sr-only">Mensagem para {names[department]}</label><textarea id="amelia-chat-message" className="ph-mask min-h-12 w-full resize-none rounded-xl border border-[var(--amelia-line)] p-3 text-sm focus-visible:outline-2 focus-visible:outline-[var(--amelia-purple)]" value={draft} onChange={event => setDraft(event.target.value)} maxLength={1000} rows={2} placeholder={active?.input?.placeholder || "Digite sua mensagem"} disabled={busy} /></div>
-            <button type="submit" disabled={busy || !draft.trim()} aria-label="Enviar mensagem" className="mb-1 rounded-xl bg-[var(--amelia-deep)] p-3 text-white disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2"><Send size={20} /></button>
+            <button type="submit" disabled={busy || !draft.trim()} aria-label="Enviar mensagem" style={{ color: "#fff" }} className="mb-1 rounded-xl bg-[var(--amelia-deep)] p-3 text-white disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2"><Send size={20} /></button>
           </form>}
           {active?.input?.hint && <p className="px-4 pb-2 text-xs text-[var(--amelia-body)]">{active.input.hint}</p>}
         </>}
       </div>
-    </dialog>
+    </dialog>, document.body) : null}
   </>;
 }
