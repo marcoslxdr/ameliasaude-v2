@@ -6,6 +6,7 @@ import { Home } from './Home.jsx';
 import { QuoteForm } from './QuoteForm.jsx';
 import { Footer } from './Footer.jsx';
 import { LandingPage } from './LandingPage.jsx';
+import { AmeliaChatWidget } from '@/components/chat/AmeliaChatWidget';
 import './styles.css';
 
 const InteriorPage = lazy(() => import('./InteriorPages.jsx').then(module => ({ default: module.InteriorPage })));
@@ -54,10 +55,16 @@ function Dialog({ children, label, onClose, className = '' }) {
 export function App({initialPath = '/'}) {
   const [path, setPath] = useState(initialPath);
   const mainRef = useRef(null), previousPathRef = useRef(path);
+  const chatRef = useRef(null), headerQuoteRef = useRef(null);
   const [menuOpen, setMenuOpen] = useState(false), [quoteOpen, setQuoteOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const closeMenu = useCallback(()=>setMenuOpen(false),[]), closeQuote = useCallback(()=>setQuoteOpen(false),[]);
   const openQuote = useCallback(()=>{setMenuOpen(false);setQuoteOpen(true);},[]);
+  const openSalesChat = useCallback(event=>{
+    const trigger = event?.currentTarget;
+    setMenuOpen(false);setQuoteOpen(false);
+    requestAnimationFrame(()=>chatRef.current?.open(trigger?.isConnected ? trigger : headerQuoteRef.current));
+  },[]);
   const navigate = useCallback(href=>{
     const destination = new URL(href,window.location.origin);
     const routeChanged = destination.pathname!==window.location.pathname;
@@ -101,13 +108,14 @@ export function App({initialPath = '/'}) {
     <header className={`site-header ${isHeroHeader?'header-on-hero':'header-solid'}`}>
       <div className="header-brand"><button className="menu-toggle icon-button" aria-label="Abrir menu" aria-expanded={menuOpen} onClick={()=>setMenuOpen(true)}><Menu size={22} strokeWidth={1.4}/></button><SiteLink href="/" navigate={navigate} className="logo-link" aria-label="Amélia Saúde — início"><img src={isHeroHeader?'/assets/logo-amelia-site-branca.png':'/assets/logo-amelia-site.png'} width="132" height="54" alt="Amélia Saúde"/></SiteLink></div>
       <nav aria-label="Menu principal" className="desktop-navigation">{pageNavLinks.map(([label,href])=><SiteLink key={href} href={href} navigate={navigate} aria-current={href===path?'page':undefined}>{label}</SiteLink>)}</nav>
-      <button className="button button-purple header-quote" onClick={pageQuoteAction}>{isLanding?'Solicitar cotação':'Quero meu plano'} <ArrowRight size={17} strokeWidth={1.5}/></button>
+      <button ref={headerQuoteRef} type="button" className="button button-purple header-quote" onClick={isLanding?pageQuoteAction:openSalesChat}>{isLanding?'Solicitar cotação':'Quero meu plano'} <ArrowRight size={17} strokeWidth={1.5}/></button>
     </header>
     <main ref={mainRef} id="main-content" tabIndex={-1}>
-      {isHome?<Home navigate={navigate} openQuote={openQuote}/>:isLanding?<LandingPage navigate={navigate} openQuote={pageQuoteAction}/>:route==='/cotacao'?<section className="quote-page"><div className="quote-page-intro"><span className="eyebrow">Simule seu plano</span><h1>Planos feitos para cuidar de você de verdade.</h1><p>Planos de saúde feitos para você</p><img src="/assets/familia-bg.webp" alt="Família reunida"/></div><div className="quote-page-form"><QuoteForm navigate={navigate}/></div></section>:<Suspense fallback={<div className="page-loading" role="status">Carregando…</div>}><InteriorPage path={path} navigate={navigate} openQuote={openQuote}/></Suspense>}
+      {isHome?<Home navigate={navigate} openSalesChat={openSalesChat}/>:isLanding?<LandingPage navigate={navigate} openQuote={pageQuoteAction}/>:route==='/cotacao'?<section className="quote-page"><div className="quote-page-intro"><span className="eyebrow">Simule seu plano</span><h1>Planos feitos para cuidar de você de verdade.</h1><p>Planos de saúde feitos para você</p><img src="/assets/familia-bg.webp" alt="Família reunida"/></div><div className="quote-page-form"><QuoteForm navigate={navigate}/></div></section>:<Suspense fallback={<div className="page-loading" role="status">Carregando…</div>}><InteriorPage path={path} navigate={navigate} openQuote={openQuote}/></Suspense>}
     </main>
     <Footer navigate={navigate}/>
-    {menuOpen?<Dialog label="Menu de navegação" onClose={closeMenu} className="menu-dialog"><div className="menu-top"><img src="/assets/logo-amelia-site-branca.png" width="150" height="61" alt="Amélia Saúde"/><button className="icon-button" aria-label="Fechar menu" onClick={closeMenu}><X size={28} strokeWidth={1.4}/></button></div><nav aria-label="Menu completo"><SiteLink href="/" navigate={navigate}>Início <ArrowRight/></SiteLink>{pageNavLinks.map(([label,href])=><SiteLink key={href} href={href} navigate={navigate}>{label}<ArrowRight/></SiteLink>)}{!isLanding&&<><SiteLink href="/landing" navigate={navigate}>Simule seu plano <ArrowRight/></SiteLink><SiteLink href="/blog" navigate={navigate}>Blog <ArrowRight/></SiteLink></>}</nav>{!isLanding&&<div className="menu-service-links"><a href="tel:08000210777">Central de Atendimento <ArrowRight size={16}/></a><a href="https://planodesaude.ameliasaude.com.br/PlanodeSaude/" target="_blank" rel="noopener noreferrer">Prestador <ArrowRight size={16}/></a></div>}<div className="menu-bottom"><button className="button button-white" onClick={pageQuoteAction}>{isLanding?'Solicitar cotação':'Quero meu plano'} <ArrowRight size={20}/></button><a href="https://www.instagram.com/ameliasauderj/" target="_blank" rel="noopener noreferrer" aria-label="Amélia Saúde no Instagram">Instagram</a></div></Dialog>:null}
+    {menuOpen?<Dialog label="Menu de navegação" onClose={closeMenu} className="menu-dialog"><div className="menu-top"><img src="/assets/logo-amelia-site-branca.png" width="150" height="61" alt="Amélia Saúde"/><button className="icon-button" aria-label="Fechar menu" onClick={closeMenu}><X size={28} strokeWidth={1.4}/></button></div><nav aria-label="Menu completo"><SiteLink href="/" navigate={navigate}>Início <ArrowRight/></SiteLink>{pageNavLinks.map(([label,href])=><SiteLink key={href} href={href} navigate={navigate}>{label}<ArrowRight/></SiteLink>)}{!isLanding&&<><SiteLink href="/landing" navigate={navigate}>Simule seu plano <ArrowRight/></SiteLink><SiteLink href="/blog" navigate={navigate}>Blog <ArrowRight/></SiteLink></>}</nav>{!isLanding&&<div className="menu-service-links"><a href="tel:08000210777">Central de Atendimento <ArrowRight size={16}/></a><a href="https://planodesaude.ameliasaude.com.br/PlanodeSaude/" target="_blank" rel="noopener noreferrer">Prestador <ArrowRight size={16}/></a></div>}<div className="menu-bottom"><button type="button" className="button button-white" onClick={isLanding?pageQuoteAction:openSalesChat}>{isLanding?'Solicitar cotação':'Quero meu plano'} <ArrowRight size={20}/></button><a href="https://www.instagram.com/ameliasauderj/" target="_blank" rel="noopener noreferrer" aria-label="Amélia Saúde no Instagram">Instagram</a></div></Dialog>:null}
     {quoteOpen?<Dialog label="Simule seu plano" onClose={closeQuote} className="quote-dialog"><div className="quote-dialog-top"><span className="eyebrow">Simule seu plano</span><button className="icon-button" aria-label="Fechar cotação" onClick={closeQuote}><X size={23}/></button></div><QuoteForm navigate={navigate}/></Dialog>:null}
+    <AmeliaChatWidget ref={chatRef} hideLauncher initialDepartment="sales" />
   </>;
 }

@@ -1,6 +1,5 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
-import { AmeliaChatWidget } from '../components/chat/AmeliaChatWidget';
 import cities from './data/network-cities.json';
 import './network-section.css';
 
@@ -12,7 +11,7 @@ const CITY_LABEL_LINES = {
   'belford-roxo': ['Belford', 'Roxo'],
 };
 
-export function NetworkSection() {
+export function NetworkSection({ openSalesChat }) {
   return <section id="rede" className="nw-section" aria-labelledby="nw-title">
     <div className="nw-shell">
       <figure className="nw-rio-photo">
@@ -34,9 +33,9 @@ export function NetworkSection() {
             </li>;
           })}
         </ul>
-        <AmeliaChatWidget initialDepartment="sales" launcherClassName="nw-cta">
+        <button type="button" onClick={openSalesChat} className="nw-cta" aria-haspopup="dialog" aria-controls="amelia-chat">
           Conheça nossa rede <ArrowRight size={20} strokeWidth={1.5} aria-hidden="true" />
-        </AmeliaChatWidget>
+        </button>
         <details className="nw-credits">
           <summary>Créditos das fotos dos municípios</summary>
           <p>Fotografias redimensionadas e recortadas para exibição.</p>

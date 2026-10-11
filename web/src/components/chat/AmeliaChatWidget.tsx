@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useCallback, useEffect, useImperativeHandle, useRef, useState, type FormEvent, type ReactNode, type Ref } from "react";
 import { createPortal } from "react-dom";
 import { MessageCircle, Send, X, ArrowLeft, Headphones, Sparkles } from "lucide-react";
 import type { ChatRequest, ChatResponse, Department, ChatMessage } from "@/lib/chat";
@@ -26,9 +26,10 @@ function terminalError(error: unknown) {
   return error instanceof Error && ["session_closed", "session_expired"].includes(error.message);
 }
 
-type AmeliaChatWidgetProps = { children?: ReactNode; launcherClassName?: string; initialDepartment?: Department };
+export type AmeliaChatHandle = { open: (returnFocus?: HTMLElement | null) => void };
+type AmeliaChatWidgetProps = { children?: ReactNode; launcherClassName?: string; initialDepartment?: Department; hideLauncher?: boolean; ref?: Ref<AmeliaChatHandle> };
 
-export function AmeliaChatWidget({ children, launcherClassName, initialDepartment }: AmeliaChatWidgetProps = {}) {
+export function AmeliaChatWidget({ children, launcherClassName, initialDepartment, hideLauncher = false, ref }: AmeliaChatWidgetProps = {}) {
   const [open, setOpen] = useState(false);
   const [department, setDepartment] = useState<Department | null>(null);
   const [sessions, setSessions] = useState<Record<Department, Session>>({ sales: fresh(), service: fresh() });
@@ -36,6 +37,7 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
   const [busy, setBusy] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null);
   const launcher = useRef<HTMLButtonElement>(null);
+  const externalTrigger = useRef<HTMLElement | null>(null);
   const messageLog = useRef<HTMLDivElement>(null);
   const end = useRef<HTMLDivElement>(null);
   const submitting = useRef(false);
@@ -44,7 +46,7 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
   useEffect(() => {
     if (!open) return;
     const element = dialog.current;
-    const trigger = launcher.current;
+    const trigger = launcher.current ?? externalTrigger.current;
     if (!element?.open) element?.showModal();
     return () => {
       element?.close();
@@ -95,6 +97,14 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
     } finally { submitting.current = false; setBusy(false); }
   }
 
+  useImperativeHandle(ref, () => ({
+    open(returnFocus) {
+      externalTrigger.current = returnFocus ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
+      setOpen(true);
+      if (initialDepartment) void start(initialDepartment);
+    },
+  }));
+
   async function send(value: string) {
     if (!department || !active?.token || active.terminal || submitting.current || !value.trim()) return;
     const target = department;
@@ -132,10 +142,10 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
   const canType = Boolean(active?.token && !active.terminal && active.input && !["none", "choice"].includes(active.input.kind));
 
   return <>
-    <button ref={launcher} type="button" onClick={() => { setOpen(true); if (initialDepartment) void start(initialDepartment); }} aria-haspopup="dialog" aria-controls="amelia-chat" aria-expanded={open} className={launcherClassName ?? "fixed bottom-5 right-5 z-[90] flex min-h-12 items-center gap-2 rounded-full bg-[var(--amelia-deep)] px-5 py-3 font-sans text-sm text-white shadow-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--amelia-purple)]"}>
+    {!hideLauncher && <button ref={launcher} type="button" onClick={() => { setOpen(true); if (initialDepartment) void start(initialDepartment); }} aria-haspopup="dialog" aria-controls="amelia-chat" aria-expanded={open} className={launcherClassName ?? "fixed bottom-5 right-5 z-[90] flex min-h-12 items-center gap-2 rounded-full bg-[var(--amelia-deep)] px-5 py-3 font-sans text-sm text-white shadow-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--amelia-purple)]"}>
       {children ?? <><MessageCircle size={21} aria-hidden="true" /> Fale com a Amélia</>}
-    </button>
-    {open ? createPortal(<dialog ref={dialog} id="amelia-chat" aria-labelledby="amelia-chat-title" onCancel={event => { event.preventDefault(); setOpen(false); }} onClose={() => { if (!dialog.current?.open) launcher.current?.focus({ preventScroll: true }); }} className="ph-no-capture ph-no-autocapture m-auto h-[min(680px,calc(100dvh-2rem))] w-[calc(100%-2rem)] max-w-[420px] overflow-hidden rounded-3xl border-0 p-0 text-[var(--amelia-deep)] shadow-2xl backdrop:bg-black/35 sm:mb-5 sm:mr-5">
+    </button>}
+    {open ? createPortal(<dialog ref={dialog} id="amelia-chat" aria-labelledby="amelia-chat-title" onCancel={event => { event.preventDefault(); setOpen(false); }} className="ph-no-capture ph-no-autocapture m-auto h-[min(680px,calc(100dvh-2rem))] w-[calc(100%-2rem)] max-w-[420px] overflow-hidden rounded-3xl border-0 p-0 text-[var(--amelia-deep)] shadow-2xl backdrop:bg-black/35 sm:mb-5 sm:mr-5">
       <div className="flex h-full flex-col bg-white font-sans">
         <header className="flex items-center gap-3 bg-[var(--amelia-deep)] px-4 py-4 text-white">
           {department && !initialDepartment && <button type="button" disabled={busy} aria-label="Escolher vendas ou atendimento" onClick={() => { setDepartment(null); setDraft(""); }} className="rounded-lg p-2 focus-visible:outline-2"><ArrowLeft size={20} /></button>}
