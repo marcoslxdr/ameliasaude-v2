@@ -1,0 +1,110 @@
+.page {
+  min-height: 100vh;
+  background: #faf9fb;
+  color: #382348;
+}
+
+.header,
+.main,
+.footer {
+  width: min(100% - 40px, 760px);
+  margin-inline: auto;
+}
+
+.header {
+  padding-block: 32px 24px;
+}
+
+.header a {
+  display: inline-block;
+}
+
+.logo {
+  width: 144px;
+  height: auto;
+}
+
+.main {
+  padding-block: 12px 32px;
+}
+
+.main h1 {
+  max-width: 700px;
+  margin: 0 0 36px;
+  font-size: clamp(1.8rem, 4.5vw, 2.6rem);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -.025em;
+}
+
+.main section {
+  margin-bottom: 30px;
+}
+
+.main h2 {
+  margin: 0 0 12px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.main p,
+.main ul {
+  margin: 0 0 12px;
+  color: #54475e;
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.main ul {
+  list-style: disc;
+  padding-left: 22px;
+}
+
+.main li + li {
+  margin-top: 6px;
+}
+
+.contacts {
+  padding: 18px 20px;
+  border-left: 3px solid #7b6db2;
+  border-radius: 0 8px 8px 0;
+  background: #eeebf5;
+}
+
+.contacts p {
+  margin: 0;
+}
+
+.page a {
+  color: #5e4985;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere;
+}
+
+.page a:focus-visible {
+  outline: 2px solid #5e4985;
+  outline-offset: 5px;
+  border-radius: 2px;
+}
+
+.footer {
+  padding-block: 20px 32px;
+  border-top: 1px solid #e4deec;
+  font-size: .9rem;
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding-top: 24px;
+  }
+
+  .main h1 {
+    margin-bottom: 28px;
+  }
+
+  .contacts {
+    padding: 14px 16px;
+  }
+}

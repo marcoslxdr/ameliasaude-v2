@@ -16,6 +16,7 @@ const STATIC_PATHS: {
   { path: "/privacidade", priority: 0.4, changeFrequency: "yearly" },
   { path: "/termos", priority: 0.4, changeFrequency: "yearly" },
   { path: "/lgpd", priority: 0.4, changeFrequency: "yearly" },
+  { path: "/exclusao-de-conta", priority: 0.4, changeFrequency: "yearly" },
   { path: "/cookies", priority: 0.3, changeFrequency: "yearly" },
 ];
 
