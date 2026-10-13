@@ -1,0 +1,41 @@
+.home-closing-stack { isolation: isolate; }
+.home-closing-panels { display: flex; flex-direction: column; gap: 4rem; }
+.closing-card { position: relative; }
+.closing-card > section, .closing-stack-footer > footer {
+  transform-origin: center bottom;
+}
+.home-page .closing-card > .contact-section {
+  background: var(--paper, #faf8fc);
+  border-radius: 24px 24px 0 0;
+}
+.closing-stack-space { display: none; }
+.home-closing-stack[data-closing-motion=scroll] .closing-stack-space {
+  display: block;
+  height: var(--closing-footer-height, 0px);
+}
+.home-closing-stack[data-closing-motion=scroll] .closing-card {
+  position: sticky;
+  top: var(--closing-top, 104px);
+}
+.home-closing-stack[data-closing-motion=scroll] .closing-card > section {
+  transform: scale(var(--closing-scale, 1));
+  box-shadow: 0 -8px 28px rgb(56 35 72 / .06);
+}
+.home-closing-stack[data-closing-motion=scroll] .closing-stack-footer {
+  margin-top: calc(-1 * var(--closing-footer-height, 0px));
+}
+.closing-telemedicine { z-index: 1; }
+.closing-contact { z-index: 2; }
+.closing-stack-footer { z-index: 3; }
+.home-closing-stack .closing-card :focus-visible,
+.site-footer :focus-visible { outline-color: #c9bfdf; }
+.home-closing-stack .closing-contact :focus-visible { outline-color: var(--purple); }
+@media (max-width: 640px) {
+  .home-closing-panels { gap: 3rem; }
+}
+@media (prefers-reduced-motion: reduce), (max-height: 640px) {
+  .home-closing-stack[data-closing-motion=scroll] .closing-stack-space { display: none; }
+  .home-closing-stack[data-closing-motion=scroll] .closing-card { position: relative; top: auto; }
+  .home-closing-stack[data-closing-motion=scroll] .closing-card > section { transform: none; }
+  .home-closing-stack[data-closing-motion=scroll] .closing-stack-footer { margin-top: 0; }
+}
