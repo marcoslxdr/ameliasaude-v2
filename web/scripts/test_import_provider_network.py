@@ -3,6 +3,7 @@
 import importlib.util
 from pathlib import Path
 import unittest
+import tempfile
 
 
 spec = importlib.util.spec_from_file_location(
@@ -21,6 +22,16 @@ class VisibilityTests(unittest.TestCase):
             "DATA_EXCLUSAO": "",
             **changes,
         }
+
+    def test_csv_requires_confirmation_when_status_date_is_missing(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "guia.csv"
+            path.write_text("Nome fantasia;Ie guia medico espec\nClínica;SIM\n", encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "confirme a vigência"):
+                provider_import.read_rows(path, False)
+            headers, rows = provider_import.read_rows(path, True)
+            self.assertEqual(headers, ["NOME_FANTASIA", "IE_GUIA_MEDICO_ESPEC", "DATA_EXCLUSAO"])
+            self.assertEqual(rows, [["Clínica", "SIM", ""]])
 
     def test_flags_must_both_be_sim(self):
         for provider_flag, specialty_flag, expected in (

@@ -136,3 +136,13 @@ body {
   font-weight: 600;
   color: var(--amelia-ink);
 }
+
+/* The third-party floating chat must not cover an open site dialog. */
+[id="container-ms-AtendimentoViaChat-9999.0007"][inert] { visibility: hidden; }
+@media (max-width: 420px) {
+  [id="container-ms-AtendimentoViaChat-9999.0007"] iframe {
+    max-width: calc(100vw - 20px);
+    max-height: calc(100dvh - 20px);
+    right: 10px !important;
+  }
+}

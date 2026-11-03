@@ -6,12 +6,13 @@ Requer openpyxl. Valida a estrutura e só publica linhas ativas marcadas para o 
 
 from __future__ import annotations
 
+import argparse
+import csv
 import hashlib
 import json
-import sys
+import re
 from pathlib import Path
 
-from openpyxl import load_workbook
 
 
 REQUIRED_COLUMNS = {
@@ -43,11 +44,27 @@ def should_publish(row: dict[str, str]) -> bool:
     )
 
 
-def main(source: Path) -> None:
+def read_rows(source: Path, confirm_active: bool):
+    if source.suffix.lower() == ".csv":
+        if not confirm_active:
+            raise ValueError("CSV sem DATA_EXCLUSAO: confirme a vigência com a Amélia e use --confirm-active")
+        with source.open(encoding="utf-8-sig", newline="") as file:
+            reader = csv.reader(file, delimiter=";")
+            headers = [clean(value).upper().replace(" ", "_") for value in next(reader)]
+            if "DATA_EXCLUSAO" not in headers:
+                headers.append("DATA_EXCLUSAO")
+                rows = [row + [""] for row in reader]
+            else:
+                rows = list(reader)
+        return headers, rows
+    from openpyxl import load_workbook
     workbook = load_workbook(source, read_only=True, data_only=True)
-    sheet = workbook["Exportar Planilha"]
-    rows = iter(sheet.values)
-    headers = [clean(value) for value in next(rows)]
+    rows = iter(workbook["Exportar Planilha"].values)
+    return [clean(value) for value in next(rows)], rows
+
+
+def main(source: Path, confirm_active: bool = False, destination: Path | None = None, ddd: str | None = None) -> None:
+    headers, rows = read_rows(source, confirm_active)
     missing = REQUIRED_COLUMNS - set(headers)
     if missing:
         raise ValueError(f"Colunas obrigatórias ausentes: {', '.join(sorted(missing))}")
@@ -96,7 +113,14 @@ def main(source: Path) -> None:
             "address": address,
         }
         if row.get("TELEFONE"):
-            provider["phone"] = row["TELEFONE"]
+            phone = re.sub(r"\D", "", row["TELEFONE"])
+            if len(phone) in (8, 9):
+                if not ddd or not re.fullmatch(r"[1-9][0-9]", ddd):
+                    raise ValueError(f"Linha {line_number}: telefone sem DDD; confirme o DDD e informe --ddd")
+                phone = ddd + phone
+            if len(phone) not in (10, 11):
+                raise ValueError(f"Linha {line_number}: telefone inválido")
+            provider["phone"] = phone
         if row.get("AREA_ATUACAO"):
             provider["area"] = row["AREA_ATUACAO"]
         previous = by_id.get(provider["id"])
@@ -114,12 +138,16 @@ def main(source: Path) -> None:
     if not output:
         raise ValueError("Nenhum prestador ativo encontrado")
 
-    destination = Path(__file__).resolve().parents[1] / "src/data/provider-network.json"
+    destination = destination or Path(__file__).resolve().parents[1] / "src/rebranding/data/provider-network.json"
     destination.write_text(json.dumps(output, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
     print(f"Importados: {len(output)} registros; excluídos: {excluded}; duplicados: {duplicates}; arquivo: {destination}")
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        raise SystemExit("Uso: python3 scripts/import-provider-network.py arquivo.xlsx")
-    main(Path(sys.argv[1]))
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("source", type=Path)
+    parser.add_argument("--confirm-active", action="store_true", help="Confirmação externa de vigência do CSV sem data de exclusão")
+    parser.add_argument("--output", type=Path, help="Arquivo de saída para revisão")
+    parser.add_argument("--ddd", help="DDD confirmado para telefones sem código de área")
+    args = parser.parse_args()
+    main(args.source, args.confirm_active, args.output, args.ddd)

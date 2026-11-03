@@ -43,6 +43,23 @@
   margin-right: auto;
 }
 
+/* Slightly smaller display titles for notebook and desktop viewports. */
+@media (min-width: 1024px) {
+  .home-page .hero h1 {
+    font-size: clamp(2.25rem, 3.8vw, 3.5rem);
+  }
+
+  .home-page .story-editorial h2 {
+    font-size: clamp(3.25rem, 5vw, 4.5rem);
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1100px) {
+  .home-page .story-editorial h2 {
+    font-size: 3.25rem;
+  }
+}
+
 @media (max-width: 1100px) {
   .home-page {
     --section-gutter: 32px;

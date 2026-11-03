@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Instrument_Serif, DM_Sans } from "next/font/google";
 import { GoogleTag } from "@/components/GoogleTag";
 import { OrganizationSchema, WebSiteSchema, LocalBusinessSchema } from "@/components/StructuredData";
+import { MosiaChat } from "@/components/MosiaChat";
 import { CotacaoModalProvider } from "@/components/CotacaoModal";
 import "./globals.css";
 
@@ -90,6 +91,7 @@ export default function RootLayout({
         <LocalBusinessSchema />
         <GoogleTag />
         <CotacaoModalProvider>{children}</CotacaoModalProvider>
+        <MosiaChat />
       </body>
     </html>
   );
