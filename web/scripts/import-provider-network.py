@@ -26,21 +26,16 @@ RJ_CITIES = {
     "MESQUITA", "NITERÓI", "SÃO JOÃO DE MERITI", "BELFORD ROXO",
     "NILÓPOLIS", "QUEIMADOS", "MAGÉ",
 }
-# Remoção solicitada da rede pública, mesmo quando o export ainda marca SIM.
-EXCLUDED_PROVIDERS = {"AMERICAN COR", "HOSPITAL AMERICAN COR"}
-
 
 def clean(value: object) -> str:
     return str(value).strip() if value is not None else ""
 
 
 def should_publish(row: dict[str, str]) -> bool:
-    name = " ".join(clean(row["NOME_FANTASIA"]).upper().split())
     return (
         clean(row["IE_GUIA_MEDICO"]).upper() == "SIM"
         and clean(row["IE_GUIA_MEDICO_ESPEC"]).upper() == "SIM"
         and not clean(row["DATA_EXCLUSAO"])
-        and name not in EXCLUDED_PROVIDERS
     )
 
 

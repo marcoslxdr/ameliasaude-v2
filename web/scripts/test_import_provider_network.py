@@ -45,10 +45,10 @@ class VisibilityTests(unittest.TestCase):
                     IE_GUIA_MEDICO_ESPEC=specialty_flag,
                 )), expected)
 
-    def test_removed_provider_is_not_reintroduced_by_sim_flags(self):
+    def test_american_cor_can_return_when_active_and_listed(self):
         for name in ("AMERICAN COR", "HOSPITAL AMERICAN COR ", "hospital  american cor"):
             with self.subTest(name=name):
-                self.assertFalse(provider_import.should_publish(self.row(NOME_FANTASIA=name)))
+                self.assertTrue(provider_import.should_publish(self.row(NOME_FANTASIA=name)))
 
     def test_excluded_date_hides_provider(self):
         self.assertFalse(provider_import.should_publish(self.row(DATA_EXCLUSAO="2026-10-08")))

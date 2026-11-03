@@ -15,8 +15,7 @@ export type Provider = {
   area?: string;
 };
 
-// Snapshot público: https://www.ameliasaude.com.br/rede-credenciada, conferido em 09/10/2026.
-// Dataset extraído do bundle público 15fcf0xa9c_a1.js; somente campos já públicos.
+// Dados fornecidos pela Amélia Saúde em 03/11/2026 para publicação no guia.
 export const providers: Provider[] = networkData as Provider[];
 
-export const networkUpdatedAt = "8 de outubro de 2026";
+export const networkUpdatedAt = "3 de novembro de 2026";
