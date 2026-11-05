@@ -12,7 +12,7 @@ const features = [
 
 const devices = [
   {
-    model: 'iPhone', screen: 'Início', image: '/assets/app-inicio-previa.jpg',
+    model: 'iPhone', screen: 'Início', image: '/assets/app-inicio-previa.png',
     store: 'App Store', badge: '/assets/app-store-pt-br.svg',
     url: 'https://apps.apple.com/br/app/id6822854228',
   },
