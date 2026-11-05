@@ -1,25 +1,46 @@
-/* The vendor iframe keeps handling clicks and focus. Only its collapsed face changes. */
-.mosia-chat[data-collapsed="true"] iframe {
-  clip-path: circle(25px at calc(100% - 25px) 50%);
-}
-
-.mosia-launcher-icon {
-  position: fixed;
-  z-index: 100000;
-  right: 20px;
-  bottom: 20px;
-  width: 50px;
-  height: 50px;
+.mosia-launcher, .mosia-panel-heading button {
   display: grid;
   place-items: center;
+  border: 0;
   border-radius: 50%;
-  background: #57407b;
+  cursor: pointer;
+}
+.mosia-launcher {
+  position: fixed;
+  right: max(20px, env(safe-area-inset-right));
+  bottom: max(20px, env(safe-area-inset-bottom));
+  z-index: 9999;
+  width: 52px;
+  height: 52px;
   color: white;
+  background: #57407b;
   box-shadow: 0 4px 16px #25123842;
-  pointer-events: none;
 }
-
-.mosia-chat:focus-within .mosia-launcher-icon {
-  outline: 3px solid #fff;
-  outline-offset: -5px;
+.mosia-launcher:focus-visible, .mosia-panel :focus-visible {
+  outline: 3px solid #9676ac;
+  outline-offset: 3px;
 }
+.mosia-panel {
+  position: fixed;
+  inset: auto max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) auto;
+  width: min(380px, calc(100vw - 24px));
+  height: min(650px, calc(100dvh - 24px));
+  max-height: none;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 16px;
+  color: #302138;
+  background: white;
+  box-shadow: 0 12px 40px #25123844;
+}
+.mosia-panel[open] { display: grid; grid-template-rows: auto minmax(0,1fr) auto; }
+.mosia-panel::backdrop { background: #190e2433; }
+.mosia-panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; border-bottom: 1px solid #e8e1ed; }
+.mosia-panel-heading h2 { font: 600 16px/1.3 system-ui; }
+.mosia-panel-heading button { width: 42px; height: 42px; color: #49355e; background: #f0ebf4; }
+.mosia-content { min-height: 0; overflow: hidden; }
+.mosia-content iframe { display: block; min-height: 100%; max-height: 100%; }
+.mosia-content p { padding: 24px; }
+.mosia-central { padding: 12px; border-top: 1px solid #e8e1ed; color: #51376b; text-align: center; font-size: 14px; text-decoration: underline; }
