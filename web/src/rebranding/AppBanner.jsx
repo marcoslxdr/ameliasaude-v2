@@ -1,13 +1,13 @@
-import { CreditCard, Expand, FileCheck, MapPin, Stethoscope, UserRound, Video } from 'lucide-react';
+import { CreditCard, Expand, FileCheck, MapPin, MessageCircle, ShieldCheck, UserRound } from 'lucide-react';
 import './app-banner.css';
 
 const features = [
-  { label: 'Carteirinha digital', Icon: CreditCard },
+  { label: 'Carteirinha virtual', Icon: CreditCard },
   { label: 'Rede credenciada', Icon: MapPin },
-  { label: 'Pronto atendimento digital', Icon: Stethoscope },
   { label: 'Solicitação de reembolso', Icon: FileCheck },
   { label: 'Atualização cadastral', Icon: UserRound },
-  { label: 'Teleconsulta', Icon: Video },
+  { label: 'Garantia de atendimento', Icon: ShieldCheck },
+  { label: 'Atendimento via Chat', Icon: MessageCircle },
 ];
 
 export function AppBanner() {
@@ -16,7 +16,7 @@ export function AppBanner() {
       <h2 id="app-banner-title">Seu plano na palma da mão.</h2>
       <p>Baixe o aplicativo Amélia Saúde e tenha acesso a diversas funcionalidades com praticidade e segurança 24h.</p>
       <ul>{features.map(({ label, Icon }) => <li key={label}><Icon size={22} aria-hidden="true" />{label}</li>)}</ul>
-      <p>E muito mais!</p>
+      <p>E MUITO MAIS!</p>
       <div className="app-banner-stores">
         <a href="https://apps.apple.com/br/app/id6822854228">
           <img src="/assets/app-store-pt-br.svg" width="120" height="40" alt="Baixar na App Store" />
