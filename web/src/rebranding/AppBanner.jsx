@@ -13,8 +13,8 @@ const features = [
 export function AppBanner() {
   return <section id="aplicativo" className="app-banner" aria-labelledby="app-banner-title">
     <div className="app-banner-copy">
-      <h2 id="app-banner-title">Baixe o aplicativo Amélia Saúde</h2>
-      <p>e tenha acesso a diversas funcionalidades com praticidade e segurança 24h.</p>
+      <h2 id="app-banner-title">Seu plano na palma da mão.</h2>
+      <p>Baixe o aplicativo Amélia Saúde e tenha acesso a diversas funcionalidades com praticidade e segurança 24h.</p>
       <ul>{features.map(({ label, Icon }) => <li key={label}><Icon size={22} aria-hidden="true" />{label}</li>)}</ul>
       <p>E muito mais!</p>
       <div className="app-banner-stores">
