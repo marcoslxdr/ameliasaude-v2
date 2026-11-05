@@ -1,4 +1,4 @@
-import { CreditCard, FileCheck, MapPin, MessageCircle, ShieldCheck, UserRound } from 'lucide-react';
+import { CreditCard, FileCheck, FileText, MapPin, MessageCircle, Phone, ShieldCheck, UserRound } from 'lucide-react';
 import './app-banner.css';
 
 const features = [
@@ -8,6 +8,8 @@ const features = [
   { label: 'Atualização cadastral', Icon: UserRound },
   { label: 'Garantia de atendimento', Icon: ShieldCheck },
   { label: 'Atendimento via Chat', Icon: MessageCircle },
+  { label: 'Extrato de utilização', Icon: FileText },
+  { label: 'Contatos e emergência', Icon: Phone },
 ];
 
 const devices = [
