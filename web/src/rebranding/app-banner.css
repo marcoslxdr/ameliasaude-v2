@@ -12,10 +12,9 @@
 .app-banner h2 { margin: 0; max-width: 17ch; font-size: clamp(38px, 4.5vw, 64px); line-height: 1.03; letter-spacing: -.055em; font-weight: 300; }
 .app-banner ul { display: grid; gap: 18px; list-style: none; padding: 0; margin: 32px 0 0; }
 .app-banner li { display: flex; align-items: center; gap: 14px; }
-.app-banner-stores { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-top: 28px; }
-.app-banner-stores a { display: inline-flex; align-items: center; min-height: 44px; border-radius: 6px; }
-.app-banner-stores img { display: block; height: 44px; width: auto; }
-.app-banner-stores a:focus-visible { outline: 3px solid #513a62; outline-offset: 3px; }
+.app-store-badge { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; max-width: 100%; border-radius: 6px; }
+.app-store-badge img { display: block; width: auto; max-width: 100%; height: 44px; object-fit: contain; }
+.app-store-badge:focus-visible { outline: 3px solid #513a62; outline-offset: 3px; }
 #aplicativo { scroll-margin-top: 100px; }
 
 .app-banner-art {
@@ -48,7 +47,9 @@
   margin-inline: auto;
   align-items: center;
 }
+.app-device-column { display: grid; justify-items: center; gap: 14px; min-width: 0; }
 .app-device-view {
+  width: 100%;
   display: grid;
   justify-items: center;
   gap: 15px;
@@ -56,8 +57,6 @@
   color: #382348;
   text-decoration: none;
 }
-.app-device-view:first-child { transform: translateY(-12px); }
-.app-device-view:last-child { transform: translateY(12px); }
 .app-device {
   position: relative;
   display: block;
@@ -79,6 +78,28 @@
   border-radius: 0 2px 2px 0;
   background: linear-gradient(#9a8a9f, #493f52);
 }
+.app-device-viewport {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: inherit;
+  background: white;
+  aspect-ratio: 610 / 1356;
+}
+.app-device--iphone .app-device-viewport::before, .app-device--samsung .app-device-viewport::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 1.5%;
+  transform: translateX(-50%);
+  background: #17161a;
+}
+.app-device--iphone .app-device-viewport::before { width: 25%; height: 3.1%; border-radius: 999px; }
+.app-device--samsung .app-device-viewport::before { width: 3%; aspect-ratio: 1; border-radius: 50%; }
+.app-device--samsung { border-radius: 6% / 2.8%; }
+.app-device--iphone .app-device-screen { position: absolute; top: 0; height: 100%; clip-path: inset(4.4% 0 4.2%); }
+.app-device--iphone .app-device-viewport::after { content: ''; position: absolute; width: 32%; height: .7%; background: #28252b; border-radius: 999px; bottom: 1.25%; left: 34%; }
 .app-device-screen {
   width: 100%;
   height: auto;
@@ -103,6 +124,5 @@
   .app-banner-art { padding: 36px clamp(14px, 5vw, 36px); }
   .app-device-pair { max-width: 400px; gap: clamp(12px, 3.5vw, 20px); }
   .app-device-view { gap: 10px; }
-  .app-device-view:first-child { transform: translateY(-6px); }
-  .app-device-view:last-child { transform: translateY(6px); }
+  .app-device-column { gap: 9px; }
 }

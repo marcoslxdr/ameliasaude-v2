@@ -10,6 +10,19 @@ const features = [
   { label: 'Atendimento via Chat', Icon: MessageCircle },
 ];
 
+const devices = [
+  {
+    model: 'iPhone', screen: 'Início', image: '/assets/app-inicio-previa.jpg',
+    store: 'App Store', badge: '/assets/app-store-pt-br.svg',
+    url: 'https://apps.apple.com/br/app/id6822854228',
+  },
+  {
+    model: 'Samsung', screen: 'Serviços', image: '/assets/app-servicos-previa.jpg',
+    store: 'Google Play', badge: '/assets/google-play-pt-br.png',
+    url: 'https://play.google.com/store/apps/details?id=br.com.mobilesaude.ameliasaude',
+  },
+];
+
 export function AppBanner() {
   return <section id="aplicativo" className="app-banner" aria-labelledby="app-banner-title">
     <div className="app-banner-copy">
@@ -17,28 +30,24 @@ export function AppBanner() {
       <p>Baixe o aplicativo Amélia Saúde e tenha acesso a diversas funcionalidades com praticidade e segurança 24h.</p>
       <ul>{features.map(({ label, Icon }) => <li key={label}><Icon size={22} aria-hidden="true" />{label}</li>)}</ul>
       <p>E MUITO MAIS!</p>
-      <div className="app-banner-stores">
-        <a href="https://apps.apple.com/br/app/id6822854228">
-          <img src="/assets/app-store-pt-br.svg" width="120" height="40" alt="Baixar na App Store" />
-        </a>
-        <a href="https://play.google.com/store/apps/details?id=br.com.mobilesaude.ameliasaude">
-          <img src="/assets/google-play-pt-br.png" width="478" height="142" alt="Baixar no Google Play" />
-        </a>
-      </div>
     </div>
     <div className="app-banner-art">
       <div className="app-device-pair">
-        {[
-          { name: 'Início', src: '/assets/app-inicio-previa.jpg' },
-          { name: 'Serviços', src: '/assets/app-servicos-previa.jpg' },
-        ].map(({name, src}) => (
-          <a key={name} className="app-device-view" href={src} target="_blank" rel="noopener noreferrer"
-            aria-label={`Ampliar tela de ${name.toLowerCase()} em uma nova aba`}>
-            <span className="app-device">
-              <img className="app-device-screen" src={src} alt="" loading="lazy" />
-            </span>
-            <span className="app-device-caption">{name}<Expand size={13} aria-hidden="true" /></span>
-          </a>
+        {devices.map(({ model, screen, image, store, url, badge }) => (
+          <div className="app-device-column" key={model}>
+            <a className="app-device-view" href={image} target="_blank" rel="noopener noreferrer"
+              aria-label={`Ampliar tela de ${screen.toLowerCase()} no ${model} em uma nova aba`}>
+              <span className={`app-device app-device--${model.toLowerCase()}`}>
+                <span className="app-device-viewport">
+                  <img className="app-device-screen" src={image} alt="" loading="lazy" />
+                </span>
+              </span>
+              <span className="app-device-caption">{model} · {screen}<Expand size={13} aria-hidden="true" /></span>
+            </a>
+            <a className="app-store-badge" href={url}>
+              <img src={badge} alt={store === 'App Store' ? 'Baixar na App Store' : 'Baixar no Google Play'} />
+            </a>
+          </div>
         ))}
       </div>
     </div>
