@@ -121,3 +121,31 @@
     --section-gutter: 18px;
   }
 }
+
+.home-page .telemedicine-tablet {
+  width: min(100%, 360px);
+  aspect-ratio: 4 / 3;
+  padding: 8px;
+  border: 2px solid #b3adb8;
+  border-radius: 16px;
+  background: #201e22;
+  box-shadow: 0 14px 30px #261e393b;
+}
+.telemedicine-tablet-screen {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  border-radius: 7px;
+  background: #d8d5d0 url('/assets/telemedicina-1.webp') 51% 38% / 148% auto no-repeat;
+}
+.telemedicine-tablet-screen > span {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  padding: 4px 8px;
+  border-radius: 20px;
+  background: #2c203cdb;
+  color: white;
+  font-size: 11px;
+}

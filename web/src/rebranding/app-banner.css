@@ -1,0 +1,36 @@
+.app-banner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+  overflow: hidden;
+  margin: 8px;
+  border-radius: 24px;
+  color: #382348;
+  background: #f2eff6;
+}
+.app-banner-copy { align-self: center; padding: clamp(32px, 6vw, 90px); }
+.app-banner-eyebrow { display: block; margin-bottom: 24px; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
+.app-banner h2 { margin: 0; max-width: 11ch; font-size: clamp(42px, 5.6vw, 80px); line-height: 1.03; letter-spacing: -.055em; font-weight: 300; }
+.app-banner ul { display: grid; gap: 18px; list-style: none; padding: 0; margin: 32px 0 0; }
+.app-banner li { display: flex; align-items: center; gap: 14px; }
+.app-banner-art { display: grid; place-items: center; padding: 44px 20px; background: radial-gradient(ellipse at center, #9585ac, #5b4873 80%); }
+.app-device {
+  position: relative;
+  width: min(240px, 90%);
+  aspect-ratio: 201 / 360;
+  background: url('/assets/telemedicina-1.webp') center / 100% 100% no-repeat;
+}
+.app-device-screen {
+  position: absolute;
+  top: 7.8%;
+  left: 17.3%;
+  width: 70.1%;
+  height: 85.2%;
+  object-fit: fill;
+  border-radius: 9% / 5%;
+  background: white;
+}
+@media (max-width: 700px) {
+  .app-banner { grid-template-columns: 1fr; }
+  .app-banner-art { padding-block: 30px; }
+  .app-device { width: 206px; }
+}
