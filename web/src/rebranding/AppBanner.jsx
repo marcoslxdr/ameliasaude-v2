@@ -1,4 +1,4 @@
-import { CreditCard, Expand, FileCheck, MapPin, MessageCircle, ShieldCheck, UserRound } from 'lucide-react';
+import { CreditCard, FileCheck, MapPin, MessageCircle, ShieldCheck, UserRound } from 'lucide-react';
 import './app-banner.css';
 
 const features = [
@@ -17,7 +17,7 @@ const devices = [
     url: 'https://apps.apple.com/br/app/id6822854228',
   },
   {
-    model: 'Samsung', screen: 'Serviços', image: '/assets/app-servicos-previa.jpg',
+    model: 'Android', screen: 'Serviços', image: '/assets/app-servicos-previa.jpg',
     store: 'Google Play', badge: '/assets/google-play-pt-br.png',
     url: 'https://play.google.com/store/apps/details?id=br.com.mobilesaude.ameliasaude',
   },
@@ -42,7 +42,7 @@ export function AppBanner() {
                   <img className="app-device-screen" src={image} alt="" loading="lazy" />
                 </span>
               </span>
-              <span className="app-device-caption">{model} · {screen}<Expand size={13} aria-hidden="true" /></span>
+              <span className="app-device-caption">{model}</span>
             </a>
             <a className="app-store-badge" href={url}>
               <img src={badge} alt={store === 'App Store' ? 'Baixar na App Store' : 'Baixar no Google Play'} />

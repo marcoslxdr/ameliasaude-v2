@@ -68,9 +68,9 @@
   overflow: hidden;
   border-radius: inherit;
   background: white;
-  aspect-ratio: 610 / 1356;
+  aspect-ratio: 738 / 1600;
 }
-.app-device--iphone .app-device-viewport::before, .app-device--samsung .app-device-viewport::before {
+.app-device--iphone .app-device-viewport::before, .app-device--android .app-device-viewport::before {
   content: '';
   position: absolute;
   z-index: 1;
@@ -80,8 +80,8 @@
   background: #17161a;
 }
 .app-device--iphone .app-device-viewport::before { width: 25%; height: 3.1%; border-radius: 999px; }
-.app-device--samsung .app-device-viewport::before { width: 3%; aspect-ratio: 1; border-radius: 50%; }
-.app-device--samsung { border-radius: 6% / 2.8%; }
+.app-device--android .app-device-viewport::before { width: 3%; aspect-ratio: 1; border-radius: 50%; }
+.app-device--android { border-radius: 6% / 2.8%; }
 .app-device--iphone .app-device-screen { position: absolute; top: 0; height: 100%; clip-path: inset(4.4% 0 4.2%); }
 .app-device--iphone .app-device-viewport::after { content: ''; position: absolute; width: 32%; height: .7%; background: #28252b; border-radius: 999px; bottom: 1.25%; left: 34%; }
 .app-device-screen {
