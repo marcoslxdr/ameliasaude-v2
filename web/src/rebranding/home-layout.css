@@ -137,7 +137,7 @@
   border: 5px solid #19181c;
   border-bottom-width: 9px;
   border-radius: 11px 11px 3px 3px;
-  background: #d8d5d0 url('/assets/telemedicina-1.webp') 51% 38% / 148% auto no-repeat;
+  background: #d8d5d0 url('/assets/teleconsulta-medica-brasileira.jpg') center / cover no-repeat;
   box-shadow: 0 0 0 1px #cbc9cd;
 }
 .telemedicine-macbook-screen::before {
