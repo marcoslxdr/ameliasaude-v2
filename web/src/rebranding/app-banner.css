@@ -18,26 +18,10 @@
 #aplicativo { scroll-margin-top: 100px; }
 
 .app-banner-art {
-  position: relative;
-  isolation: isolate;
   display: grid;
   align-items: center;
   overflow: hidden;
   padding: clamp(44px, 5vw, 80px) clamp(18px, 3vw, 52px);
-  background: radial-gradient(ellipse at 16% 12%, #f4eafd 0%, transparent 56%),
-    linear-gradient(146deg, #d3bfdf 5%, #b89cc9 56%, #846a99);
-}
-.app-banner-art::before {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  width: 125%;
-  aspect-ratio: 1;
-  left: 4%;
-  top: 37%;
-  border: 1px solid #fff6;
-  border-radius: 50%;
-  box-shadow: 0 0 0 32px #ffffff0d, 0 0 0 64px #ffffff0a;
 }
 .app-device-pair {
   display: grid;
