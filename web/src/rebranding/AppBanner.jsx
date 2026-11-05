@@ -18,8 +18,12 @@ export function AppBanner() {
       <ul>{features.map(({ label, Icon }) => <li key={label}><Icon size={22} aria-hidden="true" />{label}</li>)}</ul>
       <p>E muito mais!</p>
       <div className="app-banner-stores">
-        <a href="https://apps.apple.com/br/app/id6822854228">Baixar na App Store</a>
-        <a href="https://play.google.com/store/apps/details?id=br.com.mobilesaude.ameliasaude">Baixar no Google Play</a>
+        <a href="https://apps.apple.com/br/app/id6822854228">
+          <img src="/assets/app-store-pt-br.svg" width="120" height="40" alt="Baixar na App Store" />
+        </a>
+        <a href="https://play.google.com/store/apps/details?id=br.com.mobilesaude.ameliasaude">
+          <img src="/assets/google-play-pt-br.png" width="478" height="142" alt="Baixar no Google Play" />
+        </a>
       </div>
     </div>
     <div className="app-banner-art">

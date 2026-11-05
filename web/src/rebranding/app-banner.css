@@ -12,9 +12,9 @@
 .app-banner h2 { margin: 0; max-width: 17ch; font-size: clamp(38px, 4.5vw, 64px); line-height: 1.03; letter-spacing: -.055em; font-weight: 300; }
 .app-banner ul { display: grid; gap: 18px; list-style: none; padding: 0; margin: 32px 0 0; }
 .app-banner li { display: flex; align-items: center; gap: 14px; }
-.app-banner-stores { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 28px; }
-.app-banner-stores a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 10px 18px; border-radius: 24px; border: 1px solid #513a62; background: #513a62; color: white; font-weight: 600; text-decoration: none; }
-.app-banner-stores a:hover { background: #382348; }
+.app-banner-stores { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-top: 28px; }
+.app-banner-stores a { display: inline-flex; align-items: center; min-height: 44px; border-radius: 6px; }
+.app-banner-stores img { display: block; height: 44px; width: auto; }
 .app-banner-stores a:focus-visible { outline: 3px solid #513a62; outline-offset: 3px; }
 #aplicativo { scroll-margin-top: 100px; }
 
