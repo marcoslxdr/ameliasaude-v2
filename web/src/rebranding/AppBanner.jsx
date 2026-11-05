@@ -1,4 +1,4 @@
-import { CreditCard, FileCheck, MapPin, Phone } from 'lucide-react';
+import { CreditCard, Expand, FileCheck, MapPin, Phone } from 'lucide-react';
 import './app-banner.css';
 
 const features = [
@@ -19,10 +19,20 @@ export function AppBanner() {
         <a href="https://play.google.com/store/apps/details?id=br.com.mobilesaude.ameliasaude">Baixar no Google Play</a>
       </div>
     </div>
-    <div className="app-banner-art" aria-hidden="true">
-      <div className="app-device">
-        <img className="app-device-screen" src="/assets/app-servicos-previa.jpg"
-          alt="" width="720" height="1600" loading="lazy" />
+    <div className="app-banner-art">
+      <div className="app-device-pair">
+        {[
+          { name: 'Início', src: '/assets/app-inicio-previa.jpg' },
+          { name: 'Serviços', src: '/assets/app-servicos-previa.jpg' },
+        ].map(({name, src}) => (
+          <a key={name} className="app-device-view" href={src} target="_blank" rel="noopener noreferrer"
+            aria-label={`Ampliar tela de ${name.toLowerCase()} em uma nova aba`}>
+            <span className="app-device">
+              <img className="app-device-screen" src={src} alt="" loading="lazy" />
+            </span>
+            <span className="app-device-caption">{name}<Expand size={13} aria-hidden="true" /></span>
+          </a>
+        ))}
       </div>
     </div>
   </section>;
