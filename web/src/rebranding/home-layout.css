@@ -125,7 +125,9 @@
 .home-page .telemedicine-macbook {
   position: relative;
   width: min(100%, 420px);
-  padding: 0 7% 9px;
+  padding: 0 7%;
+  grid-column: 1 / -1;
+  justify-self: center;
   box-sizing: border-box;
 }
 .telemedicine-macbook-screen {
@@ -146,24 +148,36 @@
   border-radius: 0 0 4px 4px;
   background: #19181c;
 }
-.telemedicine-macbook::after {
-  content: '';
-  position: absolute;
-  inset: auto 0 0;
-  height: 9px;
-  border-radius: 2px 2px 8% 8% / 2px 2px 85% 85%;
-  background: linear-gradient(to bottom, #e6e5e8, #a8a6ae 65%, #716e7a);
-  box-shadow: 0 8px 14px #261e3940;
+.home-page .telemedicine-visual {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  justify-content: center;
+  justify-items: center;
+  gap: 18px 8px;
+  width: min(100%, 420px);
+  margin-inline: auto;
 }
-.telemedicine-macbook::before {
-  content: '';
-  position: absolute;
-  z-index: 1;
-  inset: auto 44% 6px;
-  height: 3px;
-  border-radius: 0 0 4px 4px;
-  background: #87848e;
+.home-page .telemedicine-visual .telemedicine-chip {
+  position: static;
+  transform: none;
+  padding: 6px 12px;
 }
+.macbook-deck {
+  position: relative;
+  aspect-ratio: 4 / 1;
+  padding: 2% 7% 1%;
+  box-sizing: border-box;
+  border-radius: 2px 2px 8px 8px;
+  border-bottom: 3px solid #84848d;
+  background: linear-gradient(115deg, #aaaab4, #e9e8ec 45%, #b2b2bd);
+  transform-origin: center top;
+  transform: perspective(350px) rotateX(42deg);
+  box-shadow: 0 6px 9px #21152940;
+}
+.macbook-keys { display: grid; height: 69%; gap: 4%; }
+.macbook-keys > div { display: flex; gap: 1%; }
+.macbook-keys i { flex-basis: 0; border-radius: 2px; background: #292832; }
+.macbook-trackpad { margin: 1% auto 0; width: 33%; height: 25%; border: 1px solid #96959e; border-radius: 3px; }
 .telemedicine-macbook-screen > span {
   position: absolute;
   bottom: 8px;

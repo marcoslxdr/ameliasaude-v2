@@ -7,6 +7,25 @@ import './home-layout.css';
 import { ArrowRight, ArrowUpRight, Check, Headphones, Layers, Megaphone, Phone } from 'lucide-react';
 import { SiteLink } from './App.jsx';
 
+function TelemedicineMacBook() {
+  const keyboardRows = [
+    Array(14).fill(1),
+    [...Array(12).fill(1), 2],
+    [1.5, ...Array(11).fill(1), 1.5],
+    [2, ...Array(10).fill(1), 2],
+    [1, 1, 1.5, 6, 1.5, 1, 1, 1],
+  ];
+  return <div className="telemedicine-macbook" role="img" aria-label="Teleconsulta em um MacBook">
+    <div className="telemedicine-macbook-screen"><span>Telemedicina</span></div>
+    <div className="macbook-deck" aria-hidden="true">
+      <div className="macbook-keys">{keyboardRows.map((row, i) =>
+        <div key={i}>{row.map((width, j) => <i key={j} style={{ flexGrow: width }} />)}</div>
+      )}</div>
+      <div className="macbook-trackpad" />
+    </div>
+  </div>;
+}
+
 const benefits=[
   {title:'Ampla cobertura',body:'Planos com cobertura completa para consultas, exames, internações e cirurgias',image:'ampla-cobertura.jpeg'},
   {title:'Atendimento ágil',body:'Eficiente, resolutivo e sem burocracia, para cuidar da sua saúde com excelência.',image:'doctor-patient-consultation.jpg'},
@@ -32,7 +51,7 @@ export function Home({navigate,openSalesChat}) {
     <AppBanner />
     <div className="home-closing-panels">
     <div className="closing-card closing-telemedicine" data-closing-card>
-    <section id="telemedicina" className="telemedicine-section section-space"><div className="telemedicine-shell"><div className="telemedicine-copy"><span className="eyebrow">Telemedicina</span><h2>Tenha um especialista Amélia disponível <span>a qualquer momento.</span></h2><p>Seja atendido em até 7 minutos por teleconsulta, com praticidade e comodidade, sem necessidade de deslocamentos.</p><a href="https://paciente.conexasaude.com.br/login/ameliasaude" target="_blank" rel="noopener noreferrer" className="button button-white">Acessar plataforma <ArrowUpRight size={19} strokeWidth={1.5}/></a></div><div className="telemedicine-visual"><div className="telemedicine-macbook" role="img" aria-label="Teleconsulta em um MacBook"><div className="telemedicine-macbook-screen"><span>Telemedicina</span></div></div><span className="telemedicine-chip chip-top">Clínico Geral 24h</span><span className="telemedicine-chip chip-bottom">Pediatra 24h</span></div><ul className="telemedicine-list">{[['Pronto atendimento digital 24h','Atendimento médico digital imediato, sem burocracias.'],['94% de resolutividade na primeira consulta','A maioria dos casos resolvidos já no primeiro atendimento.'],['Prescrição eletrônica completa','Medicamentos, exames e atestados emitidos digitalmente.']].map(([title,body])=><li key={title}><Check size={22} strokeWidth={1.4}/><div><h3>{title}</h3><p>{body}</p></div></li>)}</ul></div></section>
+    <section id="telemedicina" className="telemedicine-section section-space"><div className="telemedicine-shell"><div className="telemedicine-copy"><span className="eyebrow">Telemedicina</span><h2>Tenha um especialista Amélia disponível <span>a qualquer momento.</span></h2><p>Seja atendido em até 7 minutos por teleconsulta, com praticidade e comodidade, sem necessidade de deslocamentos.</p><a href="https://paciente.conexasaude.com.br/login/ameliasaude" target="_blank" rel="noopener noreferrer" className="button button-white">Acessar plataforma <ArrowUpRight size={19} strokeWidth={1.5}/></a></div><div className="telemedicine-visual"><TelemedicineMacBook/><span className="telemedicine-chip chip-top">Clínico Geral 24h</span><span className="telemedicine-chip chip-bottom">Pediatra 24h</span></div><ul className="telemedicine-list">{[['Pronto atendimento digital 24h','Atendimento médico digital imediato, sem burocracias.'],['94% de resolutividade na primeira consulta','A maioria dos casos resolvidos já no primeiro atendimento.'],['Prescrição eletrônica completa','Medicamentos, exames e atestados emitidos digitalmente.']].map(([title,body])=><li key={title}><Check size={22} strokeWidth={1.4}/><div><h3>{title}</h3><p>{body}</p></div></li>)}</ul></div></section>
     </div>
     <div className="closing-card closing-contact" data-closing-card>
     <section id="contato" className="contact-section section-space"><div className="section-heading"><span className="eyebrow">Contato</span><h2>Precisa falar com a Amélia?</h2><p>Entre em contato através de um de nossos canais abaixo.</p></div><ul className="contact-grid" aria-label="Canais de atendimento">{channels.map(channel=>{const Icon=channel.icon;return <li key={channel.title}><a href={channel.href} {...(channel.href.startsWith('https')?{target:'_blank',rel:'noopener noreferrer'}:{})} className="contact-card"><Icon size={28} strokeWidth={1.2}/><h3>{channel.title}</h3><p>{channel.body}</p><span className="contact-action">{channel.action}<ArrowUpRight size={19} strokeWidth={1.4}/></span></a></li>;})}</ul></section>
