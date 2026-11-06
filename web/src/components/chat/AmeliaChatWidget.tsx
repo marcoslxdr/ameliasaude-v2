@@ -174,7 +174,7 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
   const canType = Boolean(active?.token && !active.terminal && active.input && !["none", "choice", "contact"].includes(active.input.kind));
 
   return <>
-    {!hideLauncher && <button ref={launcher} type="button" onClick={() => { setOpen(true); if (initialDepartment) void start(initialDepartment); }} aria-haspopup="dialog" aria-controls="amelia-chat" aria-expanded={open} className={launcherClassName ?? "fixed bottom-5 right-5 z-[90] flex min-h-12 items-center gap-2 rounded-full bg-[var(--amelia-deep)] px-5 py-3 font-sans text-sm text-white shadow-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--amelia-purple)]"}>
+    {!hideLauncher && <button ref={launcher} type="button" style={{ color: "#fff" }} onClick={() => { setOpen(true); if (initialDepartment) void start(initialDepartment); }} aria-haspopup="dialog" aria-controls="amelia-chat" aria-expanded={open} className={launcherClassName ?? "fixed bottom-5 right-5 z-[90] flex min-h-12 items-center gap-2 rounded-full bg-[var(--amelia-deep)] px-5 py-3 font-sans text-sm text-white shadow-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--amelia-purple)]"}>
       {children ?? <><MessageCircle size={21} aria-hidden="true" /> Fale com a Amélia</>}
     </button>}
     {open ? createPortal(<dialog ref={dialog} id="amelia-chat" aria-labelledby="amelia-chat-title" onCancel={event => { event.preventDefault(); setOpen(false); }} className="ph-no-capture ph-no-autocapture m-auto h-[min(680px,calc(100dvh-2rem))] w-[calc(100%-2rem)] max-w-[420px] overflow-hidden rounded-3xl border-0 p-0 text-[var(--amelia-deep)] shadow-2xl backdrop:bg-black/35 sm:mb-5 sm:mr-5">
@@ -206,11 +206,11 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
           </div>
           {active?.handoff && <p role="status" className="border-t px-4 py-2 text-xs">Acompanhe a resposta da equipe aqui neste chat.</p>}
           {active?.error && <div role="alert" className="border-t bg-amber-50 px-4 py-3 text-sm"><p>{active.error}</p><button type="button" disabled={busy} onClick={() => void start(department, true)} className="mt-2 underline">Iniciar nova conversa</button></div>}
-          {active?.input?.kind === "contact" && <form onSubmit={register} className="ph-no-capture space-y-3 border-t p-4">
+          {active?.input?.kind === "contact" && <form onSubmit={register} className="ph-no-capture min-h-0 space-y-3 overflow-y-auto border-t p-4">
             <p className="text-sm">Seus dados permitem continuar o atendimento com nossa equipe.</p>
             {([['name','Nome','text','name'],['phone','Telefone com DDD','tel','tel'],['email','E-mail','email','email']] as const).map(([field,label,type,autoComplete])=><label key={field} className="block text-sm">{label}<input className="ph-mask mt-1 w-full rounded-xl border p-2.5" type={type} autoComplete={autoComplete} required minLength={field==='name'?2:undefined} maxLength={field==='name'?150:field==='phone'?25:254} value={contact[field]} onChange={e=>setContact(c=>({...c,[field]:e.target.value}))} disabled={busy}/></label>)}
             <label className="flex items-start gap-2 text-xs"><input type="checkbox" checked={consent} onChange={e=>setConsent(e.target.checked)} required disabled={busy}/><span>Autorizo a Amélia Saúde a entrar em contato sobre esta solicitação. <a href="/privacidade" target="_blank" rel="noopener noreferrer" className="underline">Privacidade</a></span></label>
-            <button type="submit" disabled={busy||!consent} className="w-full rounded-xl bg-[var(--amelia-deep)] p-3 text-sm text-white disabled:opacity-40">Iniciar atendimento</button>
+            <button type="submit" style={{ color: "#fff" }} disabled={busy||!consent} className="w-full rounded-xl bg-[var(--amelia-deep)] p-3 text-sm text-white disabled:opacity-40">Iniciar atendimento</button>
           </form>}
           {canType && !active?.handoff && <div className="border-t p-3 text-xs">
             <div className="flex items-center justify-between"><button type="button" className="font-medium underline" onClick={()=>setGuide(guide ? null : 'main')} aria-expanded={!!guide}>Menu de ajuda</button>{guide && guide!=='main' && <button type="button" className="underline" onClick={()=>setGuide('main')}>Voltar ao menu</button>}</div>
@@ -225,7 +225,7 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
               <label>Cidade<input required maxLength={100} value={network.city} onChange={e=>setNetwork(n=>({...n,city:e.target.value}))} className="mt-1 w-full rounded-lg border p-2"/></label>
               <label>Especialidade<input required maxLength={100} value={network.specialty} onChange={e=>setNetwork(n=>({...n,specialty:e.target.value}))} className="mt-1 w-full rounded-lg border p-2"/></label>
               <label>Plano<select value={network.product} onChange={e=>setNetwork(n=>({...n,product:e.target.value}))} className="mt-1 w-full rounded-lg border p-2"><option>Carioca 10</option><option>Não sei meu plano</option></select></label>
-              <button type="submit" disabled={busy} className="self-end rounded-lg bg-[var(--amelia-deep)] p-2 text-white">Buscar na rede</button>
+              <button type="submit" style={{ color: "#fff" }} disabled={busy} className="self-end rounded-lg bg-[var(--amelia-deep)] p-2 text-white">Buscar na rede</button>
             </form>}
           </div>}
           {canType && <form onSubmit={submit} className="flex items-end gap-2 border-t p-3">
