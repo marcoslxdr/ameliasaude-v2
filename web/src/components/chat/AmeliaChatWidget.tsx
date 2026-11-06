@@ -20,7 +20,7 @@ async function requestChat(body: ChatRequest): Promise<ChatResponse> {
 
 function errorText(error: unknown) {
   const code = error instanceof Error ? error.message : "";
-  return code === "chat_busy" ? "Sua mensagem anterior ainda está sendo respondida. Aguarde um instante e tente novamente." : code === "rate_limited" ? "Aguarde um instante antes de enviar outra mensagem." : code === "session_closed" ? "Esta conversa foi encerrada. Inicie uma nova conversa para continuar." : code === "session_expired" ? "Esta conversa expirou. Inicie uma nova conversa para continuar." : "Não foi possível conectar ao chat. Tente novamente em instantes. Sua mensagem não foi confirmada.";
+  return code === "invalid_contact" ? "Confira nome, telefone com DDD e e-mail. Não foi possível concluir o cadastro." : code === "chat_busy" ? "Sua mensagem anterior ainda está sendo respondida. Aguarde um instante e tente novamente." : code === "rate_limited" ? "Aguarde um instante antes de enviar outra mensagem." : code === "session_closed" ? "Esta conversa foi encerrada. Inicie uma nova conversa para continuar." : code === "session_expired" ? "Esta conversa expirou. Inicie uma nova conversa para continuar." : "Não foi possível conectar ao chat. Tente novamente em instantes. Sua mensagem não foi confirmada.";
 }
 
 function terminalError(error: unknown) {
@@ -35,6 +35,11 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
   const [department, setDepartment] = useState<Department | null>(null);
   const [sessions, setSessions] = useState<Record<Department, Session>>({ sales: fresh(), service: fresh() });
   const [draft, setDraft] = useState("");
+  const [contact, setContact] = useState({name:"",phone:"",email:""});
+  const [consent, setConsent] = useState(false);
+  const [guide, setGuide] = useState<'main'|'plans'|'network'|null>('main');
+  const [network, setNetwork] = useState({city:'',specialty:'',product:'Carioca 10'});
+  const registrationId = useRef<string | null>(null);
   const [busy, setBusy] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null);
   const launcher = useRef<HTMLButtonElement>(null);
@@ -66,10 +71,11 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
   }, [open, department]);
 
   const merge = useCallback((target: Department, data: ChatResponse, inbound?: string, polling = false) => {
+    try { sessionStorage.setItem(`amelia-chat-session:${target}`, data.token); } catch { /* in-memory session still works */ }
     setSessions(previous => {
       const current = previous[target];
-      const messages = [...current.messages];
-      if (inbound) messages.push({ id: crypto.randomUUID(), role: "user", text: inbound });
+      const messages: Bubble[] = data.history ? [...data.history] : [...current.messages];
+      if (inbound && !data.history) messages.push({ id: crypto.randomUUID(), role: "user", text: inbound });
       for (const message of data.messages ?? []) {
         if (!messages.some(item => item.id === message.id)) messages.push({ id: message.id, role: "bot", text: message.text, options: message.quickReplies ?? message.list?.options, document: message.document });
       }
@@ -91,7 +97,14 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
     submitting.current = true;
     setBusy(true);
     try {
-      const data = await requestChat({ action: reset ? "reset" : "start", department: target });
+      let saved: string | null = null;
+      try { saved = reset ? null : sessionStorage.getItem(`amelia-chat-session:${target}`); } catch { /* optional */ }
+      let data: ChatResponse;
+      if (saved) {
+        try { data = await requestChat({action:"poll",department:target,token:saved}); }
+        catch { data = await requestChat({action:"start",department:target}); }
+      } else data = await requestChat({ action: reset ? "reset" : "start", department: target });
+      registrationId.current = null;
       setSessions(previous => ({ ...previous, [target]: fresh() }));
       merge(target, data);
     } catch (error) {
@@ -120,6 +133,7 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
       pending.current = null;
       merge(target, data, value.trim());
       setDraft("");
+      setGuide(null);
     } catch (error) {
       setDraft(value);
       setSessions(previous => ({ ...previous, [target]: { ...previous[target], error: errorText(error), terminal: terminalError(error) } }));
@@ -144,8 +158,20 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
     return () => { stopped = true; window.clearInterval(timer); };
   }, [open, department, active?.token, active?.crmSynced, active?.terminal, merge]);
 
+  async function register(event: FormEvent) {
+    event.preventDefault();
+    if (!department || !active?.token || submitting.current || !consent) return;
+    submitting.current = true; setBusy(true);
+    try {
+      registrationId.current ??= crypto.randomUUID();
+      const data = await requestChat({action:"register",department,token:active.token,request_id:registrationId.current,contact:{...contact,consent:true}});
+      merge(department,data);
+    } catch(error) { setSessions(previous=>({...previous,[department]:{...previous[department],error:errorText(error)}})); }
+    finally { submitting.current=false;setBusy(false); }
+  }
+
   function submit(event: FormEvent) { event.preventDefault(); void send(draft); }
-  const canType = Boolean(active?.token && !active.terminal && active.input && !["none", "choice"].includes(active.input.kind));
+  const canType = Boolean(active?.token && !active.terminal && active.input && !["none", "choice", "contact"].includes(active.input.kind));
 
   return <>
     {!hideLauncher && <button ref={launcher} type="button" onClick={() => { setOpen(true); if (initialDepartment) void start(initialDepartment); }} aria-haspopup="dialog" aria-controls="amelia-chat" aria-expanded={open} className={launcherClassName ?? "fixed bottom-5 right-5 z-[90] flex min-h-12 items-center gap-2 rounded-full bg-[var(--amelia-deep)] px-5 py-3 font-sans text-sm text-white shadow-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--amelia-purple)]"}>
@@ -180,6 +206,28 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
           </div>
           {active?.handoff && <p role="status" className="border-t px-4 py-2 text-xs">Acompanhe a resposta da equipe aqui neste chat.</p>}
           {active?.error && <div role="alert" className="border-t bg-amber-50 px-4 py-3 text-sm"><p>{active.error}</p><button type="button" disabled={busy} onClick={() => void start(department, true)} className="mt-2 underline">Iniciar nova conversa</button></div>}
+          {active?.input?.kind === "contact" && <form onSubmit={register} className="ph-no-capture space-y-3 border-t p-4">
+            <p className="text-sm">Seus dados permitem continuar o atendimento com nossa equipe.</p>
+            {([['name','Nome','text','name'],['phone','Telefone com DDD','tel','tel'],['email','E-mail','email','email']] as const).map(([field,label,type,autoComplete])=><label key={field} className="block text-sm">{label}<input className="ph-mask mt-1 w-full rounded-xl border p-2.5" type={type} autoComplete={autoComplete} required minLength={field==='name'?2:undefined} maxLength={field==='name'?150:field==='phone'?25:254} value={contact[field]} onChange={e=>setContact(c=>({...c,[field]:e.target.value}))} disabled={busy}/></label>)}
+            <label className="flex items-start gap-2 text-xs"><input type="checkbox" checked={consent} onChange={e=>setConsent(e.target.checked)} required disabled={busy}/><span>Autorizo a Amélia Saúde a entrar em contato sobre esta solicitação. <a href="/privacidade" target="_blank" rel="noopener noreferrer" className="underline">Privacidade</a></span></label>
+            <button type="submit" disabled={busy||!consent} className="w-full rounded-xl bg-[var(--amelia-deep)] p-3 text-sm text-white disabled:opacity-40">Iniciar atendimento</button>
+          </form>}
+          {canType && !active?.handoff && <div className="border-t p-3 text-xs">
+            <div className="flex items-center justify-between"><button type="button" className="font-medium underline" onClick={()=>setGuide(guide ? null : 'main')} aria-expanded={!!guide}>Menu de ajuda</button>{guide && guide!=='main' && <button type="button" className="underline" onClick={()=>setGuide('main')}>Voltar ao menu</button>}</div>
+            {guide==='main' && <div className="mt-2 grid grid-cols-2 gap-2" aria-label="Opções de atendimento">
+              <button type="button" disabled={busy} className="rounded-xl border p-2 text-left" onClick={()=>setGuide('plans')}>Conhecer planos</button>
+              <button type="button" disabled={busy} className="rounded-xl border p-2 text-left" onClick={()=>setGuide('network')}>Consultar rede</button>
+              <button type="button" disabled={busy} className="rounded-xl border p-2 text-left" onClick={()=>void send('Quero saber sobre preços e carências. Quais informações oficiais vocês já têm e quais dados precisam para minha cotação?')}>Preços e carências</button>
+              <button type="button" disabled={busy} className="rounded-xl border p-2 text-left" onClick={()=>void send('Quero falar com uma pessoa da equipe.')}>Falar com equipe</button>
+            </div>}
+            {guide==='plans' && <div className="mt-2 flex flex-wrap gap-2" aria-label="Modalidades de plano">{[['Empresarial (CNPJ)','Quero conhecer os planos empresariais para CNPJ.'],['Por adesão','Quero conhecer os planos coletivos por adesão.'],['Ajude-me a escolher','Ainda não sei qual modalidade de plano posso contratar. Pode me orientar?']].map(([label,text])=><button key={label} type="button" disabled={busy} onClick={()=>void send(text)} className="rounded-xl border p-2">{label}</button>)}</div>}
+            {guide==='network' && <form onSubmit={e=>{e.preventDefault();void send(`Consulte a rede credenciada: cidade ${network.city}; especialidade ${network.specialty}; plano ${network.product}. Informe as unidades e a fonte.`);}} className="mt-2 grid grid-cols-2 gap-2">
+              <label>Cidade<input required maxLength={100} value={network.city} onChange={e=>setNetwork(n=>({...n,city:e.target.value}))} className="mt-1 w-full rounded-lg border p-2"/></label>
+              <label>Especialidade<input required maxLength={100} value={network.specialty} onChange={e=>setNetwork(n=>({...n,specialty:e.target.value}))} className="mt-1 w-full rounded-lg border p-2"/></label>
+              <label>Plano<select value={network.product} onChange={e=>setNetwork(n=>({...n,product:e.target.value}))} className="mt-1 w-full rounded-lg border p-2"><option>Carioca 10</option><option>Não sei meu plano</option></select></label>
+              <button type="submit" disabled={busy} className="self-end rounded-lg bg-[var(--amelia-deep)] p-2 text-white">Buscar na rede</button>
+            </form>}
+          </div>}
           {canType && <form onSubmit={submit} className="flex items-end gap-2 border-t p-3">
             <div className="flex-1"><label htmlFor="amelia-chat-message" className="sr-only">Mensagem para {names[department]}</label><textarea id="amelia-chat-message" className="ph-mask min-h-12 w-full resize-none rounded-xl border border-[var(--amelia-line)] p-3 text-sm focus-visible:outline-2 focus-visible:outline-[var(--amelia-purple)]" value={draft} onChange={event => setDraft(event.target.value)} maxLength={1000} rows={2} placeholder={active?.input?.placeholder || "Digite sua mensagem"} disabled={busy} /></div>
             <button type="submit" disabled={busy || !draft.trim()} aria-label="Enviar mensagem" style={{ color: "#fff" }} className="mb-1 rounded-xl bg-[var(--amelia-deep)] p-3 text-white disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2"><Send size={20} /></button>
