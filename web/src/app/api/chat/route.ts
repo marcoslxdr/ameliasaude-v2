@@ -4,7 +4,7 @@ import { isChatRequestSameOrigin, parseChatRequest, relayAmeliaChat } from "@/li
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
-export const maxDuration = 30;
+export const maxDuration = 120;
 
 export async function POST(request: NextRequest) {
   const headers = { "Cache-Control": "no-store, private", "Referrer-Policy": "no-referrer" };
@@ -26,7 +26,10 @@ export async function POST(request: NextRequest) {
   const current = request.cookies.get("amelia_chat_client")?.value;
   const client = current && /^[a-f0-9]{64}$/.test(current) ? current : randomBytes(32).toString("hex");
   const clientKey = secret ? createHmac("sha256", secret).update(client).digest("hex") : "unknown";
-  const result = await relayAmeliaChat(body, { endpoint: process.env.CRM_WEBCHAT_FLOW_URL || process.env.CRM_WEBCHAT_URL, secret, clientKey });
+  // Hash IP only on the server; the CRM never receives the address itself.
+  const peer = request.headers.get("x-vercel-forwarded-for") || request.headers.get("x-forwarded-for") || "local";
+  const peerKey = secret ? createHmac("sha256", secret).update(peer.split(",")[0].trim()).digest("hex") : "unknown";
+  const result = await relayAmeliaChat(body, { endpoint: process.env.CRM_WEBCHAT_FLOW_URL || process.env.CRM_WEBCHAT_URL, secret, clientKey, peerKey });
   const response = NextResponse.json(result.payload, { status: result.status, headers });
   response.cookies.set("amelia_chat_client", client, { httpOnly: true, secure: request.nextUrl.protocol === "https:", sameSite: "strict", path: "/api/chat", maxAge: 24 * 60 * 60 });
   return response;

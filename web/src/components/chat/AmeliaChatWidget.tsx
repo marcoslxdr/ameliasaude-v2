@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useImperativeHandle, useRef, useState, type FormEvent, type ReactNode, type Ref } from "react";
+import ReactMarkdown from "react-markdown";
 import { createPortal } from "react-dom";
 import { MessageCircle, Send, X, ArrowLeft, Headphones, Sparkles } from "lucide-react";
 import type { ChatRequest, ChatResponse, Department, ChatMessage } from "@/lib/chat";
@@ -11,7 +12,7 @@ const fresh = (): Session => ({ messages: [], input: null, handoff: false, crmSy
 const names = { sales: "Vendas", service: "Atendimento" };
 
 async function requestChat(body: ChatRequest): Promise<ChatResponse> {
-  const response = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), cache: "no-store", signal: AbortSignal.timeout(30_000) });
+  const response = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), cache: "no-store", signal: AbortSignal.timeout(100_000) });
   const data = await response.json();
   if (!response.ok) throw new Error(data.error || "chat_unavailable");
   return data;
@@ -19,7 +20,7 @@ async function requestChat(body: ChatRequest): Promise<ChatResponse> {
 
 function errorText(error: unknown) {
   const code = error instanceof Error ? error.message : "";
-  return code === "rate_limited" ? "Aguarde um instante antes de enviar outra mensagem." : code === "session_closed" ? "Esta conversa foi encerrada. Inicie uma nova conversa para continuar." : code === "session_expired" ? "Esta conversa expirou. Inicie uma nova conversa para continuar." : "Não foi possível conectar ao chat. Tente novamente em instantes. Sua mensagem não foi confirmada.";
+  return code === "chat_busy" ? "Sua mensagem anterior ainda está sendo respondida. Aguarde um instante e tente novamente." : code === "rate_limited" ? "Aguarde um instante antes de enviar outra mensagem." : code === "session_closed" ? "Esta conversa foi encerrada. Inicie uma nova conversa para continuar." : code === "session_expired" ? "Esta conversa expirou. Inicie uma nova conversa para continuar." : "Não foi possível conectar ao chat. Tente novamente em instantes. Sua mensagem não foi confirmada.";
 }
 
 function terminalError(error: unknown) {
@@ -41,6 +42,7 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
   const messageLog = useRef<HTMLDivElement>(null);
   const end = useRef<HTMLDivElement>(null);
   const submitting = useRef(false);
+  const pending = useRef<{ text: string; token: string; id: string } | null>(null);
   const active = department ? sessions[department] : null;
 
   useEffect(() => {
@@ -111,7 +113,11 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
     submitting.current = true;
     setBusy(true);
     try {
-      const data = await requestChat({ action: "message", department: target, token: active.token, input: value.trim() });
+      const text = value.trim();
+      if (!pending.current || pending.current.text !== text || pending.current.token !== active.token)
+        pending.current = { text, token: active.token, id: crypto.randomUUID() };
+      const data = await requestChat({ action: "message", department: target, token: active.token, input: text, request_id: pending.current.id });
+      pending.current = null;
       merge(target, data, value.trim());
       setDraft("");
     } catch (error) {
@@ -149,7 +155,7 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
       <div className="flex h-full flex-col bg-white font-sans">
         <header className="flex items-center gap-3 bg-[var(--amelia-deep)] px-4 py-4 text-white">
           {department && !initialDepartment && <button type="button" disabled={busy} aria-label="Escolher vendas ou atendimento" onClick={() => { setDepartment(null); setDraft(""); }} className="rounded-lg p-2 focus-visible:outline-2"><ArrowLeft size={20} /></button>}
-          <div className="min-w-0 flex-1"><h2 id="amelia-chat-title" className="text-base font-medium">Amélia Saúde</h2><p className="text-xs text-white/80">{department ? names[department] : "Como podemos ajudar?"}</p></div>
+          <div className="min-w-0 flex-1"><h2 id="amelia-chat-title" className="text-base font-medium">Amélia Saúde</h2><p className="text-xs text-white/80">{department ? "Assistente virtual · Prévia" : "Como podemos ajudar?"}</p></div>
           <button type="button" aria-label="Fechar chat" onClick={() => setOpen(false)} className="rounded-lg p-2 focus-visible:outline-2"><X size={22} /></button>
         </header>
         {!department ? <div className="flex-1 space-y-4 overflow-y-auto p-6">
@@ -161,11 +167,15 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
           <div ref={messageLog} role="log" aria-label={`Mensagens de ${names[department]}`} aria-live="polite" aria-relevant="additions" className="ph-mask flex-1 space-y-3 overflow-y-auto overscroll-contain p-4">
             {active?.messages.map((message, index) => <div key={message.id} className={`max-w-[95%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${message.role === "user" ? "ml-auto bg-[var(--amelia-deep)] text-white" : "bg-purple-50"}`}>
               {message.role === "agent" && <p className="mb-1 text-xs font-medium">Equipe Amélia Saúde</p>}
-              <p className="whitespace-pre-wrap break-words">{message.text}</p>
+              {message.role === "user" ? <p className="whitespace-pre-wrap break-words">{message.text}</p> : <div className="space-y-2 break-words"><ReactMarkdown components={{
+                a: ({ href, children }) => href?.startsWith("https://www.ameliasaude.com.br/")
+                  ? <a href={href} target="_blank" rel="noopener noreferrer" className="underline">{children}</a>
+                  : <span>{children}</span>,
+              }}>{message.text}</ReactMarkdown></div>}
               {message.document && <a href={message.document.url} target="_blank" rel="noopener noreferrer" className="mt-2 block underline">Abrir {message.document.fileName}</a>}
               {message.options && index === (active?.messages.length ?? 0) - 1 && <div className="mt-3 flex flex-wrap gap-2">{message.options.map(option => <button key={option.value} type="button" disabled={busy || active?.terminal} onClick={() => void send(option.value)} className="rounded-xl border border-[var(--amelia-purple)] bg-white px-3 py-2 text-left text-sm disabled:opacity-50 focus-visible:outline-2">{option.label}</button>)}</div>}
             </div>)}
-            {busy && <p role="status" className="text-xs text-[var(--amelia-body)]">Conectando…</p>}
+            {busy && <p role="status" className="text-xs text-[var(--amelia-body)]">{active?.started ? "Consultando as informações…" : "Conectando…"}</p>}
             <div ref={end} />
           </div>
           {active?.handoff && <p role="status" className="border-t px-4 py-2 text-xs">Acompanhe a resposta da equipe aqui neste chat.</p>}

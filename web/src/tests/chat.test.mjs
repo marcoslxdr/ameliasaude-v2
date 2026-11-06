@@ -87,3 +87,21 @@ test("human messages preserve identity for browser deduplication", async () => {
   assert.equal(result.payload.handoff, true);
   assert.deepEqual(result.payload.agentMessages, [{ id: "human-1", text: "Resposta humana" }]);
 });
+
+test("CRM preview preserves request id, peer hash and unwraps the canonical API response", async () => {
+  const id = "11111111-1111-4111-8111-111111111111";
+  const parsed = parseChatRequest({ action: "message", department: "sales", input: "Qual a rede?", token: "b".repeat(64), request_id: id });
+  assert.equal(parsed.request_id, id);
+  const result = await relayAmeliaChat(parsed, { ...options, endpoint: "https://crm.example.com/api/v1/ai/webchat-preview", peerKey: "c".repeat(64), fetchImpl: async (_url, request) => {
+    assert.equal(JSON.parse(request.body).request_id, id);
+    assert.equal(request.headers["x-webchat-peer"], "c".repeat(64));
+    return Response.json({ data: fixture() });
+  } });
+  assert.equal(result.status, 200);
+  assert.equal(result.payload.messages[0].text, "Olá");
+});
+
+test("busy preview keeps the conversation recoverable", async () => {
+  const result = await relayAmeliaChat(body, { ...options, endpoint: "https://crm.example.com/api/v1/ai/webchat-preview", fetchImpl: async () => Response.json({}, { status: 409 }) });
+  assert.equal(result.payload.error, "chat_busy");
+});

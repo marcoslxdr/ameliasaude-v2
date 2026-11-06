@@ -1,5 +1,5 @@
 export type Department = "sales" | "service";
-export type ChatRequest = { action: "start" | "reset" | "message" | "poll"; department: Department; token?: string; input?: string };
+export type ChatRequest = { action: "start" | "reset" | "message" | "poll"; department: Department; token?: string; input?: string; request_id?: string };
 export type ChatOption = { label: string; value: string };
 export type ChatMessage = { id: string; text: string; quickReplies?: ChatOption[]; list?: { title: string; options: ChatOption[] }; document?: { url: string; fileName: string } };
 export type ChatResponse = { token: string; messages: ChatMessage[]; input: { kind: string; placeholder: string; hint?: string } | null; handoff: boolean; crmSynced: boolean; brand: "amelia"; department: Department; agentMessages?: { id: string; text: string }[] };
@@ -17,7 +17,8 @@ export function parseChatRequest(body: unknown): ChatRequest | null {
   if (!["start", "reset", "message", "poll"].includes(String(value.action)) || !["sales", "service"].includes(String(value.department))) return null;
   if (["message", "poll"].includes(String(value.action)) && (typeof value.token !== "string" || !value.token || value.token.length > 60_000)) return null;
   if (value.action === "message" && (typeof value.input !== "string" || !value.input.trim() || value.input.length > 1000)) return null;
-  return { action: value.action as ChatRequest["action"], department: value.department as Department,
+  if (value.request_id !== undefined && (typeof value.request_id !== "string" || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value.request_id))) return null;
+  return { ...(value.request_id ? { request_id: value.request_id as string } : {}), action: value.action as ChatRequest["action"], department: value.department as Department,
     ...(["message", "poll"].includes(String(value.action)) ? { token: value.token as string } : {}),
     ...(value.action === "message" ? { input: (value.input as string).trim() } : {}) };
 }
@@ -29,7 +30,7 @@ export function chatFlowUrl(value?: string): string | null {
     const local = process.env.NODE_ENV !== "production" && ["localhost", "127.0.0.1"].includes(url.hostname);
     if ((url.protocol !== "https:" && !(local && url.protocol === "http:")) || url.username || url.password || url.search || url.hash) return null;
     if (url.pathname.endsWith("/api/agent/webchat/sync")) url.pathname = url.pathname.replace(/\/sync$/, "/flow");
-    return url.pathname.endsWith("/api/agent/webchat/flow") ? url.toString() : null;
+    return ["/api/agent/webchat/flow", "/api/v1/ai/webchat-preview"].includes(url.pathname) ? url.toString() : null;
   } catch { return null; }
 }
 
@@ -57,13 +58,16 @@ function publicMessage(message: ChatMessage): ChatMessage {
     ...(message.document ? { document: { url: message.document.url, fileName: message.document.fileName } } : {}) };
 }
 
-export async function relayAmeliaChat(body: ChatRequest, options: { endpoint?: string; secret?: string; clientKey: string; fetchImpl?: typeof fetch }) {
+export async function relayAmeliaChat(body: ChatRequest, options: { endpoint?: string; secret?: string; clientKey: string; peerKey?: string; fetchImpl?: typeof fetch }) {
   const endpoint = chatFlowUrl(options.endpoint);
   if (!endpoint || !options.secret) return { status: 503, payload: { error: "chat_unavailable" } };
   try {
-    const response = await (options.fetchImpl ?? fetch)(endpoint, { method: "POST", headers: { "Content-Type": "application/json", "x-webchat-brand": "amelia", "x-webchat-token": options.secret, "x-webchat-client": options.clientKey }, body: JSON.stringify(body), cache: "no-store", redirect: "manual", signal: AbortSignal.timeout(25_000) });
+    const response = await (options.fetchImpl ?? fetch)(endpoint, { method: "POST", headers: { "Content-Type": "application/json", "x-webchat-brand": "amelia", "x-webchat-token": options.secret, "x-webchat-client": options.clientKey, ...(options.peerKey ? { "x-webchat-peer": options.peerKey } : {}) }, body: JSON.stringify(body), cache: "no-store", redirect: "manual", signal: AbortSignal.timeout(90_000) });
+    if (response.status === 409 && endpoint.endsWith("/api/v1/ai/webchat-preview")) return { status: 409, payload: { error: "chat_busy" } };
     if (!response.ok) return { status: [400, 409, 410, 429].includes(response.status) ? response.status : 503, payload: { error: response.status === 410 ? "session_closed" : response.status === 429 ? "rate_limited" : [400, 409].includes(response.status) ? "session_expired" : "chat_unavailable" } };
-    const data = await response.json() as ChatResponse;
+    const decoded = await response.json();
+    const data = (endpoint.endsWith("/api/v1/ai/webchat-preview") ? decoded.data : decoded) as ChatResponse;
+    if (!data) return { status: 502, payload: { error: "invalid_chat_response" } };
     if (data.brand !== "amelia" || data.department !== body.department || typeof data.token !== "string" || !data.token || data.token.length > 60_000 || !Array.isArray(data.messages) || data.messages.length > 20 || !data.messages.every(safeMessage) || (data.input && (typeof data.input.kind !== "string" || typeof data.input.placeholder !== "string")) || (data.agentMessages && (!Array.isArray(data.agentMessages) || data.agentMessages.length > 50 || data.agentMessages.some(message => !message || typeof message.id !== "string" || typeof message.text !== "string" || message.text.length > 10_000)))) return { status: 502, payload: { error: "invalid_chat_response" } };
     // Only explicitly reviewed fields can cross the public boundary.
     return { status: 200, payload: { token: data.token, brand: "amelia", department: body.department, messages: data.messages.map(publicMessage), input: data.input ? { kind: data.input.kind, placeholder: data.input.placeholder, ...(typeof data.input.hint === "string" ? { hint: data.input.hint } : {}) } : null, handoff: data.handoff === true, crmSynced: data.crmSynced === true, agentMessages: (data.agentMessages ?? []).map(({ id, text }) => ({ id, text })) } };
