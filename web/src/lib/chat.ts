@@ -1,8 +1,62 @@
 export type Department = "sales" | "service";
-export type ChatRequest = { action: "start" | "reset" | "message" | "poll" | "register" | "handoff"; department: Department; token?: string; input?: string; request_id?: string; contact?: { name: string; phone: string; email: string; consent: true } };
+export type ChatAttribution = { page_path?: string; referrer_origin?: string; utm_source?: string; utm_medium?: string; utm_campaign?: string; utm_content?: string; utm_term?: string };
+export type ChatQualification = { city?: string; lives?: number; ages?: number[]; modality?: "empresarial" | "adesao" | "indefinido" };
+export type ChatRequest = { action: "start" | "reset" | "message" | "poll" | "register" | "handoff"; department: Department; token?: string; input?: string; request_id?: string; attribution?: ChatAttribution; qualification?: ChatQualification; contact?: { name: string; phone: string; email: string; consent: true } };
 export type ChatOption = { label: string; value: string };
 export type ChatMessage = { id: string; text: string; quickReplies?: ChatOption[]; list?: { title: string; options: ChatOption[] }; document?: { url: string; fileName: string } };
 export type ChatResponse = { token: string; messages: ChatMessage[]; input: { kind: string; placeholder: string; hint?: string } | null; handoff: boolean; crmSynced: boolean; brand: "amelia"; department: Department; agentMessages?: { id: string; text: string }[]; history?: { id: string; text: string; role: "bot" | "user" | "agent" }[]; registered?: boolean };
+
+const campaignKeys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"] as const;
+
+/** Attribution deliberately excludes query strings, click IDs and visitor identifiers. */
+export function sanitizeChatAttribution(value: unknown): ChatAttribution | undefined {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
+  const input = value as Record<string, unknown>;
+  const result: ChatAttribution = {};
+  if (typeof input.page_path === "string" && /^\/(?!\/)[a-zA-Z0-9/_.-]{0,199}$/.test(input.page_path) && !/\d{7,}/.test(input.page_path)) result.page_path = input.page_path;
+  if (typeof input.referrer_origin === "string") {
+    try {
+      const url = new URL(input.referrer_origin);
+      if (["https:", "http:"].includes(url.protocol) && !url.username && !url.password && url.origin.length <= 200) result.referrer_origin = url.origin;
+    } catch { /* optional attribution must not block a conversation */ }
+  }
+  for (const key of campaignKeys) {
+    const field = input[key];
+    if (typeof field === "string" && /^[\p{L}\p{N} _.-]{1,100}$/u.test(field) && !/\d{7,}/.test(field)) result[key] = field;
+  }
+  return Object.keys(result).length ? result : undefined;
+}
+
+export function captureChatAttribution(href: string, referrer: string): ChatAttribution | undefined {
+  try {
+    const url = new URL(href);
+    return sanitizeChatAttribution({ page_path: url.pathname, referrer_origin: referrer, ...Object.fromEntries(campaignKeys.map(key => [key, url.searchParams.get(key)])) });
+  } catch { return undefined; }
+}
+
+export function parseChatQualification(value: unknown): ChatQualification | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  const input = value as Record<string, unknown>;
+  const result: ChatQualification = {};
+  if (input.city !== undefined) {
+    if (typeof input.city !== "string" || input.city.trim().length < 2 || input.city.length > 100) return null;
+    result.city = input.city.trim();
+  }
+  if (input.lives !== undefined) {
+    if (!Number.isInteger(input.lives) || Number(input.lives) < 1 || Number(input.lives) > 1000) return null;
+    result.lives = Number(input.lives);
+  }
+  if (input.ages !== undefined) {
+    if (!Array.isArray(input.ages) || input.ages.length < 1 || input.ages.length > 1000 || input.ages.some(age => !Number.isInteger(age) || age < 0 || age > 120)) return null;
+    result.ages = input.ages as number[];
+  }
+  if (input.modality !== undefined) {
+    if (!["empresarial", "adesao", "indefinido"].includes(String(input.modality))) return null;
+    result.modality = input.modality as ChatQualification["modality"];
+  }
+  if (result.lives && result.ages && result.ages.length !== result.lives) return null;
+  return Object.keys(result).length ? result : null;
+}
 
 export function isChatRequestSameOrigin(request: Request): boolean {
   const url = new URL(request.url);
@@ -24,7 +78,10 @@ export function parseChatRequest(body: unknown): ChatRequest | null {
     if (!c || typeof c.name !== "string" || c.name.trim().length < 2 || c.name.length > 150 || typeof c.phone !== "string" || !/^[+()\d\s-]{10,25}$/.test(c.phone) || typeof c.email !== "string" || c.email.length > 254 || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(c.email) || c.consent !== true || !value.request_id) return null;
     contact = {name:c.name.trim(),phone:c.phone.trim(),email:c.email.trim(),consent:true};
   }
-  return { ...(contact ? {contact} : {}), ...(value.request_id ? { request_id: value.request_id as string } : {}), action: value.action as ChatRequest["action"], department: value.department as Department,
+  const qualification = value.qualification === undefined ? undefined : value.action === "message" ? parseChatQualification(value.qualification) : null;
+  if (qualification === null) return null;
+  const attribution = ["start", "reset", "register"].includes(String(value.action)) ? sanitizeChatAttribution(value.attribution) : undefined;
+  return { ...(qualification ? {qualification} : {}), ...(attribution ? {attribution} : {}), ...(contact ? {contact} : {}), ...(value.request_id ? { request_id: value.request_id as string } : {}), action: value.action as ChatRequest["action"], department: value.department as Department,
     ...(["message", "poll", "register", "handoff"].includes(String(value.action)) ? { token: value.token as string } : {}),
     ...(value.action === "message" ? { input: (value.input as string).trim() } : {}) };
 }

@@ -105,3 +105,74 @@ test("busy preview keeps the conversation recoverable", async () => {
   const result = await relayAmeliaChat(body, { ...options, endpoint: "https://crm.example.com/api/v1/ai/webchat-preview", fetchImpl: async () => Response.json({}, { status: 409 }) });
   assert.equal(result.payload.error, "chat_busy");
 });
+
+test("registration requires name, phone, email and explicit consent", () => {
+  const registration = { action: "register", department: "sales", token: "x", request_id: "11111111-1111-4111-8111-111111111111", contact: { name: "Teste", phone: "+442079460000", email: "teste@example.com", consent: true } };
+  assert.ok(parseChatRequest(registration));
+  for (const field of ["name", "phone", "email", "consent"]) {
+    assert.equal(parseChatRequest({ ...registration, contact: { ...registration.contact, [field]: undefined } }), null);
+  }
+});
+
+const { captureChatAttribution, sanitizeChatAttribution } = await import("../lib/chat.ts");
+const { canApplyChatPoll, isTerminalChatError, readPendingChatRequest, restoreChatSession } = await import("../lib/chat-recovery.ts");
+
+test("attribution retains approved campaign fields but strips query, fragment and referral path", () => {
+  const attribution = captureChatAttribution("https://www.ameliasaude.com.br/planos?utm_source=instagram&utm_campaign=carioca-novembro&email=private@example.com&gclid=private#secret", "https://search.example.com/find?email=private@example.com");
+  assert.deepEqual(attribution, { page_path: "/planos", referrer_origin: "https://search.example.com", utm_source: "instagram", utm_campaign: "carioca-novembro" });
+  assert.deepEqual(parseChatRequest({ ...body, attribution, private: "hidden" }).attribution, attribution);
+  assert.equal(parseChatRequest({ ...body, action: "poll", token: "x", attribution }).attribution, undefined);
+});
+
+test("attribution rejects credentials, email, phone and arbitrary query fields", () => {
+  assert.equal(sanitizeChatAttribution({ page_path: "/1234567890", referrer_origin: "https://user:password@example.com", utm_source: "user@example.com", utm_medium: "21999999999", email: "secret@example.com", gclid: "private" }), undefined);
+  assert.equal(sanitizeChatAttribution({ page_path: "//evil.example" }), undefined);
+  assert.equal(sanitizeChatAttribution({ page_path: "/?email=x", utm_campaign: "a".repeat(101) }), undefined);
+});
+
+test("guided qualification is bounded, optional, and consistent with lives", () => {
+  const request = { action: "message", department: "sales", token: "x", input: "Quero uma cotação" };
+  const qualification = { city: "Rio de Janeiro", lives: 2, ages: [28, 34], modality: "empresarial" };
+  assert.deepEqual(parseChatRequest({ ...request, qualification }).qualification, qualification);
+  assert.deepEqual(parseChatRequest({ ...request, qualification: { city: "Rio" } }).qualification, { city: "Rio" });
+  for (const invalid of [{ lives: 0 }, { lives: 1001 }, { ages: [-1] }, { ages: [121] }, { lives: 2, ages: [30] }, { city: "R" }, { modality: "individual" }, { ages: [2.3] }, {}]) {
+    assert.equal(parseChatRequest({ ...request, qualification: invalid }), null);
+  }
+  assert.equal(parseChatRequest({ ...body, qualification }), null);
+});
+
+test("human handoff uses its own action and preserves the request identity", () => {
+  const request = { action: "handoff", department: "sales", token: "x", request_id: "11111111-1111-4111-8111-111111111111" };
+  assert.deepEqual(parseChatRequest(request), request);
+});
+
+test("a transient restoration outage never starts a second conversation", async () => {
+  let starts = 0;
+  const start = async () => { starts++; return fixture(); };
+  await assert.rejects(restoreChatSession("existing-token", async () => { throw new Error("chat_unavailable"); }, start), /chat_unavailable/);
+  assert.equal(starts, 0);
+  const restored = await restoreChatSession("existing-token", async token => ({ ...fixture(), token }), start);
+  assert.equal(restored.token, "existing-token");
+  await restoreChatSession(null, async () => { throw new Error("unexpected"); }, start);
+  assert.equal(starts, 1);
+});
+
+test("expired sessions demand an explicit reset; busy and network failures remain retryable", () => {
+  for (const code of ["session_closed", "session_expired"]) assert.equal(isTerminalChatError(new Error(code)), true);
+  for (const code of ["chat_busy", "rate_limited", "chat_unavailable"]) assert.equal(isTerminalChatError(new Error(code)), false);
+});
+
+test("an old poll cannot erase a message response or overwrite a reset", () => {
+  assert.equal(canApplyChatPoll(3, 3, false), true);
+  assert.equal(canApplyChatPoll(3, 4, false), false);
+  assert.equal(canApplyChatPoll(3, 3, true), false);
+});
+
+test("reload retry reuses the exact request ID and rejects stale or foreign pending sessions", () => {
+  const now = Date.now();
+  const pending = { savedAt: now, body: { action: "message", department: "sales", token: "tab-token", input: "Quero cotação", request_id: "11111111-1111-4111-8111-111111111111", qualification: { city: "Rio" } } };
+  assert.deepEqual(readPendingChatRequest(JSON.stringify(pending), "tab-token", now), pending);
+  assert.equal(readPendingChatRequest(JSON.stringify(pending), "another-token", now), null);
+  assert.equal(readPendingChatRequest(JSON.stringify(pending), "tab-token", now + 86_400_001), null);
+  assert.equal(readPendingChatRequest("not-json", "tab-token", now), null);
+});
