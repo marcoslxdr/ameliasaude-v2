@@ -3,7 +3,7 @@ import { getVercelOidcToken } from "@vercel/oidc";
 import { NextResponse, type NextRequest } from "next/server";
 import { isChatRequestSameOrigin, parseChatRequest, relayAmeliaChat, type ChatResponse } from "@/lib/chat";
 
-import { chatCookieName, chatCookieOptions, chatSessionExpiry, publicChatPayload, relayRequestWithCookie } from "@/lib/chat-cookie";
+import { chatCookieName, chatCookieOptions, chatSessionExpiry, shouldClearChatCookies, publicChatPayload, relayRequestWithCookie } from "@/lib/chat-cookie";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
   const successful = result.status === 200 ? result.payload as ChatResponse : alreadyExpiredLogout ? { brand: "amelia" as const, department: body.department, messages: [], input: null, handoff: false, crmSynced: false, status: "closed" as const, read_only: true } : null;
   const response = NextResponse.json(successful ? publicChatPayload(successful) : result.payload, { status: alreadyExpiredLogout ? 200 : result.status, headers });
   const secure = request.nextUrl.protocol === "https:";
-  if (body.action === "logout") {
+  if (shouldClearChatCookies(body.action, result.status)) {
     for (const name of ["amelia_chat_client", chatCookieName("sales"), chatCookieName("service")]) response.cookies.set(name, "", { ...chatCookieOptions(secure, new Date(0)), maxAge: 0 });
   } else if (successful?.token) {
     const expires = chatSessionExpiry(successful.session_expires_at);

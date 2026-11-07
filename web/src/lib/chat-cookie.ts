@@ -2,6 +2,12 @@ import type { ChatRequest, ChatResponse, Department } from "./chat";
 
 export const chatCookieName = (department: Department) => `amelia_chat_session_${department}`;
 export const chatCookieOptions = (secure: boolean, expires: Date) => ({ httpOnly: true, secure, sameSite: "strict" as const, path: "/api/chat", expires });
+/** A delayed response may restore a revoked client cookie after logout.
+ * Clear expiry only during explicit entry actions: a late poll must not delete
+ * a newer session established in another tab. Conflicts retain the binding. */
+export function shouldClearChatCookies(action: ChatRequest["action"], status: number): boolean {
+  return action === "logout" || (status === 410 && ["start", "reset", "recover"].includes(action));
+}
 export function chatSessionExpiry(value: unknown, now = Date.now()): Date | null {
   if (typeof value !== "string") return null;
   const expires = Date.parse(value);

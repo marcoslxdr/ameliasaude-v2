@@ -178,7 +178,7 @@ test("reload retry reuses the exact request ID and rejects stale or foreign pend
 });
 
 const { registrationAttempt } = await import("../lib/chat-recovery.ts");
-const { chatCookieName, chatCookieOptions, chatSessionExpiry, relayRequestWithCookie, publicChatPayload } = await import("../lib/chat-cookie.ts");
+const { chatCookieName, chatCookieOptions, chatSessionExpiry, shouldClearChatCookies, relayRequestWithCookie, publicChatPayload } = await import("../lib/chat-cookie.ts");
 const id1 = "11111111-1111-4111-8111-111111111111";
 const id2 = "22222222-2222-4222-8222-222222222222";
 
@@ -332,4 +332,18 @@ test("trusted deployment identity is sent only as the server relay header, never
   const failure=await relayAmeliaChat(body,{...options,trustedOidcToken,fetchImpl:async()=>{throw new Error(trustedOidcToken);}});
   assert.deepEqual(failure,{status:503,payload:{error:"chat_unavailable"}});
   assert.equal(parseChatRequest({...body,trustedOidcToken}).trustedOidcToken,undefined);
+});
+
+
+test("expired or revoked sessions clear browser bindings, while conflicts keep the recoverable session", async () => {
+  const result=await relayAmeliaChat({action:"recover",department:"sales"},{...options,endpoint:"https://crm.example.com/api/v1/ai/webchat-preview",fetchImpl:async()=>Response.json({error:{code:"invalid_request",message:"session_expired"}},{status:410})});
+  assert.equal(result.payload.error,"session_expired");
+  assert.equal(shouldClearChatCookies("recover",result.status),true);
+  for (const action of ["start","recover","reset"]) {
+    assert.equal(shouldClearChatCookies(action,410),true);
+    for (const status of [200,400,401,403,409,429,503]) assert.equal(shouldClearChatCookies(action,status),false);
+  }
+  for (const action of ["poll","register","message","handoff","history","earlier_messages","resume"]) assert.equal(shouldClearChatCookies(action,410),false);
+  assert.equal(shouldClearChatCookies("logout",200),true);
+  assert.equal(shouldClearChatCookies("logout",503),true);
 });
