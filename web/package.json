@@ -10,6 +10,7 @@
     "test:chat": "node --experimental-strip-types --test src/tests/chat.test.mjs"
   },
   "dependencies": {
+    "@vercel/oidc": "^4.0.7",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.14.0",
     "next": "16.2.3",

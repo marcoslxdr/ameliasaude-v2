@@ -4,11 +4,11 @@ import { useCallback, useEffect, useImperativeHandle, useRef, useState, type For
 import ReactMarkdown from "react-markdown";
 import { createPortal } from "react-dom";
 import { MessageCircle, Send, X, ArrowLeft, Headphones, Sparkles } from "lucide-react";
-import { captureChatAttribution, parseChatQualification, type ChatQualification, type ChatRequest, type ChatResponse, type Department, type ChatMessage } from "@/lib/chat";
-import { canApplyChatPoll, isTerminalChatError, readPendingChatRequest, restoreChatSession, type PendingChatRequest } from "@/lib/chat-recovery";
+import { captureChatAttribution, parseChatQualification, type ChatQualification, type ChatRequest, type ChatResponse, type Department, type ChatMessage, type ChatStatus, type ChatConversation, type ChatVerification } from "@/lib/chat";
+import { canApplyChatPoll, chatWaitingTime, mergeChatMessages, isTerminalChatError, readPendingChatRequest, registrationAttempt, type PendingChatRequest } from "@/lib/chat-recovery";
 
 type Bubble = { id: string; role: "bot" | "user" | "agent"; text: string; options?: ChatMessage["quickReplies"]; document?: ChatMessage["document"] };
-type Session = { token?: string; messages: Bubble[]; input: ChatResponse["input"]; handoff: boolean; crmSynced: boolean; started: boolean; error?: string; terminal?: boolean };
+type Session = { historyCursor?: string | null; olderLoaded?: boolean; waitingSince?: string | null; connected?: boolean; conversationId?: string; status?: ChatStatus; readOnly?: boolean; verification?: ChatVerification; expiresAt?: string; errorCode?: string; messages: Bubble[]; input: ChatResponse["input"]; handoff: boolean; crmSynced: boolean; started: boolean; error?: string; terminal?: boolean };
 const fresh = (): Session => ({ messages: [], input: null, handoff: false, crmSynced: false, started: false });
 const names = { sales: "Vendas", service: "Atendimento" };
 
@@ -19,9 +19,29 @@ async function requestChat(body: ChatRequest): Promise<ChatResponse> {
   return data;
 }
 
+function statusLabel(status: ChatStatus) {
+  return {active:"Assistente virtual",waiting_human:"Aguardando a equipe",in_progress:"Em atendimento com a equipe",closed:"Atendimento encerrado"}[status];
+}
 function errorText(error: unknown) {
   const code = error instanceof Error ? error.message : "";
-  return code === "invalid_contact" ? "Confira nome, telefone com DDD e e-mail. Não foi possível concluir o cadastro." : code === "chat_busy" ? "Sua mensagem anterior ainda está sendo respondida. Aguarde um instante e tente novamente." : code === "rate_limited" ? "Aguarde um instante antes de enviar outra mensagem." : code === "session_closed" ? "Esta conversa foi encerrada. Inicie uma nova conversa para continuar." : code === "session_expired" ? "Esta conversa expirou. Inicie uma nova conversa para continuar." : "Não foi possível conectar ao chat. Tente novamente em instantes. Sua mensagem não foi confirmada.";
+  const messages: Record<string,string> = {
+    invalid_contact:"Confira nome, telefone com DDD e e-mail. Se seus dados mudaram, solicite uma revisão abaixo.",
+    identity_conflict:"Não foi possível confirmar estes dados. Confira o cadastro ou escolha “Preciso atualizar meus dados”.",
+    request_conflict:"Esta solicitação já foi registrada com outros dados. Confira o formulário antes de tentar novamente.",
+    conversation_changed:"O atendimento mudou em outra aba. Atualize a conversa antes de enviar outra mensagem.",
+    chat_busy:"Sua solicitação anterior ainda está sendo processada. Aguarde um instante e tente novamente.",
+    rate_limited:"Aguarde um instante antes de tentar novamente.",
+    session_closed:"Este atendimento foi encerrado. Inicie um novo atendimento para conversar.",
+    session_expired:"O acesso neste dispositivo expirou. Inicie ou recupere um atendimento.",
+    invalid_verification_code:"Não foi possível confirmar o código. Confira os seis dígitos ou solicite um novo código.",
+    verification_unavailable:"A recuperação por e-mail está indisponível no momento. Você pode iniciar um novo atendimento.",
+    verification_delivery_failed:"Não foi possível enviar o código agora. Tente novamente em instantes.",
+    resend_wait:"Aguarde o intervalo indicado antes de solicitar outro código.",
+    verification_rate_limited:"Você atingiu o limite de tentativas. Aguarde antes de tentar novamente.",
+    verification_required:"Confirme seu e-mail para consultar atendimentos anteriores.",
+    history_unavailable:"Não foi possível consultar seus atendimentos agora. Tente novamente.",
+  };
+  return messages[code] ?? "Não foi possível conectar ao chat. Tente novamente em instantes. Sua solicitação não foi confirmada.";
 }
 
 export type AmeliaChatHandle = { open: (returnFocus?: HTMLElement | null) => void };
@@ -38,18 +58,58 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
   const [network, setNetwork] = useState({city:'',specialty:'',product:'Carioca 10'});
   const [qualification, setQualification] = useState({ city: "", lives: "", ages: "", modality: "indefinido" });
   const [qualificationError, setQualificationError] = useState("");
-  const registrationId = useRef<string | null>(null);
+  const registration = useRef<Partial<Record<Department, ChatRequest>>>({});
+  const [view, setView] = useState<"choice" | "chat" | "identify" | "code" | "history">("choice");
+  const [identity, setIdentity] = useState({ email: "", phone: "" });
+  const [code, setCode] = useState("");
+  const [conversationsCursor, setConversationsCursor] = useState<string | null>(null);
+  const [conversations, setConversations] = useState<ChatConversation[]>([]);
+  const [flowError, setFlowError] = useState("");
+  const [resendAt, setResendAt] = useState(0);
+  const [clock, setClock] = useState(0);
+  const errorPanel = useRef<HTMLDivElement>(null);
+  const flowPanel = useRef<HTMLDivElement>(null);
+  const channel = useRef<BroadcastChannel | null>(null);
   const [busy, setBusy] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null);
   const launcher = useRef<HTMLButtonElement>(null);
   const externalTrigger = useRef<HTMLElement | null>(null);
   const messageLog = useRef<HTMLDivElement>(null);
   const end = useRef<HTMLDivElement>(null);
+  const followLatest = useRef(true);
+  const visibleConversation = useRef<string | undefined>(undefined);
+  const scrollAnchor = useRef<{ height: number; top: number } | null>(null);
   const submitting = useRef(false);
   const pending = useRef<Partial<Record<Department, PendingChatRequest>>>({});
   const revisions = useRef<Record<Department, number>>({ sales: 0, service: 0 });
   const attribution = useRef<ReturnType<typeof captureChatAttribution>>(undefined);
   const active = department ? sessions[department] : null;
+  useEffect(() => {
+    if (!department || !active?.expiresAt) return;
+    const target=department;
+    const timer=window.setTimeout(()=>{
+      revisions.current[target]++;pending.current[target]=undefined;registration.current[target]=undefined;
+      try{sessionStorage.removeItem(`amelia-chat-session:${target}`);sessionStorage.removeItem(`amelia-chat-pending:${target}`);}catch{/* optional */}
+      setSessions(previous=>({...previous,[target]:fresh()}));setView("choice");setDraft("");setCode("");setContact({name:"",phone:"",email:""});setIdentity({email:"",phone:""});setConsent(false);setQualification({city:"",lives:"",ages:"",modality:"indefinido"});setNetwork({city:"",specialty:"",product:"Carioca 10"});setConversations([]);setConversationsCursor(null);setFlowError("O acesso neste dispositivo expirou. Inicie ou recupere um atendimento.");
+    },Math.max(0,Date.parse(active.expiresAt)-Date.now()));
+    return ()=>window.clearTimeout(timer);
+  },[department,active?.expiresAt]);
+  useEffect(() => { if (active?.error && !busy) errorPanel.current?.focus(); }, [active?.error, busy]);
+  useEffect(() => { if (!open || (view !== "code" && active?.status !== "waiting_human")) return; const timer=window.setInterval(()=>setClock(Date.now()),1000); return ()=>window.clearInterval(timer); }, [open, view, active?.status]);
+  useEffect(() => { if (flowError) flowPanel.current?.focus(); }, [flowError]);
+  useEffect(() => {
+    if (typeof BroadcastChannel === "undefined") return;
+    const bus = new BroadcastChannel("amelia-chat-session"); channel.current = bus;
+    bus.onmessage = event => {
+      if (event.data === "logout") {
+        revisions.current.sales++; revisions.current.service++;
+        pending.current = {}; registration.current = {};
+        for (const target of ["sales","service"] as const) { try {sessionStorage.removeItem(`amelia-chat-session:${target}`);sessionStorage.removeItem(`amelia-chat-pending:${target}`);} catch {/* optional */} }
+        setSessions({ sales: fresh(), service: fresh() }); setView("choice"); setDraft(""); setContact({name:"",phone:"",email:""}); setIdentity({email:"",phone:""}); setCode("");setConsent(false);setQualification({city:"",lives:"",ages:"",modality:"indefinido"});setNetwork({city:"",specialty:"",product:"Carioca 10"});setConversations([]);setConversationsCursor(null);setFlowError("");
+      }
+    };
+    return () => { bus.close(); channel.current = null; };
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -62,20 +122,23 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
     };
   }, [open]);
 
-  useEffect(() => { end.current?.scrollIntoView({ block: "nearest" }); }, [active?.messages.length, open]);
-
   useEffect(() => {
-    if (!open || !messageLog.current) return;
-    const observer = new ResizeObserver(() => end.current?.scrollIntoView({ block: "nearest" }));
-    observer.observe(messageLog.current);
-    return () => observer.disconnect();
-  }, [open, department]);
+    const log = messageLog.current;
+    const changed = visibleConversation.current !== active?.conversationId;
+    visibleConversation.current = active?.conversationId;
+    if (scrollAnchor.current && log && !changed) {
+      log.scrollTop = scrollAnchor.current.top + log.scrollHeight - scrollAnchor.current.height;
+      scrollAnchor.current = null;
+    } else if (changed || followLatest.current) {
+      scrollAnchor.current=null;followLatest.current=true;end.current?.scrollIntoView({ block: "nearest" });
+    }
+  }, [active?.messages, active?.conversationId, open]);
 
-  const merge = useCallback((target: Department, data: ChatResponse, inbound?: string, polling = false) => {
-    try { sessionStorage.setItem(`amelia-chat-session:${target}`, data.token); } catch { /* in-memory session still works */ }
+  const merge = useCallback((target: Department, data: ChatResponse, inbound?: string, earlier = false) => {
     setSessions(previous => {
       const current = previous[target];
-      const messages: Bubble[] = data.history ? [...data.history] : [...current.messages];
+      const sameConversation = data.conversation_id === current.conversationId;
+      const messages: Bubble[] = mergeChatMessages<Bubble>(sameConversation ? current.messages : [], data.history ?? [], earlier);
       if (inbound && !data.history) messages.push({ id: crypto.randomUUID(), role: "user", text: inbound });
       for (const message of data.messages ?? []) {
         if (!messages.some(item => item.id === message.id)) messages.push({ id: message.id, role: "bot", text: message.text, options: message.quickReplies ?? message.list?.options, document: message.document });
@@ -83,87 +146,89 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
       for (const message of data.agentMessages ?? []) {
         if (!messages.some(item => item.id === message.id)) messages.push({ id: message.id, role: "agent", text: message.text });
       }
-      // A slow poll must never overwrite the newer token from a message turn.
-      return { ...previous, [target]: { token: polling ? current.token : data.token, messages, input: data.input ?? current.input, handoff: data.handoff, crmSynced: data.crmSynced, started: true } };
+      // Poll revision guards prevent older history replacing a newer mutation.
+      return { ...previous, [target]: { connected: true, historyCursor: earlier || !sameConversation || !current.olderLoaded ? data.history_cursor : current.historyCursor, olderLoaded: earlier || (sameConversation && current.olderLoaded), waitingSince: data.status === "waiting_human" ? data.waiting_since ?? (sameConversation ? current.waitingSince : null) : null, conversationId: data.conversation_id, status: data.status ?? (data.handoff ? "waiting_human" : "active"), readOnly: data.read_only === true || data.status === "closed", verification: data.verification ?? current.verification, expiresAt: data.session_expires_at, messages, input: data.input, handoff: data.handoff, crmSynced: data.crmSynced, started: true } };
     });
   }, []);
 
   async function start(target: Department, reset = false, retry = false) {
     if (submitting.current) return;
-    setDepartment(target);
-    if (reset || department !== target) setDraft("");
-    // Reopening a department must preserve its conversation, including errors.
-    // Only the explicit restart action may discard the established session.
-    if (sessions[target].started && !reset && !retry) return;
-    submitting.current = true;
-    revisions.current[target]++;
-    setBusy(true);
+    setDepartment(target); setFlowError("");
+    if (sessions[target].started && (!sessions[target].expiresAt || Date.parse(sessions[target].expiresAt!)>Date.now()) && !reset && !retry) { setView("chat"); return; }
+    submitting.current = true; const revision=++revisions.current[target]; setBusy(true);
     try {
       attribution.current ??= captureChatAttribution(window.location.href, document.referrer);
-      let saved: string | null = null;
-      try { saved = reset ? null : sessionStorage.getItem(`amelia-chat-session:${target}`); } catch { /* optional */ }
-      saved ??= reset ? null : sessions[target].token ?? null;
-      if (reset) {
-        pending.current[target] = undefined;
-        try { sessionStorage.removeItem(`amelia-chat-pending:${target}`); } catch { /* optional */ }
-      } else if (saved) {
-        try { pending.current[target] = readPendingChatRequest(sessionStorage.getItem(`amelia-chat-pending:${target}`), saved) ?? undefined; } catch { /* optional */ }
-        if (pending.current[target]?.body.input) setDraft(pending.current[target]!.body.input!);
-        setSessions(previous => ({ ...previous, [target]: { ...previous[target], token: saved! } }));
+      let legacy: string | null = null;
+      try { legacy = sessionStorage.getItem(`amelia-chat-session:${target}`); } catch { /* optional */ }
+      const data = await requestChat(reset ? { action: "reset", department: target, attribution: attribution.current } : { action: "recover", department: target, ...(legacy ? {token:legacy} : {}) });
+      if (revision!==revisions.current[target]) return;
+      if (reset) { pending.current[target] = undefined; registration.current[target] = undefined; setDraft(""); setContact({name:"",phone:"",email:""}); setConsent(false);setQualification({city:"",lives:"",ages:"",modality:"indefinido"});setNetwork({city:"",specialty:"",product:"Carioca 10"}); }
+      else {
+        try {
+          const saved = readPendingChatRequest(sessionStorage.getItem(`amelia-chat-pending:${target}`), legacy);
+          if (saved) {
+            const { token: _old, ...body } = saved.body; void _old;
+            if (!body.conversation_id || body.conversation_id === data.conversation_id) {
+              pending.current[target] = { ...saved, body: ["message","handoff"].includes(body.action) && !body.conversation_id ? { ...body, conversation_id: data.conversation_id } : body };
+              if (body.input) setDraft(body.input);
+              if (body.contact) { setContact(body.contact);setConsent(true);registration.current[target]=pending.current[target]!.body; }
+              try {sessionStorage.setItem(`amelia-chat-pending:${target}`,JSON.stringify(pending.current[target]));}catch{/* optional */}
+            } else { pending.current[target]=undefined;setFlowError("Há uma solicitação pendente de outro atendimento. Ela não será enviada nesta conversa. Consulte seus atendimentos para retomá-la."); }
+          }
+        } catch { /* optional */ }
       }
-      const data = await restoreChatSession(saved,
-        token => requestChat({ action: "poll", department: target, token }),
-        () => requestChat({ action: reset ? "reset" : "start", department: target, attribution: attribution.current }));
-      registrationId.current = null;
-      if (reset) setSessions(previous => ({ ...previous, [target]: fresh() }));
-      merge(target, data);
+      try { sessionStorage.removeItem(`amelia-chat-session:${target}`); if(reset) sessionStorage.removeItem(`amelia-chat-pending:${target}`); } catch { /* optional */ }
+      setSessions(previous => ({ ...previous, [target]: fresh() }));
+      merge(target, data); setView("chat");
     } catch (error) {
-      setSessions(previous => ({ ...previous, [target]: { ...previous[target], error: errorText(error), terminal: isTerminalChatError(error) || (reset && previous[target].terminal) } }));
+      if (revision!==revisions.current[target]) return;
+      if (!reset && isTerminalChatError(error)) { setView("choice"); setSessions(previous=>({...previous,[target]:fresh()})); }
+      else { setFlowError(errorText(error)); setSessions(previous=>({...previous,[target]:{...previous[target],error:errorText(error),errorCode:error instanceof Error?error.message:"",terminal:isTerminalChatError(error)}})); }
     } finally { submitting.current = false; setBusy(false); }
   }
 
-  useImperativeHandle(ref, () => ({
-    open(returnFocus) {
-      externalTrigger.current = returnFocus ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
-      setOpen(true);
-      if (initialDepartment) void start(initialDepartment);
-    },
-  }));
+  useImperativeHandle(ref, () => ({ open(returnFocus) {
+    externalTrigger.current = returnFocus ?? (document.activeElement instanceof HTMLElement ? document.activeElement : null);
+    setOpen(true); void start(initialDepartment ?? "sales");
+  } }));
 
   async function deliver(body: ChatRequest) {
     const target = body.department;
     submitting.current = true;
-    revisions.current[target]++;
+    const revision = ++revisions.current[target];
     setBusy(true);
     pending.current[target] = { body, savedAt: pending.current[target]?.savedAt ?? Date.now() };
     try { sessionStorage.setItem(`amelia-chat-pending:${target}`, JSON.stringify(pending.current[target])); } catch { /* in-memory retry still works */ }
     try {
       const data = await requestChat(body);
+      if (revision!==revisions.current[target]) return;
       pending.current[target] = undefined;
+      if (["register", "request_review"].includes(body.action)) registration.current[target] = undefined;
       try { sessionStorage.removeItem(`amelia-chat-pending:${target}`); } catch { /* optional */ }
       merge(target, data, body.input);
       setDraft("");
       setGuide(null);
     } catch (error) {
+      if (revision!==revisions.current[target]) return;
       if (body.input) setDraft(body.input);
-      setSessions(previous => ({ ...previous, [target]: { ...previous[target], error: errorText(error), terminal: isTerminalChatError(error) } }));
+      setSessions(previous => ({ ...previous, [target]: { ...previous[target], error: errorText(error), errorCode: error instanceof Error ? error.message : "", terminal: isTerminalChatError(error) } }));
     } finally { submitting.current = false; setBusy(false); }
   }
 
   async function send(value: string, details?: ChatQualification) {
-    if (!department || !active?.token || active.terminal || submitting.current || !value.trim()) return;
+    if (!department || !active?.connected || active.terminal || active.readOnly || submitting.current || !value.trim()) return;
     const waiting = pending.current[department];
     if (waiting) { await deliver(waiting.body); return; }
-    await deliver({ action: "message", department, token: active.token, input: value.trim(), request_id: crypto.randomUUID(), ...(details ? { qualification: details } : {}) });
+    await deliver({ action: "message", department, conversation_id: active.conversationId, input: value.trim(), request_id: crypto.randomUUID(), ...(details ? { qualification: details } : {}) });
   }
 
   async function handoff() {
-    if (!department || !active?.token || active.terminal || submitting.current) return;
-    await deliver(pending.current[department]?.body ?? { action: "handoff", department, token: active.token, request_id: crypto.randomUUID() });
+    if (!department || !active?.connected || active.terminal || active.readOnly || submitting.current) return;
+    await deliver(pending.current[department]?.body ?? { action: "handoff", department, conversation_id: active.conversationId, request_id: crypto.randomUUID() });
   }
 
   async function retryCurrent() {
-    if (!department || submitting.current) return;
+    if (!department || submitting.current || active?.readOnly) return;
     const waiting = pending.current[department];
     if (waiting) await deliver(waiting.body);
     else await start(department, false, true);
@@ -180,9 +245,9 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
     void send(text, details);
   }
 
-  // Poll only the current department; session tokens and pending requests are tab-scoped.
+  // Credentials stay HttpOnly; only the exact unconfirmed request is tab-scoped.
   useEffect(() => {
-    if (!open || !department || !active?.token || !active.crmSynced || active.terminal) return;
+    if (!open || view!=="chat" || !department || !active?.connected || !active.crmSynced || active.terminal || active.readOnly) return;
     let stopped = false;
     let polling = false;
     const timer = window.setInterval(async () => {
@@ -190,32 +255,92 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
       polling = true;
       const revision = revisions.current[department];
       try {
-        const data = await requestChat({ action: "poll", department, token: active.token });
-        if (!stopped && canApplyChatPoll(revision, revisions.current[department], submitting.current)) merge(department, data, undefined, true);
+        const data = await requestChat({ action: "poll", department, conversation_id: active.conversationId });
+        if (!stopped && canApplyChatPoll(revision, revisions.current[department], submitting.current)) merge(department, data);
       } catch (error) {
-        if (!stopped && canApplyChatPoll(revision, revisions.current[department], submitting.current)) setSessions(previous => ({ ...previous, [department]: { ...previous[department], error: errorText(error), terminal: isTerminalChatError(error) } }));
+        if (!stopped && canApplyChatPoll(revision, revisions.current[department], submitting.current)) setSessions(previous => ({ ...previous, [department]: { ...previous[department], error: errorText(error), errorCode: error instanceof Error ? error.message : "", terminal: isTerminalChatError(error) } }));
       } finally { polling = false; }
     }, 5000);
     return () => { stopped = true; window.clearInterval(timer); };
-  }, [open, department, active?.token, active?.crmSynced, active?.terminal, merge]);
+  }, [open, view, department, active?.connected, active?.conversationId, active?.crmSynced, active?.terminal, active?.readOnly, merge]);
 
-  async function register(event: FormEvent) {
+  async function register(event: FormEvent, review = false) {
     event.preventDefault();
-    if (!department || !active?.token || submitting.current || !consent) return;
-    submitting.current = true; revisions.current[department]++; setBusy(true);
+    if (!department || !active?.connected || submitting.current || !consent) return;
+    const body: Omit<ChatRequest, "request_id"> = { action: review ? "request_review" : "register", department, conversation_id: active.conversationId, contact: { name: contact.name.trim(), phone: contact.phone.trim(), email: contact.email.trim().toLowerCase(), consent: true }, attribution: attribution.current };
+    const next = registrationAttempt(registration.current[department] ?? null, body, () => crypto.randomUUID());
+    registration.current[department] = next;
+    await deliver(next);
+  }
+
+  async function beginResume() {
+    if (submitting.current) return;
+    const target = department ?? initialDepartment ?? "sales";
+    if (!sessions[target].connected) {
+      submitting.current=true; setBusy(true); setDepartment(target);
+      const revision=++revisions.current[target];
+      try { const data=await requestChat({action:"start",department:target,attribution:attribution.current}); if(revision!==revisions.current[target])return; merge(target,data); }
+      catch(error) { if(revision===revisions.current[target])setFlowError(errorText(error)); return; }
+      finally {submitting.current=false;setBusy(false);}
+    }
+    setIdentity({ email: contact.email, phone: contact.phone }); setFlowError(""); setView("identify");
+  }
+
+  async function flowAction(action: "email_code" | "verify_email" | "history" | "resume", conversationId?: string, cursor?: string) {
+    if (!department || submitting.current) return;
+    submitting.current=true;setBusy(true);setFlowError("");
+    const revision=++revisions.current[department];
     try {
-      registrationId.current ??= crypto.randomUUID();
-      const data = await requestChat({action:"register",department,token:active.token,request_id:registrationId.current,contact:{...contact,consent:true},attribution:attribution.current});
+      const data = await requestChat({ action, department, ...(action==="email_code" ? {email:identity.email.trim().toLowerCase(),phone:identity.phone.trim()} : {}), ...(action==="verify_email" ? {code} : {}), ...(conversationId ? {conversation_id:conversationId} : {}), ...(cursor ? {cursor} : {}) });
+      if (revision!==revisions.current[department]) return;
       merge(department,data);
-    } catch(error) { setSessions(previous=>({...previous,[department]:{...previous[department],error:errorText(error),terminal:isTerminalChatError(error)}})); }
-    finally { submitting.current=false;setBusy(false); }
+      if (action==="email_code") { setCode("");setClock(Date.now());setResendAt(Date.now()+(data.verification?.resend_after??60)*1000);setView("code"); }
+      if (action==="verify_email") { setConversations(data.conversations??[]);setConversationsCursor(data.conversations_cursor??null);setView("history"); }
+      if (action==="history") {setConversations(previous=>cursor ? mergeChatMessages(previous,data.conversations??[]) : data.conversations??[]);setConversationsCursor(data.conversations_cursor??null);setView("history");}
+      if (action==="resume") {
+        pending.current[department]=undefined;setDraft("");
+        try {const saved=readPendingChatRequest(sessionStorage.getItem(`amelia-chat-pending:${department}`),null);if(saved && saved.body.conversation_id===data.conversation_id){pending.current[department]=saved;if(saved.body.input)setDraft(saved.body.input);}}catch{/* optional */}
+        setGuide("main");setView("chat");
+      }
+    } catch(error) {if(revision===revisions.current[department])setFlowError(errorText(error));}
+    finally{submitting.current=false;setBusy(false);}
+  }
+
+  async function loadEarlier() {
+    if (!department || !active?.conversationId || !active.historyCursor || submitting.current) return;
+    submitting.current=true;setBusy(true);setFlowError("");
+    const target=department, revision=++revisions.current[target];
+    try {
+      const data=await requestChat({action:"earlier_messages",department:target,conversation_id:active.conversationId,cursor:active.historyCursor});
+      if (revision!==revisions.current[target]) return;
+      const log=messageLog.current;
+      if (log) scrollAnchor.current={height:log.scrollHeight,top:log.scrollTop};
+      merge(target,data,undefined,true);
+    } catch(error) {if(revision===revisions.current[target])setFlowError(errorText(error));}
+    finally {submitting.current=false;setBusy(false);}
+  }
+
+  async function logout() {
+    if (!department || submitting.current) return;
+    submitting.current=true;setBusy(true);
+    let failed=false;
+    try { await requestChat({action:"logout",department}); }
+    catch { failed=true; }
+    finally {
+      revisions.current.sales++;revisions.current.service++;
+      for(const target of ["sales","service"] as const) {try{sessionStorage.removeItem(`amelia-chat-session:${target}`);sessionStorage.removeItem(`amelia-chat-pending:${target}`);}catch{/* optional */}}
+      pending.current={};registration.current={};setSessions({sales:fresh(),service:fresh()});setView("choice");setDraft("");setContact({name:"",phone:"",email:""});setIdentity({email:"",phone:""});setCode("");setConsent(false);setQualification({city:"",lives:"",ages:"",modality:"indefinido"});setNetwork({city:"",specialty:"",product:"Carioca 10"});setConversations([]);setConversationsCursor(null);
+      setFlowError(failed ? "O histórico foi fechado neste dispositivo. Não foi possível confirmar o encerramento no servidor; feche esta página se estiver em um dispositivo compartilhado." : "");
+      channel.current?.postMessage("logout");submitting.current=false;setBusy(false);
+    }
   }
 
   function submit(event: FormEvent) { event.preventDefault(); void send(draft); }
-  const canType = Boolean(active?.token && !active.terminal && department && !pending.current[department] && active.input && !["none", "choice", "contact"].includes(active.input.kind));
+  const waitingTime = chatWaitingTime(active?.waitingSince, clock);
+  const canType = Boolean(active?.connected && !active.terminal && active.errorCode!=="conversation_changed" && !active.readOnly && department && !pending.current[department] && active.input && !["none", "choice", "contact"].includes(active.input.kind));
 
   return <>
-    {!hideLauncher && <button ref={launcher} type="button" style={{ color: "#fff" }} onClick={() => { setOpen(true); if (initialDepartment) void start(initialDepartment); }} aria-label={children ? undefined : "Fale com a Amélia"} title={children ? undefined : "Fale com a Amélia"} aria-haspopup="dialog" aria-controls="amelia-chat" aria-expanded={open} className={launcherClassName ?? "fixed bottom-5 right-5 z-[90] flex h-14 w-14 items-center justify-center rounded-full border-0 bg-[var(--amelia-deep)] p-0 text-white shadow-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--amelia-purple)]"}>
+    {!hideLauncher && <button ref={launcher} type="button" style={{ color: "#fff" }} onClick={() => { setOpen(true); void start(initialDepartment ?? "sales"); }} aria-label={children ? undefined : "Fale com a Amélia"} title={children ? undefined : "Fale com a Amélia"} aria-haspopup="dialog" aria-controls="amelia-chat" aria-expanded={open} className={launcherClassName ?? "fixed bottom-5 right-5 z-[90] flex h-14 w-14 items-center justify-center rounded-full border-0 bg-[var(--amelia-deep)] p-0 text-white shadow-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--amelia-purple)]"}>
       {children ?? <MessageCircle size={26} aria-hidden="true" />}
     </button>}
     {open ? createPortal(<dialog ref={dialog} id="amelia-chat" aria-labelledby="amelia-chat-title" onCancel={event => { event.preventDefault(); setOpen(false); }} className="ph-no-capture ph-no-autocapture m-auto h-[min(680px,calc(100dvh-2rem))] w-[calc(100%-2rem)] max-w-[420px] overflow-hidden rounded-3xl border-0 p-0 text-[var(--amelia-deep)] shadow-2xl backdrop:bg-black/35 sm:mb-5 sm:mr-5">
@@ -225,13 +350,47 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
           <div className="min-w-0 flex-1"><h2 id="amelia-chat-title" className="text-base font-medium">Amélia Saúde</h2><p className="text-xs text-white/80">{department ? "Assistente virtual · Prévia" : "Como podemos ajudar?"}</p></div>
           <button type="button" aria-label="Fechar chat" onClick={() => setOpen(false)} className="rounded-lg p-2 focus-visible:outline-2"><X size={22} /></button>
         </header>
-        {!department ? <div className="flex-1 space-y-4 overflow-y-auto p-6">
-          <p className="text-xl">Escolha com quem conversar</p>
-          <button type="button" onClick={() => void start("sales")} className="flex w-full items-start gap-3 rounded-2xl border border-[var(--amelia-line)] p-4 text-left hover:bg-purple-50 focus-visible:outline-2 focus-visible:outline-[var(--amelia-purple)]"><Sparkles size={22} aria-hidden="true" /><span><strong className="block text-base font-medium">Quero contratar</strong><span className="text-sm text-[var(--amelia-body)]">Conhecer os planos e falar com vendas.</span></span></button>
-          <button type="button" onClick={() => void start("service")} className="flex w-full items-start gap-3 rounded-2xl border border-[var(--amelia-line)] p-4 text-left hover:bg-purple-50 focus-visible:outline-2 focus-visible:outline-[var(--amelia-purple)]"><Headphones size={22} aria-hidden="true" /><span><strong className="block text-base font-medium">Preciso de atendimento</strong><span className="text-sm text-[var(--amelia-body)]">Ajuda com meu plano Amélia Saúde.</span></span></button>
-          <p className="text-xs leading-relaxed text-[var(--amelia-body)]">As conversas de vendas e atendimento são separadas. Consulte nossa <a href="/privacidade" target="_blank" rel="noopener noreferrer" className="underline">Política de Privacidade</a>.</p>
+        {flowError && <div ref={flowPanel} tabIndex={-1} role="alert" className="border-t bg-amber-50 px-4 py-3 text-sm">{flowError}</div>}
+        {view !== "chat" || !department ? <div className="ph-no-capture min-h-0 flex-1 space-y-4 overflow-y-auto p-5">
+          {busy && <p role="status" className="text-sm">Conectando…</p>}
+          {view === "choice" && <>
+            <h3 className="text-xl font-medium">Como podemos ajudar?</h3>
+            <p className="text-sm text-[var(--amelia-body)]">Comece uma conversa ou consulte um atendimento anterior.</p>
+            {!initialDepartment && <label className="block text-sm">Assunto<select value={department??"sales"} onChange={e=>setDepartment(e.target.value as Department)} className="mt-1 w-full rounded-xl border p-3"><option value="sales">Quero contratar</option><option value="service">Preciso de atendimento</option></select></label>}
+            <button type="button" disabled={busy} onClick={()=>void start(department??initialDepartment??"sales",true)} className="flex w-full items-center gap-3 rounded-2xl border p-4 text-left disabled:opacity-50"><Sparkles size={22} aria-hidden="true"/><span><strong className="block">Novo atendimento</strong><span className="text-sm">Conhecer planos e conversar com a Amélia.</span></span></button>
+            <button type="button" disabled={busy} onClick={()=>void beginResume()} className="flex w-full items-center gap-3 rounded-2xl border p-4 text-left disabled:opacity-50"><Headphones size={22} aria-hidden="true"/><span><strong className="block">Retomar atendimento</strong><span className="text-sm">Confirmar seu e-mail e recuperar conversas.</span></span></button>
+            {flowError && <button type="button" disabled={busy} onClick={()=>void start(department??initialDepartment??"sales",false,true)} className="underline">Tentar recuperar novamente</button>}
+          </>}
+          {view === "identify" && <form onSubmit={e=>{e.preventDefault();void flowAction("email_code");}} className="space-y-4">
+            <h3 className="text-lg font-medium">Retomar atendimento</h3>
+            <p className="text-sm">Informe o e-mail e telefone usados no atendimento. Se os dados corresponderem a um atendimento elegível, você receberá um código para confirmar seu e-mail.</p>
+            {active?.verification?.enabled === false && <p role="status" className="rounded-xl bg-amber-50 p-3 text-sm">A recuperação por e-mail está indisponível no momento. Você pode iniciar um novo atendimento.</p>}
+            <label className="block text-sm">E-mail<input type="email" autoComplete="email" required maxLength={254} value={identity.email} onChange={e=>setIdentity(v=>({...v,email:e.target.value}))} className="ph-mask mt-1 w-full rounded-xl border p-3" disabled={busy}/></label>
+            <label className="block text-sm">Telefone com DDD<input type="tel" autoComplete="tel" required maxLength={25} value={identity.phone} onChange={e=>setIdentity(v=>({...v,phone:e.target.value}))} className="ph-mask mt-1 w-full rounded-xl border p-3" disabled={busy}/></label>
+            <button type="submit" disabled={busy||active?.verification?.enabled===false} style={{color:"#fff"}} className="w-full rounded-xl bg-[var(--amelia-deep)] p-3 text-white disabled:opacity-50">Receber código por e-mail</button>
+          </form>}
+          {view === "code" && <form onSubmit={e=>{e.preventDefault();void flowAction("verify_email");}} className="space-y-4">
+            <h3 className="text-lg font-medium">Confirme seu e-mail</h3>
+            <p className="text-sm">Se os dados corresponderem a um atendimento elegível, você receberá um código de seis dígitos. Confira também a pasta de spam.</p>
+            <label className="block text-sm">Código de seis dígitos<input autoComplete="one-time-code" inputMode="numeric" pattern="[0-9]{6}" required minLength={6} maxLength={6} value={code} onChange={e=>setCode(e.target.value.replace(/\D/g,""))} className="ph-mask mt-1 w-full rounded-xl border p-3 text-center text-xl tracking-[0.25em]" disabled={busy}/></label>
+            <button type="submit" disabled={busy||code.length!==6} style={{color:"#fff"}} className="w-full rounded-xl bg-[var(--amelia-deep)] p-3 text-white disabled:opacity-50">Confirmar e consultar atendimentos</button>
+            <button type="button" disabled={busy||clock<resendAt} onClick={()=>void flowAction("email_code")} className="underline disabled:opacity-50">{clock<resendAt ? `Reenviar em ${Math.ceil((resendAt-(clock||Date.now()))/1000)}s` : "Reenviar código"}</button>
+            <button type="button" disabled={busy} onClick={()=>{setView("identify");setFlowError("");setCode("");}} className="ml-4 underline">Corrigir dados</button>
+          </form>}
+          {view === "history" && <>
+            <h3 className="text-lg font-medium">Seus atendimentos</h3>
+            <p className="text-sm">Escolha uma conversa. Atendimentos encerrados ficam disponíveis somente para consulta.</p>
+            {conversations.length===0 && <p role="status" className="rounded-xl bg-purple-50 p-3 text-sm">Não há atendimentos disponíveis para estes dados.</p>}
+            <ul className="space-y-2">{conversations.map(item=><li key={item.id}><button type="button" disabled={busy} onClick={()=>void flowAction("resume",item.id)} className="w-full rounded-xl border p-3 text-left disabled:opacity-50"><span className="block text-xs text-[var(--amelia-body)]">{new Date(item.updated_at).toLocaleString("pt-BR")} · {statusLabel(item.status)}</span><span className="ph-mask mt-1 block break-words text-sm">{item.preview||"Atendimento Amélia Saúde"}</span><span className="mt-2 block text-xs underline">{item.can_resume ? "Continuar conversa" : "Consultar histórico"}</span></button></li>)}</ul>
+            {conversationsCursor && <button type="button" disabled={busy} onClick={()=>void flowAction("history",undefined,conversationsCursor)} className="w-full rounded-xl border p-3 text-sm underline disabled:opacity-50">Carregar mais atendimentos</button>}
+          </>}
+          {view !== "choice" && <div className="flex flex-wrap gap-4 text-sm"><button type="button" disabled={busy} onClick={()=>{setFlowError("");setView(active?.connected?"chat":"choice");}} className="underline">Voltar</button><button type="button" disabled={busy} onClick={()=>void start(department??initialDepartment??"sales",true)} className="underline">Novo atendimento</button></div>}
+          {active?.connected && <button type="button" disabled={busy} onClick={()=>void logout()} className="text-sm underline">Sair deste dispositivo</button>}
+          <p className="text-xs leading-relaxed text-[var(--amelia-body)]">O acesso neste dispositivo dura até 24 horas. Em um dispositivo compartilhado, saia ao terminar. <a href="/privacidade" target="_blank" rel="noopener noreferrer" className="underline">Privacidade</a></p>
         </div> : <>
-          <div ref={messageLog} role="log" aria-label={`Mensagens de ${names[department]}`} aria-live="polite" aria-relevant="additions" className="ph-mask flex-1 space-y-3 overflow-y-auto overscroll-contain p-4">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b px-4 py-2 text-xs"><p role="status" className="mr-auto font-medium">{statusLabel(active?.status??"active")}</p><button type="button" disabled={busy} onClick={()=>active?.verification?.status==="verified"?void flowAction("history"):void beginResume()} className="underline">Atendimentos</button><button type="button" disabled={busy} onClick={()=>void start(department,true)} className="underline">Novo</button><button type="button" disabled={busy} onClick={()=>void logout()} className="underline">Sair</button></div>
+          <div ref={messageLog} onScroll={event=>{const log=event.currentTarget;followLatest.current=log.scrollHeight-log.scrollTop-log.clientHeight<80;}} role="log" aria-label={`Mensagens de ${names[department]}`} aria-live="polite" aria-relevant="additions" className="ph-mask flex-1 space-y-3 overflow-y-auto overscroll-contain p-4">
+            {active?.historyCursor && <button type="button" disabled={busy} onClick={()=>void loadEarlier()} className="w-full rounded-xl border p-2 text-sm underline disabled:opacity-50">Carregar mensagens anteriores</button>}
             {active?.messages.map((message, index) => <div key={message.id} className={`max-w-[95%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${message.role === "user" ? "ml-auto bg-[var(--amelia-deep)] text-white" : "bg-purple-50"}`}>
               {message.role === "agent" && <p className="mb-1 text-xs font-medium">Equipe Amélia Saúde</p>}
               {message.role === "user" ? <p className="whitespace-pre-wrap break-words">{message.text}</p> : <div className="space-y-2 break-words"><ReactMarkdown components={{
@@ -245,13 +404,15 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
             {busy && <p role="status" className="text-xs text-[var(--amelia-body)]">{active?.started ? "Consultando as informações…" : "Conectando…"}</p>}
             <div ref={end} />
           </div>
-          {active?.handoff && <p role="status" className="border-t px-4 py-2 text-xs">Acompanhe a resposta da equipe aqui neste chat.</p>}
-          {department && pending.current[department] && !active?.terminal && !busy && <p role="status" className="border-t bg-amber-50 px-4 py-2 text-xs">Há uma solicitação sem confirmação.{pending.current[department]?.body.input && <span className="mt-1 block break-words">{pending.current[department]?.body.input}</span>}{!active?.error && <button type="button" onClick={()=>void retryCurrent()} className="mt-1 underline">Tentar novamente</button>}</p>}
-          {active?.error && <div role="alert" className="border-t bg-amber-50 px-4 py-3 text-sm"><p>{active.error}</p><button type="button" disabled={busy} onClick={() => active.terminal ? void start(department, true) : void retryCurrent()} className="mt-2 underline">{active.terminal ? "Iniciar nova conversa" : "Tentar novamente"}</button></div>}
-          {active?.input?.kind === "contact" && <form onSubmit={register} className="ph-no-capture min-h-0 space-y-3 overflow-y-auto border-t p-4">
+          {(active?.handoff || active?.status === "waiting_human") && <p role="status" className="border-t px-4 py-2 text-xs">{active.status === "waiting_human" ? <>Aguardando a equipe{waitingTime ? ` ${waitingTime}` : ""}. Este é o tempo decorrido, sem previsão de resposta.</> : "Acompanhe a resposta da equipe aqui neste chat."}</p>}
+          {department && pending.current[department] && !active?.terminal && !active?.readOnly && !busy && <p role="status" className="border-t bg-amber-50 px-4 py-2 text-xs">Há uma solicitação sem confirmação.{pending.current[department]?.body.input && <span className="mt-1 block break-words">{pending.current[department]?.body.input}</span>}{!active?.error && <button type="button" onClick={()=>void retryCurrent()} className="mt-1 underline">Tentar novamente</button>}</p>}
+          {active?.error && <div ref={errorPanel} tabIndex={-1} role="alert" className="border-t bg-amber-50 px-4 py-3 text-sm"><p>{active.error}</p><button type="button" disabled={busy} onClick={() => active.errorCode === "conversation_changed" ? void start(department,false,true) : active.terminal ? void start(department, true) : void retryCurrent()} className="mt-2 underline">{active.errorCode === "conversation_changed" ? "Atualizar atendimento" : active.terminal ? "Iniciar nova conversa" : "Tentar novamente"}</button></div>}
+          {active?.readOnly && <p role="status" className="border-t bg-purple-50 px-4 py-3 text-sm">Este atendimento foi encerrado. O histórico está disponível para consulta.<button type="button" disabled={busy} onClick={()=>void start(department,true)} className="ml-2 underline">Novo atendimento</button></p>}
+          {active?.input?.kind === "contact" && <form onSubmit={e=>void register(e)} className="ph-no-capture min-h-0 space-y-3 overflow-y-auto border-t p-4">
             <p className="text-sm">Seus dados permitem continuar o atendimento com nossa equipe.</p>
             {([['name','Nome','text','name'],['phone','Telefone com DDD','tel','tel'],['email','E-mail','email','email']] as const).map(([field,label,type,autoComplete])=><label key={field} className="block text-sm">{label}<input className="ph-mask mt-1 w-full rounded-xl border p-2.5" type={type} autoComplete={autoComplete} required minLength={field==='name'?2:undefined} maxLength={field==='name'?150:field==='phone'?25:254} value={contact[field]} onChange={e=>setContact(c=>({...c,[field]:e.target.value}))} disabled={busy}/></label>)}
             <label className="flex items-start gap-2 text-xs"><input type="checkbox" checked={consent} onChange={e=>setConsent(e.target.checked)} required disabled={busy}/><span>Autorizo a Amélia Saúde a entrar em contato sobre esta solicitação. <a href="/privacidade" target="_blank" rel="noopener noreferrer" className="underline">Privacidade</a></span></label>
+            {["identity_conflict","invalid_contact"].includes(active?.errorCode??"") && <button type="button" disabled={busy||!consent} onClick={e=>void register(e,true)} className="block text-left text-sm underline">Preciso atualizar meus dados</button>}
             <button type="submit" style={{ color: "#fff" }} disabled={busy||!consent} className="w-full rounded-xl bg-[var(--amelia-deep)] p-3 text-sm text-white disabled:opacity-40">Iniciar atendimento</button>
           </form>}
           {canType && !active?.handoff && <div className="border-t p-3 text-xs">
