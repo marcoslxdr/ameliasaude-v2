@@ -1,4 +1,5 @@
 import { isValidCnpj, isValidDesiredStartDate } from "./sales-journey/engine.ts";
+import { DUE_DAYS } from "./sales-journey/materials.ts";
 export type Department = "sales" | "service";
 export type ChatAttribution = { page_path?: string; referrer_origin?: string; utm_source?: string; utm_medium?: string; utm_campaign?: string; utm_content?: string; utm_term?: string };
 export const CHAT_MESSAGE_LIMIT = 5000;
@@ -41,7 +42,8 @@ export function captureChatAttribution(href: string, referrer: string): ChatAttr
   } catch { return undefined; }
 }
 
-export function parseChatQualification(value: unknown): ChatQualification | null {
+/** Read historical preferences without treating them as current available options. */
+export function parseStoredChatQualification(value: unknown): ChatQualification | null {
   if (!value || typeof value !== "object" || Array.isArray(value)) return null;
   const input = value as Record<string, unknown>;
   if (Object.keys(input).some(key => !["city", "lives", "ages", "modality", "interest", "cnpj", "previous_plan", "preferred_due_day", "desired_start_date", "product", "coparticipation", "previous_plan_duration"].includes(key))) return null;
@@ -97,6 +99,12 @@ export function parseChatQualification(value: unknown): ChatQualification | null
   if (result.product && result.modality && result.modality !== "indefinido" && result.modality !== (result.product === "carioca_10_adesao" ? "adesao" : "empresarial")) return null;
   if (result.lives && result.ages && result.ages.length !== result.lives) return null;
   return Object.keys(result).length ? result : null;
+}
+
+/** New declarations and retries must use a documented due day. */
+export function parseChatQualification(value: unknown): ChatQualification | null {
+  const parsed = parseStoredChatQualification(value);
+  return parsed && (parsed.preferred_due_day === undefined || DUE_DAYS.some(day => day === parsed.preferred_due_day)) ? parsed : null;
 }
 
 export function isChatRequestSameOrigin(request: Request): boolean {
@@ -211,8 +219,8 @@ export async function relayAmeliaChat(body: ChatRequest, options: { endpoint?: s
     if (data.journey !== undefined) {
       const value = data.journey;
       if (!value || typeof value.version !== "string" || value.version.length > 100 || typeof value.step !== "string" || value.step.length > 50 || typeof value.text !== "string" || value.text.length > 10000 || !safeOptions(value.options) || !value.qualification || typeof value.qualification !== "object" || Array.isArray(value.qualification)) return { status: 502, payload: { error: "invalid_chat_response" } };
-      const qualification = Object.keys(value.qualification).length ? parseChatQualification(value.qualification) : {};
-      if (!qualification || value.options.some(option => !/^(?:sales:[a-z_:]+|sales:product:carioca_10_(?:adesao|pme))$/.test(option.value))) return { status: 502, payload: { error: "invalid_chat_response" } };
+      const qualification = Object.keys(value.qualification).length ? parseStoredChatQualification(value.qualification) : {};
+      if (!qualification || value.options.some(option => !/^(?:sales:[a-z_:]+|sales:product:carioca_10_(?:adesao|pme))$/.test(option.value) && !(value.step === "due_preference" && DUE_DAYS.some(day => option.value === String(day))))) return { status: 502, payload: { error: "invalid_chat_response" } };
       journey = { version: value.version, step: value.step, text: value.text, qualification, options: data.status === "closed" || data.status === "in_progress" || data.status === "waiting_human" || data.handoff || data.read_only ? [] : value.options.map(({ label, value }) => ({ label, value })) };
     }
     // Only explicitly reviewed fields can cross the public boundary.

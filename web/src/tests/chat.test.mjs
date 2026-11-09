@@ -469,3 +469,50 @@ test("previous plan duration is bounded and survives retry projection",async()=>
   assert.deepEqual(parseChatQualification({previous_plan:"yes",previous_plan_duration:"6_to_12_months"}),{previous_plan:"yes",previous_plan_duration:"6_to_12_months"});
   assert.equal(parseChatQualification({previous_plan_duration:"approved"}),null);
 });
+
+test("numeric due-day cards are accepted only for the documented step and values", async () => {
+  const run=(value,step="due_preference")=>relayAmeliaChat(body,{...options,fetchImpl:async()=>Response.json({...fixture(),journey:{version:"test",step,text:"Vencimento",qualification:{city:"Niterói"},options:[{label:"Dia",value}]}})});
+  for(const value of ["1","5","10","15","20"])assert.equal((await run(value)).status,200);
+  for(const value of ["0","2","31","01","15 ","javascript:alert(1)"])assert.equal((await run(value)).status,502);
+  for(const step of ["topics","summary","interest"])assert.equal((await run("15",step)).status,502);
+});
+
+test("complete shared-engine journey crosses relay, due recovery and invalid correction before automatic proposal", async () => {
+  const {createJourney,advanceJourney,journeyView,TOPICS}=await import("../lib/sales-journey/engine.ts");
+  let state=createJourney({interest:"personal",city:"Niterói",lives:2,ages:[35,18],previous_plan:"no",product:"carioca_10_adesao",coparticipation:"sem",modality:"adesao"});
+  const seen=[];
+  const relay=async(action="poll")=>{
+    const result=await relayAmeliaChat({...body,action},{...options,fetchImpl:async()=>Response.json({...fixture(),status:"active",journey:journeyView(state)})});
+    assert.equal(result.status,200);assert.equal(result.payload.handoff,false);return result.payload;
+  };
+  for(let i=0;i<6;i++){
+    assert.equal(state.step,"topics");seen.push(TOPICS[state.topicIndex].id);
+    await relay();state=advanceJourney(state,"sales:next").state;
+  }
+  assert.equal(state.step,"due_preference");
+  const before=await relay("recover");assert.deepEqual(before.journey.options.filter(x=>!x.value.startsWith("sales:")).map(x=>x.value),["1","5","10","15","20"]);assert.ok(before.journey.options.some(x=>x.value==="sales:skip"));
+  const invalid=advanceJourney(state,"31");state=invalid.state;
+  assert.equal(state.step,"due_preference");assert.equal(state.qualification.preferred_due_day,undefined);await relay();
+  state=advanceJourney(state,"15").state;
+  assert.equal(state.qualification.preferred_due_day,15);seen.push(TOPICS[state.topicIndex].id);await relay();
+  assert.deepEqual(seen,TOPICS.map(t=>t.id));
+  state=advanceJourney(state,"sales:next").state;assert.equal(state.step,"start_preference");await relay();
+  state=advanceJourney(state,"sales:skip").state;assert.equal(state.step,"summary");await relay();
+  state=advanceJourney(state,"sales:proposal").state;assert.equal(state.step,"proposal_requested");
+  assert.equal((await relay("recover")).journey.qualification.preferred_due_day,15);
+  assert.equal(state.proposalRequest.qualification.preferred_due_day,15);
+});
+
+test("new due31 is rejected at input and retry while legacy response recovers every field", async()=>{
+  const {parseChatQualification,parseStoredChatQualification}=await import("../lib/chat.ts");
+  const {restorePendingChatRequest}=await import("../lib/chat-recovery.ts");
+  const q={city:"Niterói",lives:2,ages:[35,18],preferred_due_day:31};
+  assert.equal(parseChatQualification(q),null);assert.deepEqual(parseStoredChatQualification(q),q);
+  const request={action:"message",department:"sales",input:"Preferência",request_id:"11111111-1111-4111-8111-111111111111",qualification:q};
+  assert.equal(parseChatRequest(request),null);
+  const now=Date.now(),expiresAt=new Date(now+60000).toISOString(),sessionRef="c".repeat(64);
+  assert.equal(restorePendingChatRequest(JSON.stringify({version:2,body:request,savedAt:now,expiresAt,sessionRef}),{department:"sales",sessionRef,expiresAt},now),null);
+  const recovered=await relayAmeliaChat({...body,action:"recover"},{...options,fetchImpl:async()=>Response.json({...fixture(),status:"active",journey:{version:"legacy",step:"summary",text:"Preferência anterior:31, a confirmar",qualification:q,options:[{label:"Corrigir",value:"sales:edit"}]}})});
+  assert.equal(recovered.status,200);assert.deepEqual(recovered.payload.journey.qualification,q);
+  for(const day of [1,5,10,15,20])assert.equal(parseChatRequest({...request,qualification:{...q,preferred_due_day:day}}).qualification.preferred_due_day,day);
+});
