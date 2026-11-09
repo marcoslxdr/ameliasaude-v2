@@ -29,7 +29,7 @@ export const GUIDE_ACTIONS: Record<(typeof REVIEW_CASES)[number]['id'], GuideAct
   responsive: simulator('Abra esta página no celular e percorra os controles usando o teclado. Confira a rede e os materiais.'),
   whatsapp: { text: 'Este teste será feito quando o canal for conectado. Não é necessário para esta avaliação.', href: '#resumo-avaliacao', label: 'Ver resumo' },
   ai_question: landing('No chat integrado, faça uma pergunta livre sobre carência ou rede; confira a fonte indicada e retome o roteiro. O simulador não testa a IA.'),
-  ai_missing: landing('Pergunte por uma condição que não consta dos materiais aprovados, como validade ou preço de opção sem tabela. Confira a resposta e continue.'),
+  ai_missing: landing('Pergunte por uma condição que não consta dos materiais aprovados, como regra para plano anterior inferior a seis meses ou preço de opção sem tabela. Confira a resposta e continue.'),
   ai_failure: landing('Peça à TI uma simulação de falha da IA em ambiente controlado com rollback. Faça uma dúvida livre e tente continuar; não desligue serviços reais. Sem ambiente adequado, marque Não consegui testar.'),
   integrated_paths: landing('No chat integrado, teste separadamente pessoa e empresa com dados fictícios. Confira os sete assuntos, correção, recarga e resumo.'),
   commercial_approval: materials('Com a equipe comercial, compare cada condição e sua fonte; registre se a versão, a validade e o responsável foram confirmados.'),
