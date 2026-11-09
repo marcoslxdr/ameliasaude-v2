@@ -7,6 +7,7 @@ import { ArrowDown, ArrowRight, Check, Download, ExternalLink, GitBranch, Messag
 import { advanceJourney, createJourney, journeyView, JOURNEY_VERSION, TOPICS, type JourneyResult } from '@/lib/sales-journey/engine';
 import { CommercialMaterialsPanel } from './CommercialMaterialsPanel';
 import { INITIAL_REVIEW, REVIEW_CASES, REVIEW_DATE, REVIEW_VERSION, reviewCounts, reviewExport, type ReviewEntry, type ReviewStatus } from './homologation-checklist';
+import { splitLinkedText } from './linked-text';
 
 type Message = { role: 'assistant' | 'visitor'; text: string; effect?: JourneyResult['effect'] };
 const firstState = () => createJourney();
@@ -22,7 +23,7 @@ const gaps = [
 ];
 const stepLabels: Record<string, string> = { interest: 'Interesse', cnpj: 'CNPJ', city: 'Município', lives: 'Quantidade de pessoas', ages: 'Idades', previous_plan: 'Plano anterior', previous_plan_duration: 'Tempo de plano anterior', topics: 'Apresentação do produto', due_preference: 'Vencimento desejado', start_preference: 'Início desejado', summary: 'Resumo e continuidade', proposal_requested: 'Pedido de proposta', quote_product: 'Produto para simulação', quote_coparticipation: 'Opção de coparticipação', price_simulation: 'Simulação documental', closed: 'Encerrada' };
 function LinkedText({ text }: { text: string }) {
-  return <>{text.split(/(https:\/\/www\.ameliasaude\.com\.br\/[^\s]*)/g).map((part, i) => part.startsWith('https://') ? <a key={i} href={part} target="_blank" rel="noopener noreferrer">Consultar no site Amélia ↗</a> : part)}</>;
+  return <>{splitLinkedText(text).map((part, i) => part.href ? <a key={i} href={part.href} target="_blank" rel="noopener noreferrer">Consultar no site Amélia ↗</a> : part.text)}</>;
 }
 
 export function HomologationWorkspace() {
