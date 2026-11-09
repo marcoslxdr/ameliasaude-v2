@@ -6,7 +6,8 @@ import { GUIDE_ACTIONS, adjustmentMessage, restoreGuide, whatsappUrl } from './r
 test('every review step has a clear action and destination', () => {
   for (const item of REVIEW_CASES) {
     assert.ok(GUIDE_ACTIONS[item.id]?.text);
-    assert.ok(GUIDE_ACTIONS[item.id]?.href);
+    if (item.id === 'production') assert.equal(GUIDE_ACTIONS[item.id]?.href, undefined);
+    else assert.ok(GUIDE_ACTIONS[item.id]?.href);
   }
 });
 
@@ -56,22 +57,18 @@ test('final acceptance requires identification and all required steps passed, an
 });
 
 
-test('integrated approved quote is required for acceptance and distinguishes missing or expired catalogs', async () => {
+test('all three integrated quote cases are required and direct to the preview', async () => {
   const { canAccept } = await import('./review-guide.ts');
-  const item = REVIEW_CASES.find(c => c.id === 'approved_quote');
-  assert.ok(item);
-  assert.match(item.expected, /aprovada|aprovação/);
-  assert.match(item.expected, /vencida/);
-  assert.match(item.expected, /faixas e valores/);
-  assert.match(GUIDE_ACTIONS.approved_quote.text, /ausente e vencido/);
-  assert.match(GUIDE_ACTIONS.approved_quote.text, /Não consegui testar/);
-  assert.equal(GUIDE_ACTIONS.approved_quote.href, '/landing');
   const entries = structuredClone(INITIAL_REVIEW);
-  for (const testCase of REVIEW_CASES) if (testCase.id !== 'whatsapp') entries[testCase.id].status = 'passed';
-  entries.approved_quote.status = 'blocked';
-  assert.equal(canAccept(entries, 'Equipe'), false);
-  entries.approved_quote.status = 'untested';
-  assert.equal(canAccept(entries, 'Equipe'), false);
-  entries.approved_quote.status = 'passed';
+  for (const item of REVIEW_CASES) if (item.id !== 'whatsapp') entries[item.id].status = 'passed';
+  for (const id of ['approved_quote', 'quote_missing', 'quote_expired']) {
+    assert.equal(GUIDE_ACTIONS[id].href, 'https://ameliasaude-chat-preview.vercel.app/landing');
+    entries[id].status = 'blocked';
+    assert.equal(canAccept(entries, 'Equipe'), false);
+    entries[id].status = 'passed';
+  }
+  assert.match(GUIDE_ACTIONS.quote_missing.text, /ambiente controlado/);
+  assert.match(GUIDE_ACTIONS.quote_expired.text, /Não consegui testar/);
+  assert.match(GUIDE_ACTIONS.production.text, /URLs reais autorizadas/);
   assert.equal(canAccept(entries, 'Equipe'), true);
 });
