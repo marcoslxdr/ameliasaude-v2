@@ -1,4 +1,4 @@
-export const REVIEW_VERSION = '2026-11-09.7';
+export const REVIEW_VERSION = '2026-11-09.8';
 export const REVIEW_DATE = '09/11/2026';
 export const REVIEW_CASES = [
   { id: 'personal', area: 'Modelo', title: 'Pessoa / família completa a qualificação', expected: 'Coleta município, pessoas, idades e plano anterior; não presume plano individual.' },
@@ -8,6 +8,7 @@ export const REVIEW_CASES = [
   { id: 'resume', area: 'Modelo', title: 'Menu, consulta de assunto e correção preservam os dados', expected: 'É possível voltar à jornada e corrigir dados sem recomeçar.' },
   { id: 'commercial', area: 'Conteúdo', title: 'Material recebido e aprovação comercial são distinguidos', expected: 'D1–D7 recebidos em 09/11 identificados por fonte, arquivo e horário; confirmação de Marcos em 09/11 registrada separadamente: Carioca 10, ANS Adesão com terapias 507.538/26-6, boleto no vencimento escolhido e uso de treinamento/aditivo. Validade comercial e exceções não descritas continuam explícitas.' },
   { id: 'quote', area: 'Modelo / integração', title: 'Simulação de Adesão corresponde à tabela recebida', expected: 'As duas opções de Adesão usam os 20 preços D2 e faixas corretas pelo mesmo motor; resultado documental sem periodicidade presumida, desconto automático ou aprovação de elegibilidade.' },
+  { id: 'approved_quote', area: 'Preview integrada · cotação', title: 'Cotação usa catálogo aprovado e vigente', expected: 'A cotação identifica produto, modalidade, versão, aprovação e validade do catálogo; faixas e valores conferem com a fonte. Sem fonte aprovada ou com fonte vencida, não informa valor como cotação válida e explica a pendência. A simulação documental não comprova esta etapa.' },
   { id: 'pme_price', area: 'Conteúdo', title: 'PME não recebe preços de Adesão', expected: 'Carioca 10 PME com coparticipação usa D5 e grupo de 2 a 29 vidas. Sem coparticipação permanece sem preço documentado; não copiar valores Adesão. O pedido pode continuar sem exigir vendedor.' },
   { id: 'promotion', area: 'Conteúdo', title: 'Promoção de 50% é explicada sem aplicação automática', expected: 'Primeira mensalidade bancária e janela 20/10–20/11 sem ano informadas; vigência, elegibilidade e base dependem de confirmação.' },
   { id: 'waiting_rules', area: 'Conteúdo', title: 'Carências seguem a matriz recebida sem aplicação automática', expected: 'D6/D7: nove grupos e 36 prazos conferidos. Distinguir contratual/sem plano/6–12/acima de 12 meses; preservar exceção Psicologia, terapias 180d, parto 300d e CPT 24 meses. Produto Carioca 10 e uso do aditivo confirmados; regras não descritas, especialmente menos de seis meses, e validade continuam pendentes.' },

@@ -54,3 +54,24 @@ test('final acceptance requires identification and all required steps passed, an
   assert.match(acceptanceMessage('Equipe', acceptedAt), /Equipe/);
   assert.match(acceptanceMessage('Equipe', acceptedAt), /autorização própria/);
 });
+
+
+test('integrated approved quote is required for acceptance and distinguishes missing or expired catalogs', async () => {
+  const { canAccept } = await import('./review-guide.ts');
+  const item = REVIEW_CASES.find(c => c.id === 'approved_quote');
+  assert.ok(item);
+  assert.match(item.expected, /aprovada|aprovação/);
+  assert.match(item.expected, /vencida/);
+  assert.match(item.expected, /faixas e valores/);
+  assert.match(GUIDE_ACTIONS.approved_quote.text, /ausente e vencido/);
+  assert.match(GUIDE_ACTIONS.approved_quote.text, /Não consegui testar/);
+  assert.equal(GUIDE_ACTIONS.approved_quote.href, '/landing');
+  const entries = structuredClone(INITIAL_REVIEW);
+  for (const testCase of REVIEW_CASES) if (testCase.id !== 'whatsapp') entries[testCase.id].status = 'passed';
+  entries.approved_quote.status = 'blocked';
+  assert.equal(canAccept(entries, 'Equipe'), false);
+  entries.approved_quote.status = 'untested';
+  assert.equal(canAccept(entries, 'Equipe'), false);
+  entries.approved_quote.status = 'passed';
+  assert.equal(canAccept(entries, 'Equipe'), true);
+});
