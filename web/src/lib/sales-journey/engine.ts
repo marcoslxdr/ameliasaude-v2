@@ -102,7 +102,7 @@ export function isValidDesiredStartDate(value: string): boolean {
   return !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === value;
 }
 export function isAdministrativeIntent(input: string): boolean {
-  return /\b(segunda via|2a via|boleto|reembolso|cancelamento|cancelar meu plano|autorizacao de exame|carteirinha|carteira do plano|resultado de exame)\b/.test(
+  return /\b(segunda via|2a via|meu boleto|boleto vencido|emitir boleto|enviar boleto|reembolso|cancelamento|cancelar meu plano|autorizacao de exame|carteirinha|carteira do plano|resultado de exame)\b/.test(
     normalize(input),
   );
 }
@@ -252,7 +252,7 @@ export function journeyView(state: JourneyState, context: JourneyContext = {}) {
         break;
       case "due_preference":
         text =
-          "A tabela apresenta vencimento nos dias 01, 05, 10, 15 e 20. Qual você prefere? A escolha não confirma a contratação.";
+          "A cobrança é por boleto no vencimento escolhido: 01, 05, 10, 15 ou 20. Qual você prefere? A escolha não confirma a contratação.";
         options = [
           ...DUE_DAYS.map((day) => ({
             label: `Dia ${String(day).padStart(2, "0")}`,
@@ -396,6 +396,8 @@ export function advanceJourney(
     return done(undefined, "close");
   }
   if (state.step === "closed") return done();
+  if (/\b(boleto|forma de pagamento|como (?:pago|pagar))\b/.test(value))
+    return done(TOPICS.find((topic) => topic.id === "due")!.answer);
   if (value === "sales:menu" || value === "menu") {
     state.menu = true;
     delete state.inspecting;

@@ -50,3 +50,22 @@ test('simulator uses shared journey options and retains data through direct topi
   assert.equal(state.step, 'topics');
   assert.deepEqual(state.qualification, before);
 });
+
+test('revision .6 keeps .3 sessions, explains confirmed boleto and preserves unapproved pricing', async () => {
+  const {simulateReceivedPrices,COMMERCIAL_CONFIRMATION,receivedMaterialsContext}=await import('../../lib/sales-journey/materials.ts');
+  const q={interest:'personal',city:'Niterói',lives:1,ages:[35],previous_plan:'no',product:'carioca_10_adesao',coparticipation:'com'};
+  const state={...createJourney(q),step:'price_simulation'};
+  assert.equal(state.version,'amelia-commercial-2026-11-09.3');
+  const payment=advanceJourney(state,'Posso pagar por boleto?');
+  assert.match(payment.text,/cobrança é por boleto no vencimento escolhido/);
+  assert.deepEqual(payment.state,state);
+  assert.equal(payment.effect,undefined);
+  assert.deepEqual(payment.options,journeyView(state).options);
+  const quote=simulateReceivedPrices(q);
+  assert.equal(quote.totalCents,25408);
+  assert.equal(quote.approved,false);
+  assert.equal(quote.discountApplied,false);
+  assert.equal(COMMERCIAL_CONFIRMATION.adesaoTherapiesAns,'507.538/26-6');
+  assert.match(receivedMaterialsContext(),/não são datas de validade comercial/);
+  assert.equal(reviewExport(INITIAL_REVIEW,'','','2026-11-09').version,'2026-11-09.6');
+});

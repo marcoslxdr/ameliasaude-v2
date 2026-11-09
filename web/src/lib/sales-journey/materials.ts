@@ -5,6 +5,18 @@ export const PRODUCTS = [
   { id: "carioca_10_adesao", label: "Carioca 10 Adesão", modality: "adesao" },
   { id: "carioca_10_pme", label: "Carioca 10 PME", modality: "empresarial" },
 ] as const;
+/** Explicit scope confirmed by Marcos; does not approve the commercial catalog. */
+export const COMMERCIAL_CONFIRMATION = {
+  id: "C1",
+  confirmedBy: "Marcos",
+  confirmedOn: "2026-11-09",
+  adesaoTherapiesAns: "507.538/26-6",
+  paymentMethod: "boleto",
+  product: "Carioca 10",
+  catalogApproved: false,
+} as const;
+export const CONFIRMATION_NOTICE =
+  "Confirmação de Marcos em 09/11/2026 (C1): o produto atual é Carioca 10, a rede foi enviada, as regras de elegibilidade seguem o treinamento e as carências seguem o aditivo. O ANS correto de Adesão com coparticipação em terapias é 507.538/26-6, prevalecendo sobre 507.583/26-6 impresso no treinamento/D5. A cobrança é por boleto no vencimento escolhido. A confirmação não aprova o catálogo inteiro nem define validade comercial dos preços ou ano da campanha.";
 export const COMMERCIAL_SOURCES = [
   {
     id: "D1",
@@ -550,7 +562,7 @@ export const WAITING_PERIOD_COLUMNS = [
   { key: "previous_plan_above_12_months", label: "Plano anterior acima de 12 meses" },
 ] as const;
 export const WAITING_PERIOD_NOTICE =
-  "Referência documental recebida (D6 e D7): prazos coincidem nos dois arquivos. Produto, validade, critérios de aproveitamento e aprovação ainda precisam ser confirmados. Menos de 6 meses de plano anterior não tem regra fornecida. Não confirma redução ou cobertura para uma pessoa específica.";
+  "Referência documental recebida (D6 e D7): prazos coincidem nos dois arquivos. Marcos confirmou em 09/11/2026 o Carioca 10 e o uso das regras do aditivo. Validade e critérios de aproveitamento não descritos continuam pendentes. Menos de 6 meses de plano anterior não tem regra fornecida. Não confirma redução ou cobertura para uma pessoa específica.";
 export const DUE_DAYS = [1, 5, 10, 15, 20] as const;
 export const MUNICIPALITIES = [
   "Rio de Janeiro",
@@ -603,7 +615,7 @@ export const TOPICS = [
     title: "Cobertura",
     summary: "Ambulatorial + hospitalar com obstetrícia",
     answer:
-      "O Carioca 10 é apresentado no treinamento com segmentação ambulatorial + hospitalar com obstetrícia. O material também apresenta pronto atendimento DIGITAL 24h e telemedicina com especialidades agendadas. Isso não confirma todo procedimento nem pronto-socorro hospitalar 24h em toda a rede; condições gerais e exclusões precisam ser conferidas por produto.",
+      "O produto atual, confirmado por Marcos em 09/11/2026, é o Carioca 10. Ele é apresentado no treinamento com segmentação ambulatorial + hospitalar com obstetrícia. O material também apresenta pronto atendimento DIGITAL 24h e telemedicina com especialidades agendadas. Isso não confirma todo procedimento nem pronto-socorro hospitalar 24h em toda a rede; condições gerais e exclusões precisam ser conferidas por produto.",
     source: "Treinamento comercial Amélia + SIX, outubro/2026, páginas 3, 5 e 7 (D1)",
     sourceIds: ["D1"],
     status: "received",
@@ -632,7 +644,7 @@ export const TOPICS = [
     title: "Rede de atendimento",
     summary: "Hospitais e laboratórios destacados",
     answer:
-      "Entre os destaques recebidos estão Hospital Quali Ipanema, Policlínica de Botafogo, Hospital Daniel Lipp e Casa de Saúde e Maternidade Santa Martha; laboratórios Eliel Figueiredo, RioLabor e Dimagem. Destaques não garantem qualquer procedimento em todos os produtos. Consulte a rede completa e o produto em https://www.ameliasaude.com.br/rede-credenciada.",
+      "A rede enviada foi confirmada por Marcos em 09/11/2026 para o produto atual Carioca 10. Entre os destaques recebidos estão Hospital Quali Ipanema, Policlínica de Botafogo, Hospital Daniel Lipp e Casa de Saúde e Maternidade Santa Martha; laboratórios Eliel Figueiredo, RioLabor e Dimagem. Destaques não garantem qualquer procedimento em todos os produtos. Consulte a rede completa e o produto em https://www.ameliasaude.com.br/rede-credenciada.",
     source: "Tabela Comercial 2026 p2 (D2); treinamento p4 (D1)",
     sourceIds: ["D2", "D1"],
     status: "received",
@@ -642,7 +654,7 @@ export const TOPICS = [
     title: "Carências",
     summary: "Matriz de carências recebida; aplicação a confirmar",
     answer:
-      "Recebemos matriz e planilha de carências com 9 grupos e colunas contratual, sem plano anterior, plano de 6–12 meses e acima de 12 meses. Exemplos documentais: urgência/emergência 24h em todas as colunas; parto a termo 300 dias; terapias 180 dias. Exames e internações têm diferenças conforme grupo e tempo do plano anterior. A aplicação depende do produto, validade e critérios de aproveitamento ainda não fornecidos; não confirmo redução individual. Podemos consultar a referência completa e continuar por aqui.",
+      "Recebemos matriz e planilha de carências com 9 grupos e colunas contratual, sem plano anterior, plano de 6–12 meses e acima de 12 meses. Exemplos documentais: urgência/emergência 24h em todas as colunas; parto a termo 300 dias; terapias 180 dias. Exames e internações têm diferenças conforme grupo e tempo do plano anterior. Marcos confirmou o produto Carioca 10 e o uso do aditivo. Validade e critérios de aproveitamento não descritos, incluindo plano anterior inferior a 6 meses, continuam pendentes; não confirmo redução individual. Podemos consultar a referência completa e continuar por aqui.",
     source:
       "Aditivo recebido (D6), p1; planilha recebida (D7), Planilha1 A1:H10; 36/36 prazos iguais",
     sourceIds: ["D6", "D7"],
@@ -653,8 +665,8 @@ export const TOPICS = [
     title: "Vencimentos",
     summary: "Dias 01, 05, 10, 15 e 20",
     answer:
-      "A tabela apresenta os dias 01, 05, 10, 15 e 20, cada vigência acompanhada do vencimento no mesmo dia do mês. Posso guardar sua preferência entre essas opções. A escolha não confirma contrato, primeira cobrança ou ativação; os cortes e as condições de implantação não foram detalhados.",
-    source: "Tabela Comercial 2026 p1 (D2)",
+      "A tabela apresenta os dias 01, 05, 10, 15 e 20, cada vigência acompanhada do vencimento no mesmo dia do mês. Posso guardar sua preferência entre essas opções. Conforme confirmação de Marcos em 09/11/2026, a cobrança é por boleto no vencimento escolhido. A escolha não confirma contrato, emissão ou pagamento do boleto nem ativação; os cortes e as condições de implantação não foram detalhados.",
+    source: "Tabela Comercial 2026 p1 (D2/D5); confirmação de Marcos em 09/11/2026 (C1)",
     sourceIds: ["D2"],
     status: "received",
   },
@@ -810,8 +822,8 @@ export function simulateReceivedPrices(input: ReceivedPriceInput): ReceivedPrice
     ),
     `Soma dos preços impressos: ${formatReceivedPrice(totalCents)}. A periodicidade não está especificada na peça; este valor não é uma mensalidade ou cotação aprovada.`,
     input.product === "carioca_10_pme"
-      ? "Fonte: Tabela Comercial 2026 — Adesão e PME, página 1 (D5), recebida em 09/11/2026, produto PME ANS 508.991/26-3 com coparticipação em terapias. Vigência comercial, elegibilidade e vínculo aguardam confirmação. Não confirma cobertura, contrato ou ativação."
-      : "Fonte: Tabela Comercial 2026, página 1 (D2), recebida em 09/11/2026. Vigência comercial, elegibilidade, vínculo e correspondência dos registros ANS aguardam confirmação: treinamento/D5 507.583/26-6; D2 507.538/26-6 (terapias) e 507.539/26-4 (sem). Não confirma cobertura, contrato ou ativação.",
+      ? "Fonte: Tabela Comercial 2026 — Adesão e PME, página 1 (D5), recebida em 09/11/2026, produto PME ANS 508.991/26-3 com coparticipação em terapias. Regras de elegibilidade e vínculo seguem o treinamento; o enquadramento individual e a validade comercial da tabela precisam ser verificados. Não confirma cobertura, contrato ou ativação."
+      : "Fonte: Tabela Comercial 2026, página 1 (D2), recebida em 09/11/2026. ANS Adesão com terapias confirmado por Marcos em 09/11/2026: 507.538/26-6. A variante sem coparticipação conserva a referência documental 507.539/26-4. Elegibilidade e vínculo seguem o treinamento; enquadramento individual e validade comercial da tabela precisam ser verificados. Não confirma cobertura, contrato ou ativação.",
     PROMOTION_NOTICE,
     input.coparticipation === "com"
       ? "A tabela também informa valores fixos de R$ 150,00 para terapias especiais e R$ 42,47 para demais terapias; a unidade de cobrança e os limites não estão detalhados. Esses valores não foram somados ao total."
@@ -829,9 +841,10 @@ export function receivedMaterialsContext(): string {
       (source) =>
         `${source.id}: ${source.title}; versão ${source.version}; arquivo ${source.file}; SHA256 ${source.sha256}; recebido em ${source.receivedAt}; aprovação e vigência não confirmadas.`,
     ),
+    CONFIRMATION_NOTICE,
     ...TOPICS.map((topic) => `${topic.title}: ${topic.answer} Fonte: ${topic.source}.`),
     "Elegibilidade descrita no treinamento p8–9: titular 18–69 e dependentes 12–69. Adesão: profissional liberal/servidor público, vínculo/documentos e lista de profissões a conferir. PME: 2–29 vidas, vínculo empregatício/estatutário, documentos contrato social ou MEI, CNPJ, FGTS/endereço. Essas regras são documentais, não decisão automática de elegibilidade; exceções e listas pendentes.",
-    "Conflito ANS: treinamento Adesão 507.583/26-6; tabela 507.538/26-6 (terapias) e 507.539/26-4 (sem). Empresarial 508.991/26-3. Não autocorrija nem misture os preços das modalidades.",
+    "Divergência histórica ANS resolvida por C1 para Adesão com terapias: usar 507.538/26-6. Preservar referências documentais distintas: Adesão sem coparticipação 507.539/26-4 e PME 508.991/26-3. Não misture os preços das modalidades. Dias de vigência/vencimento 01, 05, 10, 15 e 20 não são datas de validade comercial da tabela.",
     WAITING_PERIOD_NOTICE,
     ...WAITING_PERIOD_ROWS.map(
       (row) =>
