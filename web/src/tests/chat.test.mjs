@@ -17,7 +17,7 @@ test("explicit department is mandatory and message/session limits are enforced",
   assert.equal(parseChatRequest({ action: "start" }), null);
   assert.equal(parseChatRequest({ ...body, department: "atendimento" }), null);
   assert.equal(parseChatRequest({ ...body, action: "message", input: "Oi" }), null);
-  assert.equal(parseChatRequest({ ...body, action: "message", token: "a".repeat(64), input: "a".repeat(1001) }), null);
+  assert.equal(parseChatRequest({ ...body, action: "message", token: "a".repeat(64), input: "a".repeat(5001) }), null);
   assert.equal(parseChatRequest({ ...body, action: "poll", token: "a".repeat(64).repeat(60001) }), null);
   assert.deepEqual(parseChatRequest({ ...body, brand: "six", arbitrary: "hidden" }), body);
 });
@@ -346,4 +346,173 @@ test("expired or revoked sessions clear browser bindings, while conflicts keep t
   for (const action of ["poll","register","message","handoff","history","earlier_messages","resume"]) assert.equal(shouldClearChatCookies(action,410),false);
   assert.equal(shouldClearChatCookies("logout",200),true);
   assert.equal(shouldClearChatCookies("logout",503),true);
+});
+
+test("commercial qualification validates CNPJ, dates and preferences without inventing modality", () => {
+  const base = { action: "message", department: "sales", input: "sales:resume", request_id: "11111111-1111-4111-8111-111111111111" };
+  const qualification = { interest: "business", cnpj: "11.222.333/0001-81", city: "Niterói", lives: 2, ages: [0, 35], previous_plan: "no", preferred_due_day: 10, desired_start_date: "2026-11-20" };
+  const parsed = parseChatRequest({ ...base, qualification });
+  assert.equal(parsed.qualification.cnpj, "11222333000181");
+  assert.equal(parsed.qualification.modality, undefined);
+  assert.equal(parsed.qualification.secret, undefined);
+  for (const patch of [{ cnpj: "11111111111111" }, { preferred_due_day: 32 }, { desired_start_date: "2026-02-30" }, { ages: [1] }, { interest: "individual" }]) {
+    assert.equal(parseChatRequest({ ...base, qualification: { ...qualification, ...patch } }), null);
+  }
+});
+
+test("journey projection strips metadata and removes actions during human ownership", async () => {
+  const journey = { version: "test-v1", step: "interest", text: "Para quem?", qualification: {}, options: [{label: "Família", value: "sales:interest:personal", secret: "private"}], secret: "private" };
+  const relay = patch => relayAmeliaChat(body, { ...options, fetchImpl: async () => Response.json({ ...fixture(), journey, ...patch }) });
+  const active = await relay({});
+  assert.equal(active.status, 200);
+  assert.equal(JSON.stringify(active.payload.journey).includes("private"), false);
+  assert.equal(active.payload.journey.options.length, 1);
+  for (const status of ["waiting_human", "in_progress", "closed"]) assert.deepEqual((await relay({ status })).payload.journey.options, []);
+  assert.equal((await relay({ journey: { ...journey, options: [{ label: "Unsafe", value: "javascript:alert(1)" }] } })).status, 502);
+  assert.equal((await relay({ journey: { ...journey, qualification: { cnpj: "123" } } })).status, 502);
+});
+
+
+test("a write waits for an in-flight poll to release the shared server lock", async () => {
+  const { afterChatPoll } = await import('../lib/chat-recovery.ts');
+  let release;
+  const poll = new Promise(resolve => { release = resolve; });
+  const events = [];
+  const mutation = afterChatPoll(poll, async () => { events.push('write'); return 'sent'; });
+  await Promise.resolve();
+  assert.deepEqual(events, []);
+  release();
+  assert.equal(await mutation, 'sent');
+  assert.deepEqual(events, ['write']);
+  assert.equal(await afterChatPoll(Promise.reject(new Error('read failure')), async () => 'retry preserved'), 'retry preserved');
+});
+
+
+test("campaign navigation preserves only safe UTM across anchors and routes", async () => {
+  const { campaignDestination, captureChatAttribution } = await import("../lib/chat.ts");
+  const source = "https://www.ameliasaude.com.br/landing?utm_source=teste&utm_medium=cpc&utm_campaign=avaliacao&email=pessoa@example.com&gclid=secret&utm_content=21999999999#old";
+  for (const target of ["/landing#lp-cotacao", "/landing#lp-duvidas", "/planos"]) {
+    const destination = campaignDestination(target, source);
+    assert.deepEqual(captureChatAttribution(destination.href, ""), {page_path:destination.pathname,utm_source:"teste",utm_medium:"cpc",utm_campaign:"avaliacao"});
+    assert.equal(destination.search.includes("email"),false);
+    assert.equal(destination.search.includes("gclid"),false);
+    assert.equal(destination.search.includes("utm_content"),false);
+  }
+  assert.equal(campaignDestination("https://external.example/path", source).search, "");
+  assert.equal(campaignDestination("/landing?utm_source=own",source).searchParams.get("utm_source"),"own");
+});
+
+test("registration qualification is strict and cannot carry price or pipeline control", () => {
+  const registration={action:"register",department:"sales",request_id:id1,contact:{name:"Teste",phone:"+442079460000",email:"teste@example.com",consent:true},qualification:{interest:"personal",city:"Niterói",lives:1,ages:[35]}};
+  assert.deepEqual(parseChatRequest(registration).qualification,registration.qualification);
+  for(const field of ["price","status","stage_id","secret"]) assert.equal(parseChatRequest({...registration,qualification:{...registration.qualification,[field]:"injected"}}),null);
+  assert.equal(parseChatRequest({...registration,action:"request_review"}),null);
+});
+
+test("v2 reload retry binds exact registration and qualification to session expiry and conversation", async () => {
+  const {restorePendingChatRequest}=await import("../lib/chat-recovery.ts");
+  const now=Date.now(), expiresAt=new Date(now+3600000).toISOString();
+  const sessionRef="c".repeat(64);
+  const scope={department:"sales",sessionRef,expiresAt,conversationId:id1};
+  const pending={version:2,savedAt:now,sessionRef,expiresAt,body:{action:"register",department:"sales",request_id:id1,contact:{name:"Teste",phone:"+442079460000",email:"teste@example.com",consent:true},qualification:{interest:"personal",city:"Niterói",lives:1,ages:[35]}}};
+  const raw=JSON.stringify(pending);
+  assert.deepEqual(restorePendingChatRequest(raw,scope,now),pending);
+  // A committed registration recovered after response loss legitimately gains a conversation.
+  assert.deepEqual(restorePendingChatRequest(raw,{...scope,conversationId:undefined},now),pending);
+  for(const patch of [{sessionRef:"d".repeat(64)},{sessionRef:undefined},{department:"service"},{expiresAt:new Date(now+7200000).toISOString()}]) assert.equal(restorePendingChatRequest(raw,{...scope,...patch},now),null);
+  assert.equal(restorePendingChatRequest(raw,scope,now+3600000),null);
+  assert.equal(restorePendingChatRequest(JSON.stringify({...pending,savedAt:now+1}),scope,now),null);
+  assert.equal(restorePendingChatRequest(JSON.stringify({...pending,version:undefined}),scope,now),null);
+  const bound={...pending,body:{...pending.body,conversation_id:id1}};
+  assert.equal(restorePendingChatRequest(JSON.stringify(bound),{...scope,conversationId:"22222222-2222-4222-8222-222222222222"},now),null);
+  assert.equal(restorePendingChatRequest(JSON.stringify({...pending,body:{...pending.body,qualification:{status:"won"}}}),scope,now),null);
+});
+
+test("relay exposes a validated noncredential retry reference without broad metadata",async()=>{
+  const session_ref="c".repeat(64);
+  const run=ref=>relayAmeliaChat(body,{...options,fetchImpl:async()=>Response.json({...fixture(),session_ref:ref,session_expires_at:new Date(Date.now()+3600000).toISOString()})});
+  assert.equal((await run(session_ref)).payload.session_ref,session_ref);
+  assert.equal((await run("unsafe")).status,502);
+});
+
+test("transport and retry preserve1000 ages including120 with strict bounds",async()=>{
+  const {CHAT_MESSAGE_LIMIT}=await import("../lib/chat.ts");
+  const {restorePendingChatRequest}=await import("../lib/chat-recovery.ts");
+  const input=Array(1000).fill(120).join(", ");
+  const request={action:"message",department:"sales",request_id:id1,input,qualification:{interest:"personal",city:"Niterói",lives:1000,ages:Array(1000).fill(120),product:"carioca_10_adesao",coparticipation:"sem",modality:"adesao"}};
+  assert.equal(parseChatRequest({...request,department:"service"}),null);
+  assert.equal(CHAT_MESSAGE_LIMIT,5000);assert.equal(input.length,4998);
+  assert.deepEqual(parseChatRequest(request),request);
+  const now=Date.now(),expiresAt=new Date(now+3600000).toISOString(),sessionRef="c".repeat(64);
+  const saved={version:2,body:request,savedAt:now,expiresAt,sessionRef};
+  assert.ok(JSON.stringify(saved).length<10000);
+  assert.deepEqual(restorePendingChatRequest(JSON.stringify(saved),{department:"sales",sessionRef,expiresAt},now),saved);
+  const response=await relayAmeliaChat(request,{...options,fetchImpl:async(_url,init)=>{
+    assert.deepEqual(JSON.parse(init.body).qualification,request.qualification);
+    assert.equal(JSON.parse(init.body).input,input);
+    return Response.json(fixture());
+  }});
+  assert.equal(response.status,200);
+  assert.equal(parseChatRequest({...request,input:"a".repeat(5001)}),null);
+  for(const patch of [{lives:1001},{ages:Array(1001).fill(120)},{product:"individual"},{coparticipation:"free"},{modality:"empresarial"},{price:1}])assert.equal(parseChatRequest({...request,qualification:{...request.qualification,...patch}}),null);
+});
+
+test("relay accepts only the two explicit product commands with digits",async()=>{
+  const q={product:"carioca_10_adesao",coparticipation:"sem"};
+  const run=value=>relayAmeliaChat(body,{...options,fetchImpl:async()=>Response.json({...fixture(),journey:{version:"test",step:"quote_product",text:"Escolha o produto",qualification:q,options:[{label:"Produto",value}]}})});
+  for(const value of ["sales:product:carioca_10_adesao","sales:product:carioca_10_pme"]){const result=await run(value);assert.equal(result.status,200);assert.deepEqual(result.payload.journey.qualification,q);}
+  for(const value of ["sales:product:carioca_11_adesao","sales:status:123","javascript:alert(1)"])assert.equal((await run(value)).status,502);
+});
+
+test("previous plan duration is bounded and survives retry projection",async()=>{
+  const {parseChatQualification}=await import("../lib/chat.ts");
+  assert.deepEqual(parseChatQualification({previous_plan:"yes",previous_plan_duration:"6_to_12_months"}),{previous_plan:"yes",previous_plan_duration:"6_to_12_months"});
+  assert.equal(parseChatQualification({previous_plan_duration:"approved"}),null);
+});
+
+test("numeric due-day cards are accepted only for the documented step and values", async () => {
+  const run=(value,step="due_preference")=>relayAmeliaChat(body,{...options,fetchImpl:async()=>Response.json({...fixture(),journey:{version:"test",step,text:"Vencimento",qualification:{city:"Niterói"},options:[{label:"Dia",value}]}})});
+  for(const value of ["1","5","10","15","20"])assert.equal((await run(value)).status,200);
+  for(const value of ["0","2","31","01","15 ","javascript:alert(1)"])assert.equal((await run(value)).status,502);
+  for(const step of ["topics","summary","interest"])assert.equal((await run("15",step)).status,502);
+});
+
+test("complete shared-engine journey crosses relay, due recovery and invalid correction before automatic proposal", async () => {
+  const {createJourney,advanceJourney,journeyView,TOPICS}=await import("../lib/sales-journey/engine.ts");
+  let state=createJourney({interest:"personal",city:"Niterói",lives:2,ages:[35,18],previous_plan:"no",product:"carioca_10_adesao",coparticipation:"sem",modality:"adesao"});
+  const seen=[];
+  const relay=async(action="poll")=>{
+    const result=await relayAmeliaChat({...body,action},{...options,fetchImpl:async()=>Response.json({...fixture(),status:"active",journey:journeyView(state)})});
+    assert.equal(result.status,200);assert.equal(result.payload.handoff,false);return result.payload;
+  };
+  for(let i=0;i<6;i++){
+    assert.equal(state.step,"topics");seen.push(TOPICS[state.topicIndex].id);
+    await relay();state=advanceJourney(state,"sales:next").state;
+  }
+  assert.equal(state.step,"due_preference");
+  const before=await relay("recover");assert.deepEqual(before.journey.options.filter(x=>!x.value.startsWith("sales:")).map(x=>x.value),["1","5","10","15","20"]);assert.ok(before.journey.options.some(x=>x.value==="sales:skip"));
+  const invalid=advanceJourney(state,"31");state=invalid.state;
+  assert.equal(state.step,"due_preference");assert.equal(state.qualification.preferred_due_day,undefined);await relay();
+  state=advanceJourney(state,"15").state;
+  assert.equal(state.qualification.preferred_due_day,15);seen.push(TOPICS[state.topicIndex].id);await relay();
+  assert.deepEqual(seen,TOPICS.map(t=>t.id));
+  state=advanceJourney(state,"sales:next").state;assert.equal(state.step,"start_preference");await relay();
+  state=advanceJourney(state,"sales:skip").state;assert.equal(state.step,"summary");await relay();
+  state=advanceJourney(state,"sales:proposal").state;assert.equal(state.step,"proposal_requested");
+  assert.equal((await relay("recover")).journey.qualification.preferred_due_day,15);
+  assert.equal(state.proposalRequest.qualification.preferred_due_day,15);
+});
+
+test("new due31 is rejected at input and retry while legacy response recovers every field", async()=>{
+  const {parseChatQualification,parseStoredChatQualification}=await import("../lib/chat.ts");
+  const {restorePendingChatRequest}=await import("../lib/chat-recovery.ts");
+  const q={city:"Niterói",lives:2,ages:[35,18],preferred_due_day:31};
+  assert.equal(parseChatQualification(q),null);assert.deepEqual(parseStoredChatQualification(q),q);
+  const request={action:"message",department:"sales",input:"Preferência",request_id:"11111111-1111-4111-8111-111111111111",qualification:q};
+  assert.equal(parseChatRequest(request),null);
+  const now=Date.now(),expiresAt=new Date(now+60000).toISOString(),sessionRef="c".repeat(64);
+  assert.equal(restorePendingChatRequest(JSON.stringify({version:2,body:request,savedAt:now,expiresAt,sessionRef}),{department:"sales",sessionRef,expiresAt},now),null);
+  const recovered=await relayAmeliaChat({...body,action:"recover"},{...options,fetchImpl:async()=>Response.json({...fixture(),status:"active",journey:{version:"legacy",step:"summary",text:"Preferência anterior:31, a confirmar",qualification:q,options:[{label:"Corrigir",value:"sales:edit"}]}})});
+  assert.equal(recovered.status,200);assert.deepEqual(recovered.payload.journey.qualification,q);
+  for(const day of [1,5,10,15,20])assert.equal(parseChatRequest({...request,qualification:{...q,preferred_due_day:day}}).qualification.preferred_due_day,day);
 });

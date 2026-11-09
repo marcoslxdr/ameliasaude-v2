@@ -1,6 +1,9 @@
+import { isValidCnpj, isValidDesiredStartDate } from "./sales-journey/engine.ts";
+import { DUE_DAYS } from "./sales-journey/materials.ts";
 export type Department = "sales" | "service";
 export type ChatAttribution = { page_path?: string; referrer_origin?: string; utm_source?: string; utm_medium?: string; utm_campaign?: string; utm_content?: string; utm_term?: string };
-export type ChatQualification = { city?: string; lives?: number; ages?: number[]; modality?: "empresarial" | "adesao" | "indefinido" };
+export const CHAT_MESSAGE_LIMIT = 5000;
+export type ChatQualification = { product?: "carioca_10_adesao" | "carioca_10_pme"; coparticipation?: "com" | "sem"; city?: string; lives?: number; ages?: number[]; modality?: "empresarial" | "adesao" | "indefinido"; interest?: "personal" | "business"; cnpj?: string; previous_plan?: "yes" | "no" | "unknown"; previous_plan_duration?: "under_6_months" | "6_to_12_months" | "above_12_months" | "unknown"; preferred_due_day?: number; desired_start_date?: string };
 export type ChatAction = "start" | "reset" | "recover" | "message" | "poll" | "register" | "handoff" | "request_review" | "email_code" | "verify_email" | "history" | "earlier_messages" | "resume" | "logout";
 export type ChatRequest = { action: ChatAction; department: Department; token?: string; input?: string; request_id?: string; attribution?: ChatAttribution; qualification?: ChatQualification; contact?: { name: string; phone: string; email: string; consent: true }; email?: string; phone?: string; code?: string; conversation_id?: string; cursor?: string };
 export type ChatOption = { label: string; value: string };
@@ -8,7 +11,8 @@ export type ChatMessage = { id: string; text: string; quickReplies?: ChatOption[
 export type ChatStatus = "active" | "waiting_human" | "in_progress" | "closed";
 export type ChatConversation = { id: string; updated_at: string; status: ChatStatus; preview: string; can_resume: boolean };
 export type ChatVerification = { enabled: boolean; status: "unverified" | "pending" | "verified"; resend_after?: number; expires_at?: string };
-export type ChatResponse = { token?: string; messages: ChatMessage[]; input: { kind: string; placeholder: string; hint?: string } | null; handoff: boolean; crmSynced: boolean; brand: "amelia"; department: Department; agentMessages?: { id: string; text: string }[]; history?: { id: string; text: string; role: "bot" | "user" | "agent" }[]; registered?: boolean; status?: ChatStatus; read_only?: boolean; conversation_id?: string; session_expires_at?: string; verification?: ChatVerification; conversations?: ChatConversation[]; conversations_cursor?: string | null; history_cursor?: string | null; waiting_since?: string | null };
+export type ChatJourney = { version: string; step: string; text: string; options: ChatOption[]; qualification: ChatQualification };
+export type ChatResponse = { journey?: ChatJourney; token?: string; messages: ChatMessage[]; input: { kind: string; placeholder: string; hint?: string } | null; handoff: boolean; crmSynced: boolean; brand: "amelia"; department: Department; agentMessages?: { id: string; text: string }[]; history?: { id: string; text: string; role: "bot" | "user" | "agent" }[]; registered?: boolean; status?: ChatStatus; read_only?: boolean; conversation_id?: string; session_expires_at?: string; session_ref?: string; verification?: ChatVerification; conversations?: ChatConversation[]; conversations_cursor?: string | null; history_cursor?: string | null; waiting_since?: string | null };
 
 const campaignKeys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"] as const;
 
@@ -38,10 +42,20 @@ export function captureChatAttribution(href: string, referrer: string): ChatAttr
   } catch { return undefined; }
 }
 
-export function parseChatQualification(value: unknown): ChatQualification | null {
+/** Read historical preferences without treating them as current available options. */
+export function parseStoredChatQualification(value: unknown): ChatQualification | null {
   if (!value || typeof value !== "object" || Array.isArray(value)) return null;
   const input = value as Record<string, unknown>;
+  if (Object.keys(input).some(key => !["city", "lives", "ages", "modality", "interest", "cnpj", "previous_plan", "preferred_due_day", "desired_start_date", "product", "coparticipation", "previous_plan_duration"].includes(key))) return null;
   const result: ChatQualification = {};
+  if (input.product !== undefined) {
+    if (!["carioca_10_adesao", "carioca_10_pme"].includes(String(input.product))) return null;
+    result.product = input.product as ChatQualification["product"];
+  }
+  if (input.coparticipation !== undefined) {
+    if (!["com", "sem"].includes(String(input.coparticipation))) return null;
+    result.coparticipation = input.coparticipation as ChatQualification["coparticipation"];
+  }
   if (input.city !== undefined) {
     if (typeof input.city !== "string" || input.city.trim().length < 2 || input.city.length > 100) return null;
     result.city = input.city.trim();
@@ -58,8 +72,39 @@ export function parseChatQualification(value: unknown): ChatQualification | null
     if (!["empresarial", "adesao", "indefinido"].includes(String(input.modality))) return null;
     result.modality = input.modality as ChatQualification["modality"];
   }
+  if (input.interest !== undefined) {
+    if (!["personal", "business"].includes(String(input.interest))) return null;
+    result.interest = input.interest as ChatQualification["interest"];
+  }
+  if (input.cnpj !== undefined) {
+    if (typeof input.cnpj !== "string" || !isValidCnpj(input.cnpj)) return null;
+    result.cnpj = input.cnpj.replace(/\D/g, "");
+  }
+  if (input.previous_plan !== undefined) {
+    if (!["yes", "no", "unknown"].includes(String(input.previous_plan))) return null;
+    result.previous_plan = input.previous_plan as ChatQualification["previous_plan"];
+  }
+  if (input.previous_plan_duration !== undefined) {
+    if (!["under_6_months", "6_to_12_months", "above_12_months", "unknown"].includes(String(input.previous_plan_duration))) return null;
+    result.previous_plan_duration = input.previous_plan_duration as ChatQualification["previous_plan_duration"];
+  }
+  if (input.preferred_due_day !== undefined) {
+    if (!Number.isInteger(input.preferred_due_day) || Number(input.preferred_due_day) < 1 || Number(input.preferred_due_day) > 31) return null;
+    result.preferred_due_day = Number(input.preferred_due_day);
+  }
+  if (input.desired_start_date !== undefined) {
+    if (typeof input.desired_start_date !== "string" || !isValidDesiredStartDate(input.desired_start_date)) return null;
+    result.desired_start_date = input.desired_start_date;
+  }
+  if (result.product && result.modality && result.modality !== "indefinido" && result.modality !== (result.product === "carioca_10_adesao" ? "adesao" : "empresarial")) return null;
   if (result.lives && result.ages && result.ages.length !== result.lives) return null;
   return Object.keys(result).length ? result : null;
+}
+
+/** New declarations and retries must use a documented due day. */
+export function parseChatQualification(value: unknown): ChatQualification | null {
+  const parsed = parseStoredChatQualification(value);
+  return parsed && (parsed.preferred_due_day === undefined || DUE_DAYS.some(day => day === parsed.preferred_due_day)) ? parsed : null;
 }
 
 export function isChatRequestSameOrigin(request: Request): boolean {
@@ -81,7 +126,7 @@ export function parseChatRequest(body: unknown): ChatRequest | null {
   // Modern browser requests use HttpOnly cookies. A token is accepted solely
   // to migrate the previous tab-scoped session and is never returned publicly.
   if (value.token !== undefined && (typeof value.token !== "string" || !/^[a-f0-9]{64}$/.test(value.token))) return null;
-  if (value.action === "message" && (typeof value.input !== "string" || !value.input.trim() || value.input.length > 1000)) return null;
+  if (value.action === "message" && (typeof value.input !== "string" || !value.input.trim() || value.input.length > (value.department === "sales" ? CHAT_MESSAGE_LIMIT : 1000))) return null;
   if (value.request_id !== undefined && (typeof value.request_id !== "string" || !uuid.test(value.request_id))) return null;
   if (["message", "register", "handoff", "request_review"].includes(String(value.action)) && !value.request_id) return null;
   if (value.conversation_id !== undefined && (typeof value.conversation_id !== "string" || !uuid.test(value.conversation_id))) return null;
@@ -95,7 +140,7 @@ export function parseChatRequest(body: unknown): ChatRequest | null {
   }
   if (value.action === "email_code" && (typeof value.email !== "string" || value.email.length > 254 || !emailPattern.test(value.email) || (typeof value.phone !== "string" || !phonePattern.test(value.phone)))) return null;
   if (value.action === "verify_email" && (typeof value.code !== "string" || !/^\d{6}$/.test(value.code))) return null;
-  const qualification = value.qualification === undefined ? undefined : value.action === "message" ? parseChatQualification(value.qualification) : null;
+  const qualification = value.qualification === undefined ? undefined : ["message", "register"].includes(String(value.action)) ? parseChatQualification(value.qualification) : null;
   if (qualification === null) return null;
   const attribution = ["start", "reset", "register", "request_review"].includes(String(value.action)) ? sanitizeChatAttribution(value.attribution) : undefined;
   return { action: value.action as ChatAction, department: value.department as Department,
@@ -162,6 +207,7 @@ export async function relayAmeliaChat(body: ChatRequest, options: { endpoint?: s
     if (data.history && (!Array.isArray(data.history) || data.history.length > 60 || data.history.some(m => !m || typeof m.id !== "string" || typeof m.text !== "string" || m.text.length > 10000 || !["bot","user","agent"].includes(m.role)))) return {status:502,payload:{error:"invalid_chat_response"}};
     if (data.status !== undefined && !["active", "waiting_human", "in_progress", "closed"].includes(data.status)) return { status: 502, payload: { error: "invalid_chat_response" } };
     if (data.conversation_id !== undefined && !uuid.test(data.conversation_id)) return { status: 502, payload: { error: "invalid_chat_response" } };
+    if (data.session_ref !== undefined && (typeof data.session_ref !== "string" || !/^[a-f0-9]{64}$/.test(data.session_ref))) return { status: 502, payload: { error: "invalid_chat_response" } };
     if (data.session_expires_at !== undefined && !Number.isFinite(Date.parse(data.session_expires_at))) return { status: 502, payload: { error: "invalid_chat_response" } };
     if (data.verification && (typeof data.verification.enabled !== "boolean" || !["unverified", "pending", "verified"].includes(data.verification.status))) return { status: 502, payload: { error: "invalid_chat_response" } };
     if (data.conversations && (data.verification?.status !== "verified" || !Array.isArray(data.conversations) || data.conversations.length > 20 || data.conversations.some(c => !c || !uuid.test(c.id) || !Number.isFinite(Date.parse(c.updated_at)) || !["active", "waiting_human", "in_progress", "closed"].includes(c.status) || typeof c.preview !== "string" || c.preview.length > 500 || typeof c.can_resume !== "boolean"))) return { status: 502, payload: { error: "invalid_chat_response" } };
@@ -169,15 +215,36 @@ export async function relayAmeliaChat(body: ChatRequest, options: { endpoint?: s
       if (cursor !== undefined && cursor !== null && (typeof cursor !== "string" || !cursorPattern.test(cursor))) return { status: 502, payload: { error: "invalid_chat_response" } };
     }
     if (data.waiting_since !== undefined && data.waiting_since !== null && (typeof data.waiting_since !== "string" || !Number.isFinite(Date.parse(data.waiting_since)))) return { status: 502, payload: { error: "invalid_chat_response" } };
+    let journey: ChatJourney | undefined;
+    if (data.journey !== undefined) {
+      const value = data.journey;
+      if (!value || typeof value.version !== "string" || value.version.length > 100 || typeof value.step !== "string" || value.step.length > 50 || typeof value.text !== "string" || value.text.length > 10000 || !safeOptions(value.options) || !value.qualification || typeof value.qualification !== "object" || Array.isArray(value.qualification)) return { status: 502, payload: { error: "invalid_chat_response" } };
+      const qualification = Object.keys(value.qualification).length ? parseStoredChatQualification(value.qualification) : {};
+      if (!qualification || value.options.some(option => !/^(?:sales:[a-z_:]+|sales:product:carioca_10_(?:adesao|pme))$/.test(option.value) && !(value.step === "due_preference" && DUE_DAYS.some(day => option.value === String(day))))) return { status: 502, payload: { error: "invalid_chat_response" } };
+      journey = { version: value.version, step: value.step, text: value.text, qualification, options: data.status === "closed" || data.status === "in_progress" || data.status === "waiting_human" || data.handoff || data.read_only ? [] : value.options.map(({ label, value }) => ({ label, value })) };
+    }
     // Only explicitly reviewed fields can cross the public boundary.
-    return { status: 200, payload: { token: data.token,
+    return { status: 200, payload: { token: data.token, ...(journey ? { journey } : {}),
       ...(data.conversations_cursor !== undefined ? { conversations_cursor: data.conversations_cursor } : {}),
       ...(data.history_cursor !== undefined ? { history_cursor: data.history_cursor } : {}),
       ...(data.waiting_since !== undefined ? { waiting_since: data.status === "waiting_human" ? data.waiting_since : null } : {}),
       ...(data.status ? { status: data.status } : {}), read_only: data.read_only === true || data.status === "closed",
       ...(data.conversation_id ? { conversation_id: data.conversation_id } : {}),
+      ...(data.session_ref ? { session_ref: data.session_ref } : {}),
       ...(data.session_expires_at ? { session_expires_at: data.session_expires_at } : {}),
       ...(data.verification ? { verification: { enabled: data.verification.enabled, status: data.verification.status, ...(Number.isFinite(data.verification.resend_after) ? { resend_after: Math.max(0, Math.min(data.verification.resend_after!, 3600)) } : {}), ...(typeof data.verification.expires_at === "string" ? { expires_at: data.verification.expires_at } : {}) } } : {}),
       ...(data.conversations ? { conversations: data.conversations.map(({ id, updated_at, status, preview, can_resume }) => ({ id, updated_at, status, preview, can_resume: can_resume && status !== "closed" })) } : {}), ...(data.history ? {history:data.history.map(({id,text,role})=>({id,text,role}))} : {}), registered:data.registered === true, brand: "amelia", department: body.department, messages: data.messages.map(publicMessage), input: data.input ? { kind: data.input.kind, placeholder: data.input.placeholder, ...(typeof data.input.hint === "string" ? { hint: data.input.hint } : {}) } : null, handoff: data.handoff === true, crmSynced: data.crmSynced === true, agentMessages: (data.agentMessages ?? []).map(({ id, text }) => ({ id, text })) } };
   } catch { return { status: 503, payload: { error: "chat_unavailable" } }; }
+}
+
+/** Carry only sanitized campaign values across our navigation; never propagate visitor identifiers. */
+export function campaignDestination(href: string, currentHref: string): URL {
+  const current = new URL(currentHref);
+  const destination = new URL(href, current.origin);
+  if (destination.origin !== current.origin) return destination;
+  const campaign = captureChatAttribution(currentHref, "");
+  for (const key of campaignKeys) {
+    if (!destination.searchParams.has(key) && campaign?.[key]) destination.searchParams.set(key, campaign[key]!);
+  }
+  return destination;
 }
