@@ -350,7 +350,7 @@ test("expired or revoked sessions clear browser bindings, while conflicts keep t
 
 test("commercial qualification validates CNPJ, dates and preferences without inventing modality", () => {
   const base = { action: "message", department: "sales", input: "sales:resume", request_id: "11111111-1111-4111-8111-111111111111" };
-  const qualification = { interest: "business", cnpj: "11.222.333/0001-81", city: "Niterói", lives: 2, ages: [0, 35], previous_plan: "no", preferred_due_day: 10, desired_start_date: "2026-11-20", secret: "discard" };
+  const qualification = { interest: "business", cnpj: "11.222.333/0001-81", city: "Niterói", lives: 2, ages: [0, 35], previous_plan: "no", preferred_due_day: 10, desired_start_date: "2026-11-20" };
   const parsed = parseChatRequest({ ...base, qualification });
   assert.equal(parsed.qualification.cnpj, "11222333000181");
   assert.equal(parsed.qualification.modality, undefined);
@@ -385,4 +385,52 @@ test("a write waits for an in-flight poll to release the shared server lock", as
   assert.equal(await mutation, 'sent');
   assert.deepEqual(events, ['write']);
   assert.equal(await afterChatPoll(Promise.reject(new Error('read failure')), async () => 'retry preserved'), 'retry preserved');
+});
+
+
+test("campaign navigation preserves only safe UTM across anchors and routes", async () => {
+  const { campaignDestination, captureChatAttribution } = await import("../lib/chat.ts");
+  const source = "https://www.ameliasaude.com.br/landing?utm_source=teste&utm_medium=cpc&utm_campaign=avaliacao&email=pessoa@example.com&gclid=secret&utm_content=21999999999#old";
+  for (const target of ["/landing#lp-cotacao", "/landing#lp-duvidas", "/planos"]) {
+    const destination = campaignDestination(target, source);
+    assert.deepEqual(captureChatAttribution(destination.href, ""), {page_path:destination.pathname,utm_source:"teste",utm_medium:"cpc",utm_campaign:"avaliacao"});
+    assert.equal(destination.search.includes("email"),false);
+    assert.equal(destination.search.includes("gclid"),false);
+    assert.equal(destination.search.includes("utm_content"),false);
+  }
+  assert.equal(campaignDestination("https://external.example/path", source).search, "");
+  assert.equal(campaignDestination("/landing?utm_source=own",source).searchParams.get("utm_source"),"own");
+});
+
+test("registration qualification is strict and cannot carry price or pipeline control", () => {
+  const registration={action:"register",department:"sales",request_id:id1,contact:{name:"Teste",phone:"+442079460000",email:"teste@example.com",consent:true},qualification:{interest:"personal",city:"Niterói",lives:1,ages:[35]}};
+  assert.deepEqual(parseChatRequest(registration).qualification,registration.qualification);
+  for(const field of ["price","status","stage_id","secret"]) assert.equal(parseChatRequest({...registration,qualification:{...registration.qualification,[field]:"injected"}}),null);
+  assert.equal(parseChatRequest({...registration,action:"request_review"}),null);
+});
+
+test("v2 reload retry binds exact registration and qualification to session expiry and conversation", async () => {
+  const {restorePendingChatRequest}=await import("../lib/chat-recovery.ts");
+  const now=Date.now(), expiresAt=new Date(now+3600000).toISOString();
+  const sessionRef="c".repeat(64);
+  const scope={department:"sales",sessionRef,expiresAt,conversationId:id1};
+  const pending={version:2,savedAt:now,sessionRef,expiresAt,body:{action:"register",department:"sales",request_id:id1,contact:{name:"Teste",phone:"+442079460000",email:"teste@example.com",consent:true},qualification:{interest:"personal",city:"Niterói",lives:1,ages:[35]}}};
+  const raw=JSON.stringify(pending);
+  assert.deepEqual(restorePendingChatRequest(raw,scope,now),pending);
+  // A committed registration recovered after response loss legitimately gains a conversation.
+  assert.deepEqual(restorePendingChatRequest(raw,{...scope,conversationId:undefined},now),pending);
+  for(const patch of [{sessionRef:"d".repeat(64)},{sessionRef:undefined},{department:"service"},{expiresAt:new Date(now+7200000).toISOString()}]) assert.equal(restorePendingChatRequest(raw,{...scope,...patch},now),null);
+  assert.equal(restorePendingChatRequest(raw,scope,now+3600000),null);
+  assert.equal(restorePendingChatRequest(JSON.stringify({...pending,savedAt:now+1}),scope,now),null);
+  assert.equal(restorePendingChatRequest(JSON.stringify({...pending,version:undefined}),scope,now),null);
+  const bound={...pending,body:{...pending.body,conversation_id:id1}};
+  assert.equal(restorePendingChatRequest(JSON.stringify(bound),{...scope,conversationId:"22222222-2222-4222-8222-222222222222"},now),null);
+  assert.equal(restorePendingChatRequest(JSON.stringify({...pending,body:{...pending.body,qualification:{status:"won"}}}),scope,now),null);
+});
+
+test("relay exposes a validated noncredential retry reference without broad metadata",async()=>{
+  const session_ref="c".repeat(64);
+  const run=ref=>relayAmeliaChat(body,{...options,fetchImpl:async()=>Response.json({...fixture(),session_ref:ref,session_expires_at:new Date(Date.now()+3600000).toISOString()})});
+  assert.equal((await run(session_ref)).payload.session_ref,session_ref);
+  assert.equal((await run("unsafe")).status,502);
 });

@@ -1,4 +1,4 @@
-export const REVIEW_VERSION = '2026-11-09.2';
+export const REVIEW_VERSION = '2026-11-09.3';
 export const REVIEW_DATE = '09/11/2026';
 export const REVIEW_CASES = [
   { id: 'personal', area: 'Modelo', title: 'Pessoa / família completa a qualificação', expected: 'Coleta município, pessoas, idades e plano anterior; não presume plano individual.' },
@@ -10,7 +10,8 @@ export const REVIEW_CASES = [
   { id: 'quote', area: 'Integração', title: 'Cotação corresponde à tabela oficial', expected: 'Faixas e produto corretos; fonte ausente ou vencida impede preço inventado.' },
   { id: 'form', area: 'Integração', title: 'Formulário continua no chat sem repetir cadastro', expected: 'Contato consentido e qualificação reaproveitados; campanha preservada.' },
   { id: 'duplicate', area: 'Integração', title: 'Reenvio e recarga não duplicam contato ou oportunidade', expected: 'Retoma a mesma jornada e mantém vínculos no CRM.' },
-  { id: 'handoff', area: 'Integração', title: 'Vendedor recebe histórico e resumo e assume atendimento', expected: 'Bot para durante atendimento humano e só retorna após devolução.' },
+  { id: 'autonomous', area: 'Integração', title: 'Jornada solicita proposta sem exigir vendedor', expected: 'Após qualificação, explicações e cotação aprovada, o bot registra a solicitação e continua disponível; reenvio não duplica, fonte ausente não inventa nem transfere automaticamente, pedido não vira contrato ou Ganho.' },
+  { id: 'handoff', area: 'Integração', title: 'Quando solicitado, vendedor recebe histórico e resumo e assume atendimento', expected: 'Bot para durante atendimento humano e só retorna após devolução.' },
   { id: 'administrative', area: 'Integração', title: 'Pedido administrativo não vira venda', expected: 'Solicitação de boleto ou carteirinha recebe canal de atendimento adequado.' },
   { id: 'privacy', area: 'Integração', title: 'Histórico de outro contato fica inacessível', expected: 'Troca de identidade exige novo vínculo e não expõe conversa anterior.' },
   { id: 'responsive', area: 'Interface', title: 'Celular, teclado, documentos e rede funcionam', expected: 'Sem cortes ou rolagem horizontal; foco visível e documentos legíveis.' },

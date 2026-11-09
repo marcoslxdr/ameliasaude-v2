@@ -7,6 +7,7 @@ import { QuoteForm } from './QuoteForm.jsx';
 import { Footer } from './Footer.jsx';
 import { ClosingStack } from './ClosingStack.jsx';
 import { LandingPage } from './LandingPage.jsx';
+import { campaignDestination } from '@/lib/chat';
 import { AmeliaChatWidget } from '@/components/chat/AmeliaChatWidget';
 import './styles.css';
 
@@ -73,7 +74,7 @@ export function App({initialPath = '/'}) {
     return chatRef.current.open(trigger instanceof HTMLElement ? trigger : headerQuoteRef.current, prefill);
   },[]);
   const navigate = useCallback(href=>{
-    const destination = new URL(href,window.location.origin);
+    const destination = campaignDestination(href,window.location.href);
     const routeChanged = destination.pathname!==window.location.pathname;
     if(routeChanged){window.location.assign(destination.pathname+destination.search+destination.hash);return;}
     if(destination.href!==window.location.href)window.history.pushState({},'',destination.pathname+destination.search+destination.hash);

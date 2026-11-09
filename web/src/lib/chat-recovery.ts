@@ -1,6 +1,15 @@
-import type { ChatRequest } from "./chat";
+import { parseChatRequest, type ChatRequest, type Department } from "./chat.ts";
 
-export type PendingChatRequest = { body: ChatRequest; savedAt: number };
+export type PendingChatRequest = { body: ChatRequest; savedAt: number; version?: 2; sessionRef?: string; expiresAt?: string };
+export type PendingChatScope = { department: Department; sessionRef?: string; expiresAt?: string; conversationId?: string };
+
+/** Only an unconfirmed write from this exact HttpOnly session may be restored. */
+export function restorePendingChatRequest(raw: string | null, scope: PendingChatScope, now = Date.now()): PendingChatRequest | null {
+  const saved = readPendingChatRequest(raw, null, now);
+  if (!saved || saved.version !== 2 || !scope.sessionRef || !/^[a-f0-9]{64}$/.test(scope.sessionRef) || saved.sessionRef !== scope.sessionRef || saved.expiresAt !== scope.expiresAt || !saved.expiresAt || !Number.isFinite(Date.parse(saved.expiresAt)) || Date.parse(saved.expiresAt) <= now || saved.body.department !== scope.department || saved.body.token || (saved.body.conversation_id && saved.body.conversation_id !== scope.conversationId)) return null;
+  const body = parseChatRequest(saved.body);
+  return body ? { version: 2, body, savedAt: saved.savedAt, sessionRef: saved.sessionRef, expiresAt: saved.expiresAt } : null;
+}
 const maxAge = 24 * 60 * 60 * 1000;
 
 export function isTerminalChatError(error: unknown): boolean {
@@ -17,6 +26,7 @@ export function readPendingChatRequest(raw: string | null, token: string | null,
   try {
     const value = JSON.parse(raw) as PendingChatRequest;
     const body = value.body;
+    if (value.expiresAt && (!Number.isFinite(Date.parse(value.expiresAt)) || Date.parse(value.expiresAt) <= now)) return null;
     if (!value || !Number.isFinite(value.savedAt) || now - value.savedAt > maxAge || value.savedAt > now || !body || (token !== null && body.token !== token) || !["sales", "service"].includes(body.department) || !["message", "handoff", "register", "request_review"].includes(body.action) || typeof body.request_id !== "string" || !/^[0-9a-f-]{36}$/i.test(body.request_id)) return null;
     if (body.action === "message" && (typeof body.input !== "string" || !body.input.trim() || body.input.length > 1000)) return null;
     if (["register", "request_review"].includes(body.action)) {

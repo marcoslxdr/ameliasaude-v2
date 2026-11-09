@@ -10,7 +10,7 @@ export type ChatStatus = "active" | "waiting_human" | "in_progress" | "closed";
 export type ChatConversation = { id: string; updated_at: string; status: ChatStatus; preview: string; can_resume: boolean };
 export type ChatVerification = { enabled: boolean; status: "unverified" | "pending" | "verified"; resend_after?: number; expires_at?: string };
 export type ChatJourney = { version: string; step: string; text: string; options: ChatOption[]; qualification: ChatQualification };
-export type ChatResponse = { journey?: ChatJourney; token?: string; messages: ChatMessage[]; input: { kind: string; placeholder: string; hint?: string } | null; handoff: boolean; crmSynced: boolean; brand: "amelia"; department: Department; agentMessages?: { id: string; text: string }[]; history?: { id: string; text: string; role: "bot" | "user" | "agent" }[]; registered?: boolean; status?: ChatStatus; read_only?: boolean; conversation_id?: string; session_expires_at?: string; verification?: ChatVerification; conversations?: ChatConversation[]; conversations_cursor?: string | null; history_cursor?: string | null; waiting_since?: string | null };
+export type ChatResponse = { journey?: ChatJourney; token?: string; messages: ChatMessage[]; input: { kind: string; placeholder: string; hint?: string } | null; handoff: boolean; crmSynced: boolean; brand: "amelia"; department: Department; agentMessages?: { id: string; text: string }[]; history?: { id: string; text: string; role: "bot" | "user" | "agent" }[]; registered?: boolean; status?: ChatStatus; read_only?: boolean; conversation_id?: string; session_expires_at?: string; session_ref?: string; verification?: ChatVerification; conversations?: ChatConversation[]; conversations_cursor?: string | null; history_cursor?: string | null; waiting_since?: string | null };
 
 const campaignKeys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"] as const;
 
@@ -43,6 +43,7 @@ export function captureChatAttribution(href: string, referrer: string): ChatAttr
 export function parseChatQualification(value: unknown): ChatQualification | null {
   if (!value || typeof value !== "object" || Array.isArray(value)) return null;
   const input = value as Record<string, unknown>;
+  if (Object.keys(input).some(key => !["city", "lives", "ages", "modality", "interest", "cnpj", "previous_plan", "preferred_due_day", "desired_start_date"].includes(key))) return null;
   const result: ChatQualification = {};
   if (input.city !== undefined) {
     if (typeof input.city !== "string" || input.city.trim().length < 2 || input.city.length > 100) return null;
@@ -117,7 +118,7 @@ export function parseChatRequest(body: unknown): ChatRequest | null {
   }
   if (value.action === "email_code" && (typeof value.email !== "string" || value.email.length > 254 || !emailPattern.test(value.email) || (typeof value.phone !== "string" || !phonePattern.test(value.phone)))) return null;
   if (value.action === "verify_email" && (typeof value.code !== "string" || !/^\d{6}$/.test(value.code))) return null;
-  const qualification = value.qualification === undefined ? undefined : value.action === "message" ? parseChatQualification(value.qualification) : null;
+  const qualification = value.qualification === undefined ? undefined : ["message", "register"].includes(String(value.action)) ? parseChatQualification(value.qualification) : null;
   if (qualification === null) return null;
   const attribution = ["start", "reset", "register", "request_review"].includes(String(value.action)) ? sanitizeChatAttribution(value.attribution) : undefined;
   return { action: value.action as ChatAction, department: value.department as Department,
@@ -184,6 +185,7 @@ export async function relayAmeliaChat(body: ChatRequest, options: { endpoint?: s
     if (data.history && (!Array.isArray(data.history) || data.history.length > 60 || data.history.some(m => !m || typeof m.id !== "string" || typeof m.text !== "string" || m.text.length > 10000 || !["bot","user","agent"].includes(m.role)))) return {status:502,payload:{error:"invalid_chat_response"}};
     if (data.status !== undefined && !["active", "waiting_human", "in_progress", "closed"].includes(data.status)) return { status: 502, payload: { error: "invalid_chat_response" } };
     if (data.conversation_id !== undefined && !uuid.test(data.conversation_id)) return { status: 502, payload: { error: "invalid_chat_response" } };
+    if (data.session_ref !== undefined && (typeof data.session_ref !== "string" || !/^[a-f0-9]{64}$/.test(data.session_ref))) return { status: 502, payload: { error: "invalid_chat_response" } };
     if (data.session_expires_at !== undefined && !Number.isFinite(Date.parse(data.session_expires_at))) return { status: 502, payload: { error: "invalid_chat_response" } };
     if (data.verification && (typeof data.verification.enabled !== "boolean" || !["unverified", "pending", "verified"].includes(data.verification.status))) return { status: 502, payload: { error: "invalid_chat_response" } };
     if (data.conversations && (data.verification?.status !== "verified" || !Array.isArray(data.conversations) || data.conversations.length > 20 || data.conversations.some(c => !c || !uuid.test(c.id) || !Number.isFinite(Date.parse(c.updated_at)) || !["active", "waiting_human", "in_progress", "closed"].includes(c.status) || typeof c.preview !== "string" || c.preview.length > 500 || typeof c.can_resume !== "boolean"))) return { status: 502, payload: { error: "invalid_chat_response" } };
@@ -206,8 +208,21 @@ export async function relayAmeliaChat(body: ChatRequest, options: { endpoint?: s
       ...(data.waiting_since !== undefined ? { waiting_since: data.status === "waiting_human" ? data.waiting_since : null } : {}),
       ...(data.status ? { status: data.status } : {}), read_only: data.read_only === true || data.status === "closed",
       ...(data.conversation_id ? { conversation_id: data.conversation_id } : {}),
+      ...(data.session_ref ? { session_ref: data.session_ref } : {}),
       ...(data.session_expires_at ? { session_expires_at: data.session_expires_at } : {}),
       ...(data.verification ? { verification: { enabled: data.verification.enabled, status: data.verification.status, ...(Number.isFinite(data.verification.resend_after) ? { resend_after: Math.max(0, Math.min(data.verification.resend_after!, 3600)) } : {}), ...(typeof data.verification.expires_at === "string" ? { expires_at: data.verification.expires_at } : {}) } } : {}),
       ...(data.conversations ? { conversations: data.conversations.map(({ id, updated_at, status, preview, can_resume }) => ({ id, updated_at, status, preview, can_resume: can_resume && status !== "closed" })) } : {}), ...(data.history ? {history:data.history.map(({id,text,role})=>({id,text,role}))} : {}), registered:data.registered === true, brand: "amelia", department: body.department, messages: data.messages.map(publicMessage), input: data.input ? { kind: data.input.kind, placeholder: data.input.placeholder, ...(typeof data.input.hint === "string" ? { hint: data.input.hint } : {}) } : null, handoff: data.handoff === true, crmSynced: data.crmSynced === true, agentMessages: (data.agentMessages ?? []).map(({ id, text }) => ({ id, text })) } };
   } catch { return { status: 503, payload: { error: "chat_unavailable" } }; }
+}
+
+/** Carry only sanitized campaign values across our navigation; never propagate visitor identifiers. */
+export function campaignDestination(href: string, currentHref: string): URL {
+  const current = new URL(currentHref);
+  const destination = new URL(href, current.origin);
+  if (destination.origin !== current.origin) return destination;
+  const campaign = captureChatAttribution(currentHref, "");
+  for (const key of campaignKeys) {
+    if (!destination.searchParams.has(key) && campaign?.[key]) destination.searchParams.set(key, campaign[key]!);
+  }
+  return destination;
 }

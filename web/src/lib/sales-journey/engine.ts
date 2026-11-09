@@ -1,5 +1,5 @@
 /** One deterministic sales script for the bot and approval simulator. No commercial prices live here. */
-export const JOURNEY_VERSION = "amelia-commercial-2026-11-09.1";
+export const JOURNEY_VERSION = "amelia-commercial-2026-11-09.2";
 export type JourneyQualification = {
   interest?: "personal" | "business";
   cnpj?: string;
@@ -47,7 +47,7 @@ export const TOPICS = [
     id: "area",
     title: "Abrangência geográfica",
     summary: "Abrangência regional e municípios",
-    answer: `A referência de abrangência regional reúne: ${MUNICIPALITIES.join(", ")}. A elegibilidade e o atendimento dependem do produto; a lista ainda precisa de confirmação comercial. Atendimento fora da área exige esclarecimento da equipe.`,
+    answer: `A referência de abrangência regional reúne: ${MUNICIPALITIES.join(", ")}. A elegibilidade e o atendimento dependem do produto; a lista ainda precisa de confirmação comercial. Fora dessa referência, a disponibilidade fica pendente de uma fonte oficial; você pode continuar a consulta por aqui.`,
     source: "Materiais existentes da Amélia — confirmação de vigência pendente",
     status: "pending",
   },
@@ -74,7 +74,7 @@ export const TOPICS = [
     title: "Vencimentos",
     summary: "Preferência de vencimento",
     answer:
-      "Posso registrar seu dia de vencimento preferido. As datas disponíveis precisam ser confirmadas pela equipe; a preferência não representa alteração ou aprovação contratual.",
+      "Posso registrar seu dia de vencimento preferido. As datas disponíveis dependem da tabela oficial aprovada; a preferência não representa alteração ou aprovação contratual.",
     source: "Datas comerciais disponíveis — pendentes",
     status: "pending",
   },
@@ -100,6 +100,7 @@ export type JourneyStep =
   | "due_preference"
   | "start_preference"
   | "summary"
+  | "proposal_requested"
   | "closed";
 export type JourneyState = {
   version: string;
@@ -112,12 +113,18 @@ export type JourneyState = {
   resumeStep?: JourneyStep;
   menu?: boolean;
   inspecting?: TopicId;
+  /** A request of interest, never an issued proposal, policy or completed sale. */
+  proposalRequest?: {
+    status: "requested";
+    qualification: JourneyQualification;
+    requestedOn?: string;
+  };
 };
 export type JourneyResult = {
   state: JourneyState;
   text: string;
   options: JourneyOption[];
-  effect?: "question" | "quote" | "handoff" | "close";
+  effect?: "question" | "quote" | "proposal" | "handoff" | "close";
 };
 export type JourneyContext = { today?: string; topicAnswers?: Partial<Record<TopicId, string>> };
 const normalize = (value: string) =>
@@ -235,7 +242,7 @@ export function journeyView(state: JourneyState, context: JourneyContext = {}) {
       state.qualification.city &&
       !MUNICIPALITIES.some((city) => normalize(city) === normalize(state.qualification.city!))
     ) {
-      text += `\n\nO município informado, ${state.qualification.city}, não consta nessa referência regional. A equipe precisa esclarecer a disponibilidade do produto e o atendimento nessa localidade antes de uma proposta.`;
+      text += `\n\nO município informado, ${state.qualification.city}, não consta nessa referência regional. A disponibilidade do produto e do atendimento nessa localidade continua pendente de uma fonte oficial. Você pode seguir a consulta e registrar seu interesse sem transferência automática.`;
     }
     options = [
       option(
@@ -281,17 +288,30 @@ export function journeyView(state: JourneyState, context: JourneyContext = {}) {
         break;
       case "start_preference":
         text =
-          "Quando gostaria de iniciar? Informe DD/MM/AAAA. A vigência será confirmada pela equipe.";
+          "Quando gostaria de iniciar? Informe DD/MM/AAAA. A data é apenas desejada; a vigência depende das condições oficiais.";
         options = [option("Definir depois", "skip")];
         break;
       case "summary":
         text = `${journeySummary(state.qualification)}\n\nAssuntos apresentados: ${state.visited.map((id) => TOPICS.find((t) => t.id === id)?.title).join(", ") || "nenhum"}.\nCondições pendentes de validação serão confirmadas antes da proposta. Como deseja continuar?`;
         options = [
           option("Consultar cotação", "quote"),
-          option("Solicitar proposta / vendedor", "handoff"),
+          option("Solicitar proposta", "proposal"),
           option("Encerrar", "close"),
         ];
         break;
+      case "proposal_requested": {
+        const requested = state.proposalRequest?.qualification;
+        const changed = requested && !sameQualification(requested, state.qualification);
+        text = changed
+          ? `Você corrigiu os dados depois de solicitar a proposta. Confira as informações atuais e confirme a atualização do pedido:\n${journeySummary(state.qualification)}\n\nO pedido anterior permanece registrado até sua confirmação. Nenhuma contratação ou cobertura foi confirmada.`
+          : `Seu pedido de proposta está registrado para estes dados:\n${journeySummary(requested ?? state.qualification)}\n\nUma proposta formal depende de condições comerciais aprovadas e da etapa de contratação. Este pedido não é um contrato, não confirma preço, elegibilidade, início de vigência ou cobertura. As informações ainda não aprovadas continuam pendentes. Você pode consultar a cotação, tirar dúvidas ou corrigir dados aqui; o atendimento continua automático.`;
+        options = [
+          ...(changed ? [option("Confirmar atualização do pedido", "proposal")] : []),
+          option("Consultar cotação", "quote"),
+          option("Encerrar", "close"),
+        ];
+        break;
+      }
       case "closed":
         text = "Conversa encerrada. Obrigado pelo interesse na Amélia Saúde.";
         break;
@@ -306,6 +326,21 @@ export function journeyView(state: JourneyState, context: JourneyContext = {}) {
     options,
   };
 }
+const qualificationKeys: (keyof JourneyQualification)[] = [
+  "interest",
+  "cnpj",
+  "city",
+  "lives",
+  "ages",
+  "modality",
+  "previous_plan",
+  "preferred_due_day",
+  "desired_start_date",
+];
+function sameQualification(a: JourneyQualification, b: JourneyQualification): boolean {
+  return qualificationKeys.every((key) => JSON.stringify(a[key]) === JSON.stringify(b[key]));
+}
+
 export function advanceJourney(
   original: JourneyState,
   input: string,
@@ -391,6 +426,53 @@ export function advanceJourney(
       return done();
     }
     return done("Escolha um campo válido para corrigir.");
+  }
+  if (
+    value === "sales:proposal" ||
+    /^(quero (a |uma )?proposta|quero solicitar (a |uma )?proposta|solicitar proposta|quero contratar|quero contratar (o |um )?plano)[.!]?$/.test(
+      value,
+    )
+  ) {
+    const missing = firstMissing(state.qualification);
+    if (missing !== "topics") {
+      state.step = missing;
+      delete state.menu;
+      delete state.inspecting;
+      delete state.editMenu;
+      return done();
+    }
+    if (
+      !state.proposalRequest ||
+      !sameQualification(state.proposalRequest.qualification, state.qualification)
+    ) {
+      state.proposalRequest = {
+        status: "requested",
+        qualification: {
+          ...state.qualification,
+          ...(state.qualification.ages ? { ages: [...state.qualification.ages] } : {}),
+        },
+        ...(context.today ? { requestedOn: context.today } : {}),
+      };
+    }
+    state.step = "proposal_requested";
+    delete state.menu;
+    delete state.inspecting;
+    delete state.editMenu;
+    delete state.editing;
+    delete state.resumeStep;
+    return done(undefined, "proposal");
+  }
+  if (
+    /^(como (posso |faco para )?contratar|como (peco|solicito) (a |uma )?proposta)\??$/.test(value)
+  ) {
+    return {
+      state,
+      text: "Você pode conferir os dados e solicitar a proposta aqui no chat. O pedido será registrado sem transferir o atendimento. Uma proposta formal e a contratação dependem de condições oficiais aprovadas; solicitar não ativa o plano nem confirma cobertura.",
+      options: [
+        option("Solicitar proposta", "proposal"),
+        ...journeyView(state, context).options.filter((item) => item.value !== "sales:proposal"),
+      ],
+    };
   }
   if (value === "sales:quote") {
     const missing = firstMissing(state.qualification);
@@ -494,6 +576,7 @@ export function advanceJourney(
       }
       return done(undefined, "question");
     case "summary":
+    case "proposal_requested":
       return done(undefined, "question");
   }
   const next = firstMissing(q);
@@ -519,6 +602,7 @@ export function journeyInputLabel(_state: JourneyState, input: string): string {
     "sales:handoff": "Falar com vendedor",
     "sales:close": "Encerrar",
     "sales:quote": "Consultar cotação",
+    "sales:proposal": "Solicitar proposta",
     "sales:skip": "Definir depois",
     "sales:menu": "Menu de assuntos",
     "sales:edit": "Corrigir dados",

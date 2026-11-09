@@ -7,14 +7,14 @@ import './landing.css';
 const landingPlans = [
   {
     id: 'empresarial', badge: 'Para empresas com CNPJ', title: 'Cuide de quem faz sua empresa acontecer.',
-    body: 'Conte sobre sua empresa e as pessoas que deseja incluir. A equipe verifica a elegibilidade e apresenta as opções aplicáveis ao seu perfil.', image: 'empresarial.jpg', href: '/planos/empresarial', Icon: Building2,
+    body: 'Conte sobre sua empresa e as pessoas que deseja incluir. Consulte no chat as regras de elegibilidade e as opções aplicáveis ao seu perfil.', image: 'empresarial.jpg', href: '/planos/empresarial', Icon: Building2,
     bullets: ['Informe o CNPJ e o município', 'Inclua a quantidade de pessoas e suas idades', 'Confira a elegibilidade na proposta'],
     note: 'Quantidade mínima, inclusão de dependentes e condições comerciais dependem do produto e serão confirmadas na proposta.',
     cta: 'Cotar para minha empresa',
   },
   {
     id: 'adesao', badge: 'Por entidade de classe', title: 'Cuidado para você e sua família, por adesão.',
-    body: 'Conheça a possibilidade de contratação coletiva por adesão. A equipe orienta sobre o vínculo necessário e verifica as opções aplicáveis à sua família.', image: 'adesao.jpg', href: '/planos/adesao', Icon: Users,
+    body: 'Conheça a possibilidade de contratação coletiva por adesão. O chat apresenta o vínculo necessário e permite consultar as opções aplicáveis à sua família.', image: 'adesao.jpg', href: '/planos/adesao', Icon: Users,
     bullets: ['Informe quem você deseja incluir', 'Confira o vínculo aceito pela entidade', 'Verifique as condições para dependentes'],
     note: 'A contratação por adesão depende de vínculo aceito pela entidade e da elegibilidade para o produto. Interesse pessoal não significa plano individual.',
     cta: 'Cotar um plano por adesão',
@@ -23,11 +23,11 @@ const landingPlans = [
 const landingBenefits = [
   { title: 'Cuidado para sua rotina', body: 'Conheça as coberturas do produto e confira suas condições antes de contratar.', image: 'ampla-cobertura.jpeg', Icon: ShieldCheck },
   { title: 'Cotação para seu perfil', body: 'Quantidade de pessoas, idades e elegibilidade orientam sua proposta.', image: 'precos.jpg', Icon: Wallet },
-  { title: 'Conversa com continuidade', body: 'Conheça o plano, tire dúvidas e continue com a equipe comercial.', image: 'doctor-patient-consultation.jpg', Icon: Zap },
+  { title: 'Conversa com continuidade', body: 'Conheça o plano, tire dúvidas e solicite sua proposta no próprio chat.', image: 'doctor-patient-consultation.jpg', Icon: Zap },
 ];
 const digitalBenefits = [
   ['Conheça os serviços digitais', 'Consulte os canais de atendimento disponíveis para o seu produto.'],
-  ['Entenda como acessar', 'A equipe orienta sobre disponibilidade e utilização na proposta.'],
+  ['Entenda como acessar', 'Confira as condições de disponibilidade e utilização na proposta.'],
   ['Cuidado com informação clara', 'Cobertura, rede e condições devem ser conferidas antes da contratação.'],
 ];
 const questions = [
@@ -36,7 +36,7 @@ const questions = [
   { question: '03. Qual é a abrangência geográfica?', answer: 'A proposta considera atendimento regional. Informe seu município e confirme a abrangência do produto escolhido, inclusive as condições para atendimento fora da região.' },
   { question: '04. Como consultar hospitais e laboratórios?', answer: 'Consulte o guia da rede por plano, serviço e município. Confira hospitais e laboratórios na rede aplicável ao produto da sua proposta; a disponibilidade varia conforme o plano e o serviço.', link: '/rede-credenciada', linkLabel: 'Consultar rede credenciada' },
   { question: '05. Como funcionam as carências?', answer: 'As condições de carência e de eventual redução promocional dependem do produto, da campanha vigente e do plano anterior. Peça as regras e o aditivo aplicável antes de contratar; a redução não é automática.' },
-  { question: '06. Posso escolher o vencimento?', answer: 'Você pode informar sua preferência na conversa. A equipe confirma quais datas estão disponíveis; registrar uma preferência não altera nem confirma o vencimento contratual.' },
+  { question: '06. Posso escolher o vencimento?', answer: 'Você pode informar sua preferência na conversa. As datas disponíveis seguem as condições oficiais do produto; registrar uma preferência não altera nem confirma o vencimento contratual.' },
   { question: '07. Quando começa a vigência?', answer: 'Informe a data em que deseja começar. O início efetivo depende das regras do produto e do cumprimento das condições de contratação, e será confirmado pela Amélia.' },
 ];
 
@@ -95,6 +95,6 @@ export function LandingPage({ navigate, openQuote, onStartChat }) {
 
     <section id="lp-beneficios" className="lp-benefits-section stacked-benefits-landing" aria-labelledby="lp-beneficios-title"><div className="lp-shell"><div className="lp-section-heading"><span className="lp-eyebrow">O jeito Amélia de cuidar</span><h2 id="lp-beneficios-title">Cuidado que acompanha sua rotina.</h2></div><StackedCards items={landingBenefits} headingLevel="h3" /></div></section>
 
-    <section className="lp-shell lp-final-panel" aria-labelledby="lp-final-title"><div className="lp-final-heading"><span className="lp-eyebrow">Seu próximo passo</span><h2 id="lp-final-title">Vamos encontrar o plano para o seu perfil?</h2><p>Conte para quem é o plano. Conheça as condições no chat e avance para uma proposta com a equipe.</p></div><ol className="lp-quote-steps">{['Conte quem precisa do plano', 'Conheça o produto e tire dúvidas', 'Continue sua proposta com vendas'].map((title, i) => <li key={title}><span className="lp-step-number">0{i + 1}</span><h3>{title}</h3></li>)}</ol><div className="lp-final-actions"><LandingQuoteButton requestQuote={requestQuote} /><LandingLink href="/landing#lp-planos" navigate={navigate} className="lp-text-link">Rever modalidades<ArrowRight size={18} strokeWidth={1.4} aria-hidden="true" /></LandingLink></div></section>
+    <section className="lp-shell lp-final-panel" aria-labelledby="lp-final-title"><div className="lp-final-heading"><span className="lp-eyebrow">Seu próximo passo</span><h2 id="lp-final-title">Vamos encontrar o plano para o seu perfil?</h2><p>Conte para quem é o plano. Conheça as condições e solicite sua proposta no próprio chat. Você pode pedir um vendedor quando desejar.</p></div><ol className="lp-quote-steps">{['Conte quem precisa do plano', 'Conheça o produto e tire dúvidas', 'Solicite sua proposta pelo chat'].map((title, i) => <li key={title}><span className="lp-step-number">0{i + 1}</span><h3>{title}</h3></li>)}</ol><div className="lp-final-actions"><LandingQuoteButton requestQuote={requestQuote} /><LandingLink href="/landing#lp-planos" navigate={navigate} className="lp-text-link">Rever modalidades<ArrowRight size={18} strokeWidth={1.4} aria-hidden="true" /></LandingLink></div></section>
   </div>;
 }
