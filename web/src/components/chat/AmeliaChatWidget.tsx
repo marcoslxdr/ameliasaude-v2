@@ -5,7 +5,7 @@ import ReactMarkdown from "react-markdown";
 import { createPortal } from "react-dom";
 import { MessageCircle, Send, X, ArrowLeft, Headphones, Sparkles } from "lucide-react";
 import { captureChatAttribution, parseChatQualification, type ChatQualification, type ChatRequest, type ChatResponse, type Department, type ChatMessage, type ChatStatus, type ChatConversation, type ChatVerification } from "@/lib/chat";
-import { canApplyChatPoll, chatWaitingTime, mergeChatMessages, isTerminalChatError, readPendingChatRequest, registrationAttempt, type PendingChatRequest } from "@/lib/chat-recovery";
+import { afterChatPoll, canApplyChatPoll, chatWaitingTime, mergeChatMessages, isTerminalChatError, readPendingChatRequest, registrationAttempt, type PendingChatRequest } from "@/lib/chat-recovery";
 
 type Bubble = { id: string; role: "bot" | "user" | "agent"; text: string; options?: ChatMessage["quickReplies"]; document?: ChatMessage["document"] };
 type Session = { journey?: ChatResponse["journey"]; historyCursor?: string | null; olderLoaded?: boolean; waitingSince?: string | null; connected?: boolean; conversationId?: string; status?: ChatStatus; readOnly?: boolean; verification?: ChatVerification; expiresAt?: string; errorCode?: string; messages: Bubble[]; input: ChatResponse["input"]; handoff: boolean; crmSynced: boolean; started: boolean; error?: string; terminal?: boolean };
@@ -85,6 +85,10 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
   const pending = useRef<Partial<Record<Department, PendingChatRequest>>>({});
   const revisions = useRef<Record<Department, number>>({ sales: 0, service: 0 });
   const attribution = useRef<ReturnType<typeof captureChatAttribution>>(undefined);
+  const pollInFlight = useRef<Promise<ChatResponse> | null>(null);
+  function requestAfterPoll(body: ChatRequest) {
+    return afterChatPoll(pollInFlight.current, () => requestChat(body));
+  }
   const active = department ? sessions[department] : null;
   useEffect(() => {
     if (!department || !active?.expiresAt) return;
@@ -149,7 +153,7 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
         if (!messages.some(item => item.id === message.id)) messages.push({ id: message.id, role: "agent", text: message.text });
       }
       // Poll revision guards prevent older history replacing a newer mutation.
-      return { ...previous, [target]: { journey: earlier && sameConversation && data.status === "active" ? data.journey ?? current.journey : data.journey, connected: true, historyCursor: earlier || !sameConversation || !current.olderLoaded ? data.history_cursor : current.historyCursor, olderLoaded: earlier || (sameConversation && current.olderLoaded), waitingSince: data.status === "waiting_human" ? data.waiting_since ?? (sameConversation ? current.waitingSince : null) : null, conversationId: data.conversation_id, status: data.status ?? (data.handoff ? "waiting_human" : "active"), readOnly: data.read_only === true || data.status === "closed", verification: data.verification ?? current.verification, expiresAt: data.session_expires_at, messages, input: data.input, handoff: data.handoff, crmSynced: data.crmSynced, started: true } };
+      return { ...previous, [target]: { journey: earlier && sameConversation && data.status === "active" ? data.journey ?? current.journey : data.journey, connected: true, historyCursor: earlier || !sameConversation || !current.olderLoaded ? data.history_cursor : current.historyCursor, olderLoaded: earlier || (sameConversation && current.olderLoaded), waitingSince: data.status === "waiting_human" ? data.waiting_since ?? (sameConversation ? current.waitingSince : null) : null, conversationId: data.conversation_id, status: data.status ?? (data.handoff ? "waiting_human" : "active"), readOnly: data.read_only === true || data.status === "closed", verification: data.verification ?? current.verification, expiresAt: data.session_expires_at, messages, input: data.input, handoff: data.handoff, crmSynced: data.crmSynced, started: true, ...(pending.current[target] ? { error: current.error, errorCode: current.errorCode, terminal: current.terminal } : {}) } };
     });
   }, []);
 
@@ -163,7 +167,7 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
       attribution.current ??= captureChatAttribution(window.location.href, document.referrer);
       let legacy: string | null = null;
       try { legacy = sessionStorage.getItem(`amelia-chat-session:${target}`); } catch { /* optional */ }
-      const data = await requestChat(reset ? { action: "reset", department: target, attribution: attribution.current } : { action: "recover", department: target, ...(legacy ? {token:legacy} : {}) });
+      const data = await requestAfterPoll(reset ? { action: "reset", department: target, attribution: attribution.current } : { action: "recover", department: target, ...(legacy ? {token:legacy} : {}) });
       if (revision!==revisions.current[target]) return;
       if (reset) { pending.current[target] = undefined; registration.current[target] = undefined; setDraft(""); setContact({name:"",phone:"",email:""}); setConsent(false);setQualification({city:"",lives:"",ages:"",modality:"indefinido"});setNetwork({city:"",specialty:"",product:"Carioca 10"}); }
       else {
@@ -238,7 +242,7 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
     pending.current[target] = { body, savedAt: pending.current[target]?.savedAt ?? Date.now() };
     try { if (persistRetry) sessionStorage.setItem(`amelia-chat-pending:${target}`, JSON.stringify(pending.current[target])); } catch { /* in-memory retry still works */ }
     try {
-      const data = await requestChat(body);
+      const data = await requestAfterPoll(body);
       if (revision!==revisions.current[target]) return;
       pending.current[target] = undefined;
       if (["register", "request_review"].includes(body.action)) registration.current[target] = undefined;
@@ -291,15 +295,17 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
     let stopped = false;
     let polling = false;
     const timer = window.setInterval(async () => {
-      if (submitting.current || polling || document.hidden) return;
+      if (submitting.current || polling || pollInFlight.current || document.hidden) return;
       polling = true;
       const revision = revisions.current[department];
+      const request = requestChat({ action: "poll", department, conversation_id: active.conversationId });
+      pollInFlight.current = request;
       try {
-        const data = await requestChat({ action: "poll", department, conversation_id: active.conversationId });
+        const data = await request;
         if (!stopped && canApplyChatPoll(revision, revisions.current[department], submitting.current)) merge(department, data);
       } catch (error) {
         if (!stopped && canApplyChatPoll(revision, revisions.current[department], submitting.current)) setSessions(previous => ({ ...previous, [department]: { ...previous[department], error: errorText(error), errorCode: error instanceof Error ? error.message : "", terminal: isTerminalChatError(error) } }));
-      } finally { polling = false; }
+      } finally { if (pollInFlight.current === request) pollInFlight.current = null; polling = false; }
     }, 5000);
     return () => { stopped = true; window.clearInterval(timer); };
   }, [open, view, department, active?.connected, active?.conversationId, active?.crmSynced, active?.terminal, active?.readOnly, merge]);
@@ -326,7 +332,7 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
     if (!sessions[target].connected) {
       submitting.current=true; setBusy(true); setDepartment(target);
       const revision=++revisions.current[target];
-      try { const data=await requestChat({action:"start",department:target,attribution:attribution.current}); if(revision!==revisions.current[target])return; merge(target,data); }
+      try { const data=await requestAfterPoll({action:"start",department:target,attribution:attribution.current}); if(revision!==revisions.current[target])return; merge(target,data); }
       catch(error) { if(revision===revisions.current[target])setFlowError(errorText(error)); return; }
       finally {submitting.current=false;setBusy(false);}
     }
@@ -338,7 +344,7 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
     submitting.current=true;setBusy(true);setFlowError("");
     const revision=++revisions.current[department];
     try {
-      const data = await requestChat({ action, department, ...(action==="email_code" ? {email:identity.email.trim().toLowerCase(),phone:identity.phone.trim()} : {}), ...(action==="verify_email" ? {code} : {}), ...(conversationId ? {conversation_id:conversationId} : {}), ...(cursor ? {cursor} : {}) });
+      const data = await requestAfterPoll({ action, department, ...(action==="email_code" ? {email:identity.email.trim().toLowerCase(),phone:identity.phone.trim()} : {}), ...(action==="verify_email" ? {code} : {}), ...(conversationId ? {conversation_id:conversationId} : {}), ...(cursor ? {cursor} : {}) });
       if (revision!==revisions.current[department]) return;
       merge(department,data);
       if (action==="email_code") { setCode("");setClock(Date.now());setResendAt(Date.now()+(data.verification?.resend_after??60)*1000);setView("code"); }
@@ -359,7 +365,7 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
     submitting.current=true;setBusy(true);setFlowError("");
     const target=department, revision=++revisions.current[target];
     try {
-      const data=await requestChat({action:"earlier_messages",department:target,conversation_id:active.conversationId,cursor:active.historyCursor});
+      const data=await requestAfterPoll({action:"earlier_messages",department:target,conversation_id:active.conversationId,cursor:active.historyCursor});
       if (revision!==revisions.current[target]) return;
       const log=messageLog.current;
       if (log) scrollAnchor.current={height:log.scrollHeight,top:log.scrollTop};
@@ -372,7 +378,7 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
     if (!department || submitting.current) return;
     submitting.current=true;setBusy(true);
     let failed=false;
-    try { await requestChat({action:"logout",department}); }
+    try { await requestAfterPoll({action:"logout",department}); }
     catch { failed=true; }
     finally {
       prefilled.current=null;revisions.current.sales++;revisions.current.service++;
@@ -453,7 +459,7 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
             <div ref={end} />
           </div>
           {(active?.handoff || active?.status === "waiting_human") && <p role="status" className="border-t px-4 py-2 text-xs">{active.status === "waiting_human" ? <>Aguardando a equipe{waitingTime ? ` ${waitingTime}` : ""}. Este é o tempo decorrido, sem previsão de resposta.</> : "Acompanhe a resposta da equipe aqui neste chat."}</p>}
-          {department && pending.current[department] && !active?.terminal && !active?.readOnly && !busy && <p role="status" className="border-t bg-amber-50 px-4 py-2 text-xs">Há uma solicitação sem confirmação.{pending.current[department]?.body.input && <span className="mt-1 block break-words">{pending.current[department]?.body.input}</span>}{!active?.error && <button type="button" onClick={()=>void retryCurrent()} className="mt-1 underline">Tentar novamente</button>}</p>}
+          {department && pending.current[department] && !active?.terminal && !active?.readOnly && !busy && <p role="status" className="border-t bg-amber-50 px-4 py-2 text-xs">Há uma solicitação sem confirmação.{pending.current[department]?.body.input && <span className="mt-1 block break-words">{pending.current[department]?.body.input?.startsWith("sales:") ? "Solicitação comercial aguardando confirmação." : pending.current[department]?.body.input}</span>}{!active?.error && <button type="button" onClick={()=>void retryCurrent()} className="mt-1 underline">Tentar novamente</button>}</p>}
           {active?.error && <div ref={errorPanel} tabIndex={-1} role="alert" className="border-t bg-amber-50 px-4 py-3 text-sm"><p>{active.error}</p><button type="button" disabled={busy} onClick={() => active.errorCode === "conversation_changed" ? void start(department,false,true) : active.terminal ? void start(department, true) : void retryCurrent()} className="mt-2 underline">{active.errorCode === "conversation_changed" ? "Atualizar atendimento" : active.terminal ? "Iniciar nova conversa" : "Tentar novamente"}</button></div>}
           {active?.readOnly && <p role="status" className="border-t bg-purple-50 px-4 py-3 text-sm">Este atendimento foi encerrado. O histórico está disponível para consulta.<button type="button" disabled={busy} onClick={()=>void start(department,true)} className="ml-2 underline">Novo atendimento</button></p>}
           {active?.input?.kind === "contact" && <form onSubmit={e=>void register(e)} className="ph-no-capture min-h-0 space-y-3 overflow-y-auto border-t p-4">

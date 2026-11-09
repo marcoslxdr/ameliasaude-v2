@@ -371,3 +371,18 @@ test("journey projection strips metadata and removes actions during human owners
   assert.equal((await relay({ journey: { ...journey, options: [{ label: "Unsafe", value: "javascript:alert(1)" }] } })).status, 502);
   assert.equal((await relay({ journey: { ...journey, qualification: { cnpj: "123" } } })).status, 502);
 });
+
+
+test("a write waits for an in-flight poll to release the shared server lock", async () => {
+  const { afterChatPoll } = await import('../lib/chat-recovery.ts');
+  let release;
+  const poll = new Promise(resolve => { release = resolve; });
+  const events = [];
+  const mutation = afterChatPoll(poll, async () => { events.push('write'); return 'sent'; });
+  await Promise.resolve();
+  assert.deepEqual(events, []);
+  release();
+  assert.equal(await mutation, 'sent');
+  assert.deepEqual(events, ['write']);
+  assert.equal(await afterChatPoll(Promise.reject(new Error('read failure')), async () => 'retry preserved'), 'retry preserved');
+});

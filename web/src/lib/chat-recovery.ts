@@ -56,3 +56,9 @@ export function chatWaitingTime(since: string | null | undefined, now: number): 
   const hours = Math.floor(minutes / 60), remainder = minutes % 60;
   return `há ${hours} ${hours === 1 ? "hora" : "horas"}${remainder ? ` e ${remainder} min` : ""}`;
 }
+
+/** Serialize writes after an already-running poll: both share the server session lock. */
+export async function afterChatPoll<T>(poll: Promise<unknown> | null, send: () => Promise<T>): Promise<T> {
+  if (poll) { try { await poll; } catch { /* A failed read must not discard the pending write. */ } }
+  return send();
+}
