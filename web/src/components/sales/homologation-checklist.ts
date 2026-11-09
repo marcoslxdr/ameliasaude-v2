@@ -1,4 +1,4 @@
-export const REVIEW_VERSION = '2026-11-09.9';
+export const REVIEW_VERSION = '2026-11-09.10';
 export const REVIEW_DATE = '09/11/2026';
 export const REVIEW_CASES = [
   { id: 'personal', area: 'Modelo', title: 'Pessoa / família completa a qualificação', expected: 'Coleta município, pessoas, idades e plano anterior; não presume plano individual.' },

@@ -67,5 +67,5 @@ test('revision .9 keeps .3 sessions, explains confirmed boleto and preserves una
   assert.equal(quote.discountApplied,false);
   assert.equal(COMMERCIAL_CONFIRMATION.adesaoTherapiesAns,'507.538/26-6');
   assert.match(receivedMaterialsContext(),/não são datas de validade comercial/);
-  assert.equal(reviewExport(INITIAL_REVIEW,'','','2026-11-09').version,'2026-11-09.9');
+  assert.equal(reviewExport(INITIAL_REVIEW,'','','2026-11-09').version,'2026-11-09.10');
 });

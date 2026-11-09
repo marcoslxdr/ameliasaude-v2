@@ -17,6 +17,19 @@ export const COMMERCIAL_CONFIRMATION = {
 } as const;
 export const CONFIRMATION_NOTICE =
   "Confirmação de Marcos em 09/11/2026 (C1): o produto atual é Carioca 10, a rede foi enviada, as regras de elegibilidade seguem o treinamento e as carências seguem o aditivo. O ANS correto de Adesão com coparticipação em terapias é 507.538/26-6, prevalecendo sobre 507.583/26-6 impresso no treinamento/D5. A cobrança é por boleto no vencimento escolhido. A confirmação não aprova o catálogo inteiro nem define validade comercial dos preços ou ano da campanha.";
+/** Marcelo's later answer is recorded separately from the source documents and catalog approval. */
+export const COMMERCIAL_UPDATE = {
+  id: "C2",
+  confirmedBy: "Marcelo",
+  confirmedOn: "2026-11-09",
+  source: "Grupo Amélia Saúde - Atria, resposta de Marcelo às 12:00",
+  tableUseUntil: "setembro de 2027",
+  acquisitionFeePercentOfMonthlyPayment: 100,
+  acquisitionFeeDue: "na assinatura do contrato",
+  catalogApproved: false,
+} as const;
+export const COMMERCIAL_UPDATE_NOTICE =
+  "Marcelo informou em 09/11/2026 (C2) que as tabelas de preços podem ser utilizadas até setembro de 2027. Informou também uma taxa de angariação equivalente a 100% da mensalidade, paga no ato da assinatura do contrato. A taxa é separada dos preços exibidos nesta simulação; sua base e valor aplicáveis à contratação precisam ser confirmados e não são calculados aqui. C2 não informa o dia final de setembro nem constitui por si só cadastro de catálogo aprovado.";
 export const COMMERCIAL_SOURCES = [
   {
     id: "D1",
@@ -608,7 +621,7 @@ export const NETWORK_HIGHLIGHTS = [
 export const MEDICAL_INTERVIEW =
   "O treinamento exige entrevista médica em 100% das vendas, por videoconferência gravada. Ela precisa ser concluída para efetivar a vigência. Se não terminar no prazo, a vigência passa à próxima data disponível no mesmo mês; se não terminar no mês da contratação, a proposta deve ser refeita. Agendamento, pré-agendamento ou ordem de chegada dependem do fluxo oficial; o link e os cortes não foram fornecidos.";
 export const PROMOTION_NOTICE =
-  "As campanhas anunciam 50% na primeira mensalidade bancária de Adesão e PME, de 20/10 a 20/11, sem ano impresso. Ano, elegibilidade e base da cobrança aguardam confirmação: desconto não aplicado nesta simulação.";
+  "As campanhas anunciam 50% na primeira mensalidade bancária de Adesão e PME, de 20/10 a 20/11, sem ano impresso. À pergunta que agrupou ano e requisitos, Marcelo respondeu apenas ‘Não’; é preciso esclarecer a que parte se refere. Ano, elegibilidade e base da cobrança aguardam confirmação: desconto não aplicado nesta simulação.";
 export const TOPICS = [
   {
     id: "coverage",
@@ -665,7 +678,7 @@ export const TOPICS = [
     title: "Vencimentos",
     summary: "Dias 01, 05, 10, 15 e 20",
     answer:
-      "A tabela apresenta os dias 01, 05, 10, 15 e 20, cada vigência acompanhada do vencimento no mesmo dia do mês. Posso guardar sua preferência entre essas opções. Conforme confirmação de Marcos em 09/11/2026, a cobrança é por boleto no vencimento escolhido. A escolha não confirma contrato, emissão ou pagamento do boleto nem ativação; os cortes e as condições de implantação não foram detalhados.",
+      "A tabela apresenta os dias 01, 05, 10, 15 e 20, cada vigência acompanhada do vencimento no mesmo dia do mês. Posso guardar sua preferência entre essas opções. Conforme confirmação de Marcos em 09/11/2026, a cobrança é por boleto no vencimento escolhido. Marcelo informou também taxa de angariação equivalente a 100% da mensalidade, paga na assinatura do contrato; a base e o valor aplicáveis devem ser confirmados. A escolha não confirma contrato, emissão ou pagamento do boleto nem ativação; os cortes e as condições de implantação não foram detalhados.",
     source: "Tabela Comercial 2026 p1 (D2/D5); confirmação de Marcos em 09/11/2026 (C1)",
     sourceIds: ["D2"],
     status: "received",
@@ -821,9 +834,10 @@ export function simulateReceivedPrices(input: ReceivedPriceInput): ReceivedPrice
         `${line.people} pessoa(s), faixa ${line.ageBand}: ${formatReceivedPrice(line.unitCents)} por pessoa = ${formatReceivedPrice(line.totalCents)}.`,
     ),
     `Soma dos preços impressos: ${formatReceivedPrice(totalCents)}. A periodicidade não está especificada na peça; este valor não é uma mensalidade ou cotação aprovada.`,
+    COMMERCIAL_UPDATE_NOTICE,
     input.product === "carioca_10_pme"
-      ? "Fonte: Tabela Comercial 2026 — Adesão e PME, página 1 (D5), recebida em 09/11/2026, produto PME ANS 508.991/26-3 com coparticipação em terapias. Regras de elegibilidade e vínculo seguem o treinamento; o enquadramento individual e a validade comercial da tabela precisam ser verificados. Não confirma cobertura, contrato ou ativação."
-      : "Fonte: Tabela Comercial 2026, página 1 (D2), recebida em 09/11/2026. ANS Adesão com terapias confirmado por Marcos em 09/11/2026: 507.538/26-6. A variante sem coparticipação conserva a referência documental 507.539/26-4. Elegibilidade e vínculo seguem o treinamento; enquadramento individual e validade comercial da tabela precisam ser verificados. Não confirma cobertura, contrato ou ativação.",
+      ? "Fonte: Tabela Comercial 2026 — Adesão e PME, página 1 (D5), recebida em 09/11/2026, produto PME ANS 508.991/26-3 com coparticipação em terapias. Regras de elegibilidade e vínculo seguem o treinamento; o enquadramento individual precisa ser verificado. Não confirma cobertura, contrato ou ativação."
+      : "Fonte: Tabela Comercial 2026, página 1 (D2), recebida em 09/11/2026. ANS Adesão com terapias confirmado por Marcos em 09/11/2026: 507.538/26-6. A variante sem coparticipação conserva a referência documental 507.539/26-4. Elegibilidade e vínculo seguem o treinamento; o enquadramento individual precisa ser verificado. Não confirma cobertura, contrato ou ativação.",
     PROMOTION_NOTICE,
     input.coparticipation === "com"
       ? "A tabela também informa valores fixos de R$ 150,00 para terapias especiais e R$ 42,47 para demais terapias; a unidade de cobrança e os limites não estão detalhados. Esses valores não foram somados ao total."
@@ -836,12 +850,13 @@ export function simulateReceivedPrices(input: ReceivedPriceInput): ReceivedPrice
 /** Context for explanations only. Arithmetic stays in simulateReceivedPrices; no approval is implied. */
 export function receivedMaterialsContext(): string {
   return [
-    "MATERIAIS RECEBIDOS, NÃO CATÁLOGO APROVADO: use os fatos abaixo para explicar o produto, sempre conservando fonte e limites. Não invente validade, aprovador, preço ausente da variante ou regra de aproveitamento de carência. Não calcule preços pelo modelo: a simulação determinística do roteiro é a responsável pelos valores de Adesão e PME.",
+    "MATERIAIS RECEBIDOS, NÃO CATÁLOGO APROVADO: use os fatos abaixo para explicar o produto, sempre conservando fonte e limites. Use a validade até setembro de 2027 informada por Marcelo como C2, sem inventar dia exato, início ou aprovação formal; não invente preço ausente da variante ou regra de aproveitamento de carência. Não calcule preços pelo modelo: a simulação determinística do roteiro é a responsável pelos valores de Adesão e PME.",
     ...COMMERCIAL_SOURCES.map(
       (source) =>
         `${source.id}: ${source.title}; versão ${source.version}; arquivo ${source.file}; SHA256 ${source.sha256}; recebido em ${source.receivedAt}; aprovação e vigência não confirmadas.`,
     ),
     CONFIRMATION_NOTICE,
+    COMMERCIAL_UPDATE_NOTICE,
     ...TOPICS.map((topic) => `${topic.title}: ${topic.answer} Fonte: ${topic.source}.`),
     "Elegibilidade descrita no treinamento p8–9: titular 18–69 e dependentes 12–69. Adesão: profissional liberal/servidor público, vínculo/documentos e lista de profissões a conferir. PME: 2–29 vidas, vínculo empregatício/estatutário, documentos contrato social ou MEI, CNPJ, FGTS/endereço. Essas regras são documentais, não decisão automática de elegibilidade; exceções e listas pendentes.",
     "Divergência histórica ANS resolvida por C1 para Adesão com terapias: usar 507.538/26-6. Preservar referências documentais distintas: Adesão sem coparticipação 507.539/26-4 e PME 508.991/26-3. Não misture os preços das modalidades. Dias de vigência/vencimento 01, 05, 10, 15 e 20 não são datas de validade comercial da tabela.",
