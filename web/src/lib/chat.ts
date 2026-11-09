@@ -1,7 +1,8 @@
 import { isValidCnpj, isValidDesiredStartDate } from "./sales-journey/engine.ts";
 export type Department = "sales" | "service";
 export type ChatAttribution = { page_path?: string; referrer_origin?: string; utm_source?: string; utm_medium?: string; utm_campaign?: string; utm_content?: string; utm_term?: string };
-export type ChatQualification = { city?: string; lives?: number; ages?: number[]; modality?: "empresarial" | "adesao" | "indefinido"; interest?: "personal" | "business"; cnpj?: string; previous_plan?: "yes" | "no" | "unknown"; preferred_due_day?: number; desired_start_date?: string };
+export const CHAT_MESSAGE_LIMIT = 5000;
+export type ChatQualification = { product?: "carioca_10_adesao" | "carioca_10_pme"; coparticipation?: "com" | "sem"; city?: string; lives?: number; ages?: number[]; modality?: "empresarial" | "adesao" | "indefinido"; interest?: "personal" | "business"; cnpj?: string; previous_plan?: "yes" | "no" | "unknown"; previous_plan_duration?: "under_6_months" | "6_to_12_months" | "above_12_months" | "unknown"; preferred_due_day?: number; desired_start_date?: string };
 export type ChatAction = "start" | "reset" | "recover" | "message" | "poll" | "register" | "handoff" | "request_review" | "email_code" | "verify_email" | "history" | "earlier_messages" | "resume" | "logout";
 export type ChatRequest = { action: ChatAction; department: Department; token?: string; input?: string; request_id?: string; attribution?: ChatAttribution; qualification?: ChatQualification; contact?: { name: string; phone: string; email: string; consent: true }; email?: string; phone?: string; code?: string; conversation_id?: string; cursor?: string };
 export type ChatOption = { label: string; value: string };
@@ -43,8 +44,16 @@ export function captureChatAttribution(href: string, referrer: string): ChatAttr
 export function parseChatQualification(value: unknown): ChatQualification | null {
   if (!value || typeof value !== "object" || Array.isArray(value)) return null;
   const input = value as Record<string, unknown>;
-  if (Object.keys(input).some(key => !["city", "lives", "ages", "modality", "interest", "cnpj", "previous_plan", "preferred_due_day", "desired_start_date"].includes(key))) return null;
+  if (Object.keys(input).some(key => !["city", "lives", "ages", "modality", "interest", "cnpj", "previous_plan", "preferred_due_day", "desired_start_date", "product", "coparticipation", "previous_plan_duration"].includes(key))) return null;
   const result: ChatQualification = {};
+  if (input.product !== undefined) {
+    if (!["carioca_10_adesao", "carioca_10_pme"].includes(String(input.product))) return null;
+    result.product = input.product as ChatQualification["product"];
+  }
+  if (input.coparticipation !== undefined) {
+    if (!["com", "sem"].includes(String(input.coparticipation))) return null;
+    result.coparticipation = input.coparticipation as ChatQualification["coparticipation"];
+  }
   if (input.city !== undefined) {
     if (typeof input.city !== "string" || input.city.trim().length < 2 || input.city.length > 100) return null;
     result.city = input.city.trim();
@@ -73,6 +82,10 @@ export function parseChatQualification(value: unknown): ChatQualification | null
     if (!["yes", "no", "unknown"].includes(String(input.previous_plan))) return null;
     result.previous_plan = input.previous_plan as ChatQualification["previous_plan"];
   }
+  if (input.previous_plan_duration !== undefined) {
+    if (!["under_6_months", "6_to_12_months", "above_12_months", "unknown"].includes(String(input.previous_plan_duration))) return null;
+    result.previous_plan_duration = input.previous_plan_duration as ChatQualification["previous_plan_duration"];
+  }
   if (input.preferred_due_day !== undefined) {
     if (!Number.isInteger(input.preferred_due_day) || Number(input.preferred_due_day) < 1 || Number(input.preferred_due_day) > 31) return null;
     result.preferred_due_day = Number(input.preferred_due_day);
@@ -81,6 +94,7 @@ export function parseChatQualification(value: unknown): ChatQualification | null
     if (typeof input.desired_start_date !== "string" || !isValidDesiredStartDate(input.desired_start_date)) return null;
     result.desired_start_date = input.desired_start_date;
   }
+  if (result.product && result.modality && result.modality !== "indefinido" && result.modality !== (result.product === "carioca_10_adesao" ? "adesao" : "empresarial")) return null;
   if (result.lives && result.ages && result.ages.length !== result.lives) return null;
   return Object.keys(result).length ? result : null;
 }
@@ -104,7 +118,7 @@ export function parseChatRequest(body: unknown): ChatRequest | null {
   // Modern browser requests use HttpOnly cookies. A token is accepted solely
   // to migrate the previous tab-scoped session and is never returned publicly.
   if (value.token !== undefined && (typeof value.token !== "string" || !/^[a-f0-9]{64}$/.test(value.token))) return null;
-  if (value.action === "message" && (typeof value.input !== "string" || !value.input.trim() || value.input.length > 1000)) return null;
+  if (value.action === "message" && (typeof value.input !== "string" || !value.input.trim() || value.input.length > (value.department === "sales" ? CHAT_MESSAGE_LIMIT : 1000))) return null;
   if (value.request_id !== undefined && (typeof value.request_id !== "string" || !uuid.test(value.request_id))) return null;
   if (["message", "register", "handoff", "request_review"].includes(String(value.action)) && !value.request_id) return null;
   if (value.conversation_id !== undefined && (typeof value.conversation_id !== "string" || !uuid.test(value.conversation_id))) return null;
@@ -198,7 +212,7 @@ export async function relayAmeliaChat(body: ChatRequest, options: { endpoint?: s
       const value = data.journey;
       if (!value || typeof value.version !== "string" || value.version.length > 100 || typeof value.step !== "string" || value.step.length > 50 || typeof value.text !== "string" || value.text.length > 10000 || !safeOptions(value.options) || !value.qualification || typeof value.qualification !== "object" || Array.isArray(value.qualification)) return { status: 502, payload: { error: "invalid_chat_response" } };
       const qualification = Object.keys(value.qualification).length ? parseChatQualification(value.qualification) : {};
-      if (!qualification || value.options.some(option => !/^sales:[a-z_:]+$/.test(option.value))) return { status: 502, payload: { error: "invalid_chat_response" } };
+      if (!qualification || value.options.some(option => !/^(?:sales:[a-z_:]+|sales:product:carioca_10_(?:adesao|pme))$/.test(option.value))) return { status: 502, payload: { error: "invalid_chat_response" } };
       journey = { version: value.version, step: value.step, text: value.text, qualification, options: data.status === "closed" || data.status === "in_progress" || data.status === "waiting_human" || data.handoff || data.read_only ? [] : value.options.map(({ label, value }) => ({ label, value })) };
     }
     // Only explicitly reviewed fields can cross the public boundary.

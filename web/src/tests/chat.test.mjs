@@ -17,7 +17,7 @@ test("explicit department is mandatory and message/session limits are enforced",
   assert.equal(parseChatRequest({ action: "start" }), null);
   assert.equal(parseChatRequest({ ...body, department: "atendimento" }), null);
   assert.equal(parseChatRequest({ ...body, action: "message", input: "Oi" }), null);
-  assert.equal(parseChatRequest({ ...body, action: "message", token: "a".repeat(64), input: "a".repeat(1001) }), null);
+  assert.equal(parseChatRequest({ ...body, action: "message", token: "a".repeat(64), input: "a".repeat(5001) }), null);
   assert.equal(parseChatRequest({ ...body, action: "poll", token: "a".repeat(64).repeat(60001) }), null);
   assert.deepEqual(parseChatRequest({ ...body, brand: "six", arbitrary: "hidden" }), body);
 });
@@ -433,4 +433,39 @@ test("relay exposes a validated noncredential retry reference without broad meta
   const run=ref=>relayAmeliaChat(body,{...options,fetchImpl:async()=>Response.json({...fixture(),session_ref:ref,session_expires_at:new Date(Date.now()+3600000).toISOString()})});
   assert.equal((await run(session_ref)).payload.session_ref,session_ref);
   assert.equal((await run("unsafe")).status,502);
+});
+
+test("transport and retry preserve1000 ages including120 with strict bounds",async()=>{
+  const {CHAT_MESSAGE_LIMIT}=await import("../lib/chat.ts");
+  const {restorePendingChatRequest}=await import("../lib/chat-recovery.ts");
+  const input=Array(1000).fill(120).join(", ");
+  const request={action:"message",department:"sales",request_id:id1,input,qualification:{interest:"personal",city:"Niterói",lives:1000,ages:Array(1000).fill(120),product:"carioca_10_adesao",coparticipation:"sem",modality:"adesao"}};
+  assert.equal(parseChatRequest({...request,department:"service"}),null);
+  assert.equal(CHAT_MESSAGE_LIMIT,5000);assert.equal(input.length,4998);
+  assert.deepEqual(parseChatRequest(request),request);
+  const now=Date.now(),expiresAt=new Date(now+3600000).toISOString(),sessionRef="c".repeat(64);
+  const saved={version:2,body:request,savedAt:now,expiresAt,sessionRef};
+  assert.ok(JSON.stringify(saved).length<10000);
+  assert.deepEqual(restorePendingChatRequest(JSON.stringify(saved),{department:"sales",sessionRef,expiresAt},now),saved);
+  const response=await relayAmeliaChat(request,{...options,fetchImpl:async(_url,init)=>{
+    assert.deepEqual(JSON.parse(init.body).qualification,request.qualification);
+    assert.equal(JSON.parse(init.body).input,input);
+    return Response.json(fixture());
+  }});
+  assert.equal(response.status,200);
+  assert.equal(parseChatRequest({...request,input:"a".repeat(5001)}),null);
+  for(const patch of [{lives:1001},{ages:Array(1001).fill(120)},{product:"individual"},{coparticipation:"free"},{modality:"empresarial"},{price:1}])assert.equal(parseChatRequest({...request,qualification:{...request.qualification,...patch}}),null);
+});
+
+test("relay accepts only the two explicit product commands with digits",async()=>{
+  const q={product:"carioca_10_adesao",coparticipation:"sem"};
+  const run=value=>relayAmeliaChat(body,{...options,fetchImpl:async()=>Response.json({...fixture(),journey:{version:"test",step:"quote_product",text:"Escolha o produto",qualification:q,options:[{label:"Produto",value}]}})});
+  for(const value of ["sales:product:carioca_10_adesao","sales:product:carioca_10_pme"]){const result=await run(value);assert.equal(result.status,200);assert.deepEqual(result.payload.journey.qualification,q);}
+  for(const value of ["sales:product:carioca_11_adesao","sales:status:123","javascript:alert(1)"])assert.equal((await run(value)).status,502);
+});
+
+test("previous plan duration is bounded and survives retry projection",async()=>{
+  const {parseChatQualification}=await import("../lib/chat.ts");
+  assert.deepEqual(parseChatQualification({previous_plan:"yes",previous_plan_duration:"6_to_12_months"}),{previous_plan:"yes",previous_plan_duration:"6_to_12_months"});
+  assert.equal(parseChatQualification({previous_plan_duration:"approved"}),null);
 });

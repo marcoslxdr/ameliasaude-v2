@@ -4,7 +4,7 @@ import { useCallback, useEffect, useImperativeHandle, useRef, useState, type For
 import ReactMarkdown from "react-markdown";
 import { createPortal } from "react-dom";
 import { MessageCircle, Send, X, ArrowLeft, Headphones, Sparkles } from "lucide-react";
-import { captureChatAttribution, parseChatQualification, type ChatQualification, type ChatRequest, type ChatResponse, type Department, type ChatMessage, type ChatStatus, type ChatConversation, type ChatVerification } from "@/lib/chat";
+import { CHAT_MESSAGE_LIMIT, captureChatAttribution, parseChatQualification, type ChatQualification, type ChatRequest, type ChatResponse, type Department, type ChatMessage, type ChatStatus, type ChatConversation, type ChatVerification } from "@/lib/chat";
 import { afterChatPoll, canApplyChatPoll, chatWaitingTime, mergeChatMessages, isTerminalChatError, readPendingChatRequest, restorePendingChatRequest, registrationAttempt, type PendingChatScope, type PendingChatRequest } from "@/lib/chat-recovery";
 
 type Bubble = { id: string; role: "bot" | "user" | "agent"; text: string; options?: ChatMessage["quickReplies"]; document?: ChatMessage["document"] };
@@ -298,7 +298,7 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
     if (!details) { setQualificationError("Confira a quantidade de pessoas e as idades informadas."); return; }
     setQualificationError("");
     const modality = { empresarial: "empresarial", adesao: "por adesão", indefinido: "a definir" }[details.modality ?? "indefinido"];
-    const text = `Quero uma cotação. Modalidade: ${modality}.${details.city ? ` Cidade: ${details.city}.` : ""}${details.lives ? ` Pessoas: ${details.lives}.` : ""}${details.ages ? ` Idades: ${details.ages.join(", ")}.` : ""}`;
+    const text = `Quero uma cotação. Modalidade: ${modality}.${details.city ? ` Cidade: ${details.city}.` : ""}${details.lives ? ` Pessoas: ${details.lives}.` : ""}${details.ages ? ` Idades: ${details.ages.join(",")}.` : ""}`;
     void send(text, details);
   }
 
@@ -502,7 +502,7 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
                 <label>Cidade<input maxLength={100} value={qualification.city} onChange={e=>setQualification(q=>({...q,city:e.target.value}))} className="mt-1 w-full rounded-lg border p-2" disabled={busy}/></label>
                 <label>Quantidade de pessoas<input type="number" min={1} max={1000} step={1} value={qualification.lives} onChange={e=>setQualification(q=>({...q,lives:e.target.value}))} className="mt-1 w-full rounded-lg border p-2" disabled={busy}/></label>
               </div>
-              <label className="block">Idades (separadas por vírgula)<input maxLength={500} placeholder="Ex.: 28, 34, 7" value={qualification.ages} onChange={e=>setQualification(q=>({...q,ages:e.target.value}))} className="ph-mask mt-1 w-full rounded-lg border p-2" disabled={busy}/></label>
+              <label className="block">Idades (separadas por vírgula)<input maxLength={CHAT_MESSAGE_LIMIT} placeholder="Ex.: 28, 34, 7" value={qualification.ages} onChange={e=>setQualification(q=>({...q,ages:e.target.value}))} className="ph-mask mt-1 w-full rounded-lg border p-2" disabled={busy}/></label>
               <label className="block">Modalidade<select value={qualification.modality} onChange={e=>setQualification(q=>({...q,modality:e.target.value}))} className="mt-1 w-full rounded-lg border p-2" disabled={busy}><option value="indefinido">Quero ajuda para escolher</option><option value="empresarial">Empresarial (CNPJ)</option><option value="adesao">Por adesão</option></select></label>
               {qualificationError && <p role="alert">{qualificationError}</p>}
               <button type="submit" style={{color:"#fff"}} disabled={busy} className="w-full rounded-lg bg-[var(--amelia-deep)] p-2 text-white">Pedir cotação</button>
@@ -515,7 +515,7 @@ export function AmeliaChatWidget({ children, launcherClassName, initialDepartmen
             </form>}
           </div>}
           {canType && <form onSubmit={submit} className="flex items-end gap-2 border-t p-3">
-            <div className="flex-1"><label htmlFor="amelia-chat-message" className="sr-only">Mensagem para {names[department]}</label><textarea id="amelia-chat-message" className="ph-mask min-h-12 w-full resize-none rounded-xl border border-[var(--amelia-line)] p-3 text-sm focus-visible:outline-2 focus-visible:outline-[var(--amelia-purple)]" value={draft} onChange={event => setDraft(event.target.value)} maxLength={1000} rows={2} placeholder={active?.input?.placeholder || "Digite sua mensagem"} disabled={busy} /></div>
+            <div className="flex-1"><label htmlFor="amelia-chat-message" className="sr-only">Mensagem para {names[department]}</label><textarea id="amelia-chat-message" className="ph-mask min-h-12 w-full resize-none rounded-xl border border-[var(--amelia-line)] p-3 text-sm focus-visible:outline-2 focus-visible:outline-[var(--amelia-purple)]" value={draft} onChange={event => setDraft(event.target.value)} maxLength={department === "sales" ? CHAT_MESSAGE_LIMIT : 1000} rows={2} placeholder={active?.input?.placeholder || "Digite sua mensagem"} disabled={busy} /></div>
             <button type="submit" disabled={busy || !draft.trim()} aria-label="Enviar mensagem" style={{ color: "#fff" }} className="mb-1 rounded-xl bg-[var(--amelia-deep)] p-3 text-white disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-offset-2"><Send size={20} /></button>
           </form>}
           {active?.input?.hint && <p className="px-4 pb-2 text-xs text-[var(--amelia-body)]">{active.input.hint}</p>}

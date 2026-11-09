@@ -4,11 +4,11 @@ import { INITIAL_REVIEW, REVIEW_CASES, reviewCounts, reviewExport } from './homo
 import { createJourney, journeyView, advanceJourney, TOPICS } from '../../lib/sales-journey/engine.ts';
 
 test('only explicitly deferred WhatsApp starts outside current acceptance; no case is auto-approved', () => {
-  assert.deepEqual(reviewCounts(INITIAL_REVIEW), { untested: 15, passed: 0, failed: 0, blocked: 0, deferred: 1 });
+  assert.deepEqual(reviewCounts(INITIAL_REVIEW), { untested: REVIEW_CASES.length - 1, passed: 0, failed: 0, blocked: 0, deferred: 1 });
   const edited = structuredClone(INITIAL_REVIEW);
   edited.personal = { status: 'passed', evidence: 'Teste pessoa: resumo conferido.' };
   edited.commercial = { status: 'blocked', evidence: 'Tabela comercial pendente.' };
-  assert.deepEqual(reviewCounts(edited), { untested: 13, passed: 1, failed: 0, blocked: 1, deferred: 1 });
+  assert.deepEqual(reviewCounts(edited), { untested: REVIEW_CASES.length - 3, passed: 1, failed: 0, blocked: 1, deferred: 1 });
   assert.equal(INITIAL_REVIEW.personal.status, 'untested');
   assert.equal(INITIAL_REVIEW.whatsapp.status, 'deferred');
   assert.match(INITIAL_REVIEW.whatsapp.evidence, /solicitação do usuário/);

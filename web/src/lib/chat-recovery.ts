@@ -1,4 +1,4 @@
-import { parseChatRequest, type ChatRequest, type Department } from "./chat.ts";
+import { CHAT_MESSAGE_LIMIT, parseChatRequest, type ChatRequest, type Department } from "./chat.ts";
 
 export type PendingChatRequest = { body: ChatRequest; savedAt: number; version?: 2; sessionRef?: string; expiresAt?: string };
 export type PendingChatScope = { department: Department; sessionRef?: string; expiresAt?: string; conversationId?: string };
@@ -28,7 +28,7 @@ export function readPendingChatRequest(raw: string | null, token: string | null,
     const body = value.body;
     if (value.expiresAt && (!Number.isFinite(Date.parse(value.expiresAt)) || Date.parse(value.expiresAt) <= now)) return null;
     if (!value || !Number.isFinite(value.savedAt) || now - value.savedAt > maxAge || value.savedAt > now || !body || (token !== null && body.token !== token) || !["sales", "service"].includes(body.department) || !["message", "handoff", "register", "request_review"].includes(body.action) || typeof body.request_id !== "string" || !/^[0-9a-f-]{36}$/i.test(body.request_id)) return null;
-    if (body.action === "message" && (typeof body.input !== "string" || !body.input.trim() || body.input.length > 1000)) return null;
+    if (body.action === "message" && (typeof body.input !== "string" || !body.input.trim() || body.input.length > (body.department === "sales" ? CHAT_MESSAGE_LIMIT : 1000))) return null;
     if (["register", "request_review"].includes(body.action)) {
       const contact = body.contact;
       if (!contact || typeof contact.name !== "string" || contact.name.trim().length < 2 || contact.name.length > 150 || typeof contact.phone !== "string" || !/^[+()\d\s-]{10,25}$/.test(contact.phone) || typeof contact.email !== "string" || contact.email.length > 254 || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(contact.email) || contact.consent !== true) return null;

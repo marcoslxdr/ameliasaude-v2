@@ -1,5 +1,17 @@
-/** One deterministic sales script for the bot and approval simulator. No commercial prices live here. */
-export const JOURNEY_VERSION = "amelia-commercial-2026-11-09.2";
+/** One deterministic sales script for the bot and approval simulator. */
+import {
+  DUE_DAYS,
+  MUNICIPALITIES,
+  PRODUCTS,
+  TOPICS,
+  simulateReceivedPrices,
+  waitingPeriodReference,
+  type PreviousPlanDuration,
+  type ProductId,
+  type Coparticipation,
+} from "./materials.ts";
+export { MUNICIPALITIES, TOPICS } from "./materials.ts";
+export const JOURNEY_VERSION = "amelia-commercial-2026-11-09.3";
 export type JourneyQualification = {
   interest?: "personal" | "business";
   cnpj?: string;
@@ -7,87 +19,14 @@ export type JourneyQualification = {
   lives?: number;
   ages?: number[];
   modality?: "empresarial" | "adesao" | "indefinido";
+  product?: ProductId;
+  coparticipation?: Coparticipation;
   previous_plan?: "yes" | "no" | "unknown";
+  previous_plan_duration?: PreviousPlanDuration;
   preferred_due_day?: number;
   desired_start_date?: string;
 };
 export type JourneyOption = { label: string; value: string };
-export const MUNICIPALITIES = [
-  "Rio de Janeiro",
-  "Nova Iguaçu",
-  "Nilópolis",
-  "Belford Roxo",
-  "São Gonçalo",
-  "Niterói",
-  "São João de Meriti",
-  "Duque de Caxias",
-  "Magé",
-  "Mesquita",
-];
-export const TOPICS = [
-  {
-    id: "coverage",
-    title: "Cobertura",
-    summary: "Consultas, exames, internações e emergência",
-    answer:
-      "Vamos conferir consultas, exames, internações e emergência 24h no produto escolhido. A cobertura e suas condições dependem do contrato aprovado; não há confirmação de cobertura individual neste modelo.",
-    source: "Condições gerais do produto — aprovação pendente",
-    status: "pending",
-  },
-  {
-    id: "accommodation",
-    title: "Acomodação",
-    summary: "Quarto coletivo",
-    answer:
-      "A proposta apresentada para esta jornada considera quarto coletivo. A acomodação precisa ser confirmada nas condições oficiais do produto antes da contratação.",
-    source: "Orientação de Marcelo em 09/11/2026; confirmação do produto pendente",
-    status: "pending",
-  },
-  {
-    id: "area",
-    title: "Abrangência geográfica",
-    summary: "Abrangência regional e municípios",
-    answer: `A referência de abrangência regional reúne: ${MUNICIPALITIES.join(", ")}. A elegibilidade e o atendimento dependem do produto; a lista ainda precisa de confirmação comercial. Fora dessa referência, a disponibilidade fica pendente de uma fonte oficial; você pode continuar a consulta por aqui.`,
-    source: "Materiais existentes da Amélia — confirmação de vigência pendente",
-    status: "pending",
-  },
-  {
-    id: "network",
-    title: "Rede de atendimento",
-    summary: "Hospitais e laboratórios do produto",
-    answer:
-      "A rede depende do produto e do município. Consulte a rede completa em https://www.ameliasaude.com.br/rede-credenciada e confira o produto selecionado. Os hospitais e laboratórios de destaque serão apresentados após confirmação da rede aplicável.",
-    source: "Rede Amélia por produto; destaques pendentes de aprovação",
-    status: "pending",
-  },
-  {
-    id: "waiting",
-    title: "Carências",
-    summary: "Plano anterior e redução promocional",
-    answer:
-      "As condições de redução de carência podem variar para quem possui ou não plano anterior. A tabela e o aditivo promocional vigente ainda precisam ser validados; não posso confirmar prazos ou redução sem esses documentos.",
-    source: "Tabela de carências e aditivo vigente — pendentes",
-    status: "pending",
-  },
-  {
-    id: "due",
-    title: "Vencimentos",
-    summary: "Preferência de vencimento",
-    answer:
-      "Posso registrar seu dia de vencimento preferido. As datas disponíveis dependem da tabela oficial aprovada; a preferência não representa alteração ou aprovação contratual.",
-    source: "Datas comerciais disponíveis — pendentes",
-    status: "pending",
-  },
-  {
-    id: "start",
-    title: "Início do contrato",
-    summary: "Data desejada e vigência confirmada",
-    answer:
-      "Posso registrar quando você gostaria de iniciar. A vigência depende da análise e das condições oficiais da Amélia; uma data desejada não confirma ativação ou cobertura.",
-    source: "Regras de início de vigência — pendentes",
-    status: "pending",
-  },
-] as const;
 export type TopicId = (typeof TOPICS)[number]["id"];
 export type JourneyStep =
   | "interest"
@@ -96,10 +35,14 @@ export type JourneyStep =
   | "lives"
   | "ages"
   | "previous_plan"
+  | "previous_plan_duration"
   | "topics"
   | "due_preference"
   | "start_preference"
   | "summary"
+  | "quote_product"
+  | "quote_coparticipation"
+  | "price_simulation"
   | "proposal_requested"
   | "closed";
 export type JourneyState = {
@@ -113,6 +56,7 @@ export type JourneyState = {
   resumeStep?: JourneyStep;
   menu?: boolean;
   inspecting?: TopicId;
+  quoteFlow?: boolean;
   /** A request of interest, never an issued proposal, policy or completed sale. */
   proposalRequest?: {
     status: "requested";
@@ -197,8 +141,14 @@ export function journeySummary(q: JourneyQualification): string {
     q.lives && `Pessoas: ${q.lives}`,
     q.ages && `Idades: ${q.ages.join(", ")}`,
     q.modality && `Modalidade informada: ${q.modality} (sujeita à elegibilidade)`,
+    q.product &&
+      `Produto: ${PRODUCTS.find((product) => product.id === q.product)?.label ?? "a confirmar"}`,
+    q.coparticipation && `Coparticipação: ${q.coparticipation === "com" ? "em terapias" : "sem"}`,
     q.previous_plan &&
       `Plano anterior: ${{ yes: "sim", no: "não", unknown: "a confirmar" }[q.previous_plan]}`,
+    q.previous_plan === "yes" &&
+      q.previous_plan_duration &&
+      `Tempo de plano anterior: ${{ under_6_months: "menos de 6 meses", "6_to_12_months": "de 6 a 12 meses", above_12_months: "acima de 12 meses", unknown: "a confirmar" }[q.previous_plan_duration]}`,
     q.preferred_due_day && `Vencimento desejado: dia ${q.preferred_due_day} (a confirmar)`,
     q.desired_start_date && `Início desejado: ${q.desired_start_date} (a confirmar)`,
   ]
@@ -222,6 +172,13 @@ export function journeyView(state: JourneyState, context: JourneyContext = {}) {
       option("Idades", "edit:ages"),
       ...(state.qualification.interest === "business" ? [option("CNPJ", "edit:cnpj")] : []),
       option("Plano anterior", "edit:previous_plan"),
+      ...(state.qualification.previous_plan === "yes"
+        ? [option("Tempo do plano anterior", "edit:previous_plan_duration")]
+        : []),
+      option("Produto / modalidade", "edit:quote_product"),
+      ...(!!state.qualification.product
+        ? [option("Coparticipação", "edit:quote_coparticipation")]
+        : []),
       option("Vencimento", "edit:due_preference"),
       option("Data de início", "edit:start_preference"),
       option("Retomar", "resume"),
@@ -237,6 +194,8 @@ export function journeyView(state: JourneyState, context: JourneyContext = {}) {
     const topic =
       TOPICS.find((t) => t.id === state.inspecting) ?? TOPICS[state.topicIndex] ?? TOPICS[0];
     text = `${topic.title}\n${context.topicAnswers?.[topic.id] ?? topic.answer}`;
+    if (topic.id === "waiting" && !context.topicAnswers?.waiting)
+      text += `\n\n${waitingPeriodReference(state.qualification.previous_plan, state.qualification.previous_plan_duration)}`;
     if (
       topic.id === "area" &&
       state.qualification.city &&
@@ -281,21 +240,62 @@ export function journeyView(state: JourneyState, context: JourneyContext = {}) {
           option("Preciso confirmar", "previous:unknown"),
         ];
         break;
+      case "previous_plan_duration":
+        text =
+          "Há quanto tempo as pessoas têm o plano anterior? Isso permite explicar a coluna da matriz recebida, sem confirmar aproveitamento. Se houver tempos diferentes, escolha a confirmar.";
+        options = [
+          option("Menos de 6 meses", "duration:under_six"),
+          option("De 6 a 12 meses", "duration:six_to_twelve"),
+          option("Acima de 12 meses", "duration:above_twelve"),
+          option("Preciso confirmar", "duration:unknown"),
+        ];
+        break;
       case "due_preference":
         text =
-          "Qual dia do mês você prefere para o vencimento? Registraremos como preferência, sujeita às datas disponíveis.";
-        options = [option("Definir depois", "skip")];
+          "A tabela apresenta vencimento nos dias 01, 05, 10, 15 e 20. Qual você prefere? A escolha não confirma a contratação.";
+        options = [
+          ...DUE_DAYS.map((day) => ({
+            label: `Dia ${String(day).padStart(2, "0")}`,
+            value: String(day),
+          })),
+          option("Definir depois", "skip"),
+        ];
         break;
       case "start_preference":
         text =
-          "Quando gostaria de iniciar? Informe DD/MM/AAAA. A data é apenas desejada; a vigência depende das condições oficiais.";
+          "Quando gostaria de iniciar? Informe DD/MM/AAAA. A tabela mostra os dias 01, 05, 10, 15 e 20; a data desejada depende da conclusão da entrevista médica e das condições de implantação, sem ativação automática.";
         options = [option("Definir depois", "skip")];
         break;
       case "summary":
         text = `${journeySummary(state.qualification)}\n\nAssuntos apresentados: ${state.visited.map((id) => TOPICS.find((t) => t.id === id)?.title).join(", ") || "nenhum"}.\nCondições pendentes de validação serão confirmadas antes da proposta. Como deseja continuar?`;
         options = [
-          option("Consultar cotação", "quote"),
+          option("Simular valores recebidos", "quote"),
           option("Solicitar proposta", "proposal"),
+          option("Encerrar", "close"),
+        ];
+        break;
+      case "quote_product":
+        text =
+          "Qual produto deseja consultar? Interesse pessoal ou empresarial não define sozinho a modalidade contratual. A elegibilidade depende dos vínculos e condições do produto.";
+        options = PRODUCTS.map((product) => option(product.label, `product:${product.id}`));
+        break;
+      case "quote_coparticipation":
+        text =
+          state.qualification.product === "carioca_10_pme"
+            ? "A tabela PME recebida tem somente a opção com coparticipação em terapias. Deseja simular essa opção? Unidade de cobrança e limites das terapias precisam ser confirmados."
+            : "Para o Carioca 10 Adesão, qual opção deseja simular? A unidade de cobrança e os limites das terapias precisam ser confirmados.";
+        options = [
+          option("Coparticipação em terapias", "copart:com"),
+          ...(state.qualification.product === "carioca_10_pme"
+            ? []
+            : [option("Sem coparticipação", "copart:sem")]),
+        ];
+        break;
+      case "price_simulation":
+        text = simulateReceivedPrices(state.qualification).text;
+        options = [
+          option("Solicitar proposta", "proposal"),
+          option("Consultar condições vigentes", "approved_quote"),
           option("Encerrar", "close"),
         ];
         break;
@@ -304,10 +304,10 @@ export function journeyView(state: JourneyState, context: JourneyContext = {}) {
         const changed = requested && !sameQualification(requested, state.qualification);
         text = changed
           ? `Você corrigiu os dados depois de solicitar a proposta. Confira as informações atuais e confirme a atualização do pedido:\n${journeySummary(state.qualification)}\n\nO pedido anterior permanece registrado até sua confirmação. Nenhuma contratação ou cobertura foi confirmada.`
-          : `Seu pedido de proposta está registrado para estes dados:\n${journeySummary(requested ?? state.qualification)}\n\nUma proposta formal depende de condições comerciais aprovadas e da etapa de contratação. Este pedido não é um contrato, não confirma preço, elegibilidade, início de vigência ou cobertura. As informações ainda não aprovadas continuam pendentes. Você pode consultar a cotação, tirar dúvidas ou corrigir dados aqui; o atendimento continua automático.`;
+          : `Seu pedido de proposta está registrado para estes dados:\n${journeySummary(requested ?? state.qualification)}\n\nUma proposta formal depende de condições comerciais aprovadas e da etapa de contratação. Este pedido não é um contrato, não confirma preço, elegibilidade, início de vigência ou cobertura. As informações ainda não aprovadas continuam pendentes. O treinamento exige entrevista médica concluída antes da vigência; o pedido no chat não agenda essa entrevista nem emite proposta formal. Você pode simular valores recebidos, tirar dúvidas ou corrigir dados aqui; o atendimento continua automático.`;
         options = [
           ...(changed ? [option("Confirmar atualização do pedido", "proposal")] : []),
-          option("Consultar cotação", "quote"),
+          option("Simular valores recebidos", "quote"),
           option("Encerrar", "close"),
         ];
         break;
@@ -333,7 +333,10 @@ const qualificationKeys: (keyof JourneyQualification)[] = [
   "lives",
   "ages",
   "modality",
+  "product",
+  "coparticipation",
   "previous_plan",
+  "previous_plan_duration",
   "preferred_due_day",
   "desired_start_date",
 ];
@@ -354,6 +357,22 @@ export function advanceJourney(
   const done = (text?: string, effect?: JourneyResult["effect"]): JourneyResult => {
     const view = journeyView(state, context);
     return { state, text: text ?? view.text, options: view.options, ...(effect ? { effect } : {}) };
+  };
+  const beginSimulation = (): JourneyResult => {
+    const missing = firstMissing(state.qualification);
+    state.step =
+      missing !== "topics"
+        ? missing
+        : !state.qualification.product
+          ? "quote_product"
+          : !state.qualification.coparticipation
+            ? "quote_coparticipation"
+            : "price_simulation";
+    state.quoteFlow = state.step !== "price_simulation";
+    delete state.menu;
+    delete state.inspecting;
+    delete state.editMenu;
+    return done();
   };
   const raw = input.trim();
   const value = normalize(raw);
@@ -412,8 +431,11 @@ export function advanceJourney(
         "ages",
         "cnpj",
         "previous_plan",
+        "previous_plan_duration",
         "due_preference",
         "start_preference",
+        "quote_product",
+        "quote_coparticipation",
       ].includes(field) &&
       (field !== "cnpj" || state.qualification.interest === "business")
     ) {
@@ -455,6 +477,7 @@ export function advanceJourney(
       };
     }
     state.step = "proposal_requested";
+    delete state.quoteFlow;
     delete state.menu;
     delete state.inspecting;
     delete state.editMenu;
@@ -474,14 +497,15 @@ export function advanceJourney(
       ],
     };
   }
-  if (value === "sales:quote") {
+  if (value === "sales:quote") return beginSimulation();
+  if (value === "sales:approved_quote") {
     const missing = firstMissing(state.qualification);
     if (missing !== "topics") {
       state.step = missing;
       return done();
     }
     return done(
-      "Vou consultar a tabela aprovada e vigente para os dados informados. Se faltarem produto, modalidade ou condições validadas, precisaremos confirmá-los antes de calcular qualquer valor.",
+      "Vou consultar as condições aprovadas e vigentes, separadamente da simulação dos materiais recebidos. Se faltarem produto, modalidade ou fonte validada, manteremos a pendência explícita, sem inventar valores ou transferir automaticamente.",
       "quote",
     );
   }
@@ -494,6 +518,50 @@ export function advanceJourney(
     return done(undefined, "question");
   const q = state.qualification;
   switch (state.step) {
+    case "quote_product": {
+      const selected = PRODUCTS.find(
+        (product) =>
+          value === `sales:product:${product.id}` ||
+          value === normalize(product.label) ||
+          value === product.modality ||
+          (product.id === "carioca_10_pme" && value === "pme"),
+      );
+      if (!selected)
+        return done(
+          "Escolha Carioca 10 Adesão ou Carioca 10 PME. Não utilizamos a tabela de uma modalidade para a outra.",
+        );
+      q.product = selected.id;
+      q.modality = selected.modality;
+      if (selected.id === "carioca_10_pme" && q.coparticipation === "sem") delete q.coparticipation;
+      if (state.editing) {
+        if (!q.coparticipation) {
+          state.step = "quote_coparticipation";
+          return done();
+        }
+        state.step = state.resumeStep ?? "summary";
+        delete state.editing;
+        delete state.resumeStep;
+        return done();
+      }
+      return beginSimulation();
+    }
+    case "quote_coparticipation":
+      if (
+        ["sales:copart:com", "com", "com coparticipacao", "coparticipacao em terapias"].includes(
+          value,
+        )
+      )
+        q.coparticipation = "com";
+      else if (["sales:copart:sem", "sem", "sem coparticipacao"].includes(value))
+        q.coparticipation = "sem";
+      else return done("Escolha com coparticipação em terapias ou sem coparticipação.");
+      if (state.editing) {
+        state.step = state.resumeStep ?? "summary";
+        delete state.editing;
+        delete state.resumeStep;
+        return done();
+      }
+      return beginSimulation();
     case "interest":
       if (
         ["sales:interest:personal", "pessoal", "familia", "para mim", "pessoa", "1"].includes(value)
@@ -533,17 +601,45 @@ export function advanceJourney(
       q.ages = ages;
       break;
     }
+    case "previous_plan_duration": {
+      const durations: Record<string, PreviousPlanDuration> = {
+        "sales:duration:under_six": "under_6_months",
+        "sales:duration:six_to_twelve": "6_to_12_months",
+        "sales:duration:above_twelve": "above_12_months",
+        "sales:duration:unknown": "unknown",
+        "nao sei": "unknown",
+      };
+      const months = /^(\d{1,4})(?: meses)?$/.exec(value);
+      const selected =
+        durations[value] ??
+        (months && Number(months[1]) >= 1
+          ? Number(months[1]) < 6
+            ? "under_6_months"
+            : Number(months[1]) <= 12
+              ? "6_to_12_months"
+              : "above_12_months"
+          : undefined);
+      if (!selected)
+        return done("Escolha menos de 6 meses, de 6 a 12, acima de 12 ou preciso confirmar.");
+      q.previous_plan_duration = selected;
+      break;
+    }
     case "previous_plan":
       if (["sales:previous:yes", "sim"].includes(value)) q.previous_plan = "yes";
       else if (["sales:previous:no", "nao"].includes(value)) q.previous_plan = "no";
       else if (["sales:previous:unknown", "nao sei"].includes(value)) q.previous_plan = "unknown";
       else return done("Selecione sim, não ou preciso confirmar.");
+      if (q.previous_plan === "yes") {
+        state.step = "previous_plan_duration";
+        return done();
+      }
+      delete q.previous_plan_duration;
       break;
     case "due_preference":
       if (value !== "sales:skip") {
-        if (!/^\d{1,2}$/.test(raw) || Number(raw) < 1 || Number(raw) > 31)
+        if (!/^\d{1,2}$/.test(raw) || !DUE_DAYS.some((day) => day === Number(raw)))
           return done(
-            "Informe um dia de 1 a 31, ou escolha definir depois. A disponibilidade será confirmada.",
+            "Escolha um dos dias apresentados na tabela: 01, 05, 10, 15 ou 20, ou defina depois.",
           );
         q.preferred_due_day = Number(raw);
       } else if (state.editing) delete q.preferred_due_day;
@@ -577,9 +673,11 @@ export function advanceJourney(
       return done(undefined, "question");
     case "summary":
     case "proposal_requested":
+    case "price_simulation":
       return done(undefined, "question");
   }
   const next = firstMissing(q);
+  if (next === "topics" && state.quoteFlow && !state.editing) return beginSimulation();
   state.step = state.editing && next === "topics" ? (state.resumeStep ?? "summary") : next;
   if (next === "topics") {
     delete state.editing;
@@ -597,11 +695,20 @@ export function journeyInputLabel(_state: JourneyState, input: string): string {
     "sales:previous:yes": "Já tenho plano",
     "sales:previous:no": "Não tenho plano",
     "sales:previous:unknown": "Plano anterior a confirmar",
+    "sales:duration:under_six": "Menos de 6 meses de plano anterior",
+    "sales:duration:six_to_twelve": "De 6 a 12 meses de plano anterior",
+    "sales:duration:above_twelve": "Acima de 12 meses de plano anterior",
+    "sales:duration:unknown": "Tempo de plano anterior a confirmar",
     "sales:resume": "Retomar jornada",
     "sales:next": "Continuar",
     "sales:handoff": "Falar com vendedor",
     "sales:close": "Encerrar",
-    "sales:quote": "Consultar cotação",
+    "sales:quote": "Simular valores recebidos",
+    "sales:approved_quote": "Consultar condições vigentes",
+    "sales:product:carioca_10_adesao": "Carioca 10 Adesão",
+    "sales:product:carioca_10_pme": "Carioca 10 PME",
+    "sales:copart:com": "Coparticipação em terapias",
+    "sales:copart:sem": "Sem coparticipação",
     "sales:proposal": "Solicitar proposta",
     "sales:skip": "Definir depois",
     "sales:menu": "Menu de assuntos",
@@ -614,6 +721,9 @@ export function journeyInputLabel(_state: JourneyState, input: string): string {
     ages: "idades",
     cnpj: "CNPJ",
     previous_plan: "plano anterior",
+    previous_plan_duration: "tempo do plano anterior",
+    quote_product: "produto / modalidade",
+    quote_coparticipation: "coparticipação",
     due_preference: "vencimento",
     start_preference: "data de início",
   };
