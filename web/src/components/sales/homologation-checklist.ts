@@ -1,4 +1,4 @@
-export const REVIEW_VERSION = '2026-11-09.1';
+export const REVIEW_VERSION = '2026-11-09.2';
 export const REVIEW_DATE = '09/11/2026';
 export const REVIEW_CASES = [
   { id: 'personal', area: 'Modelo', title: 'Pessoa / família completa a qualificação', expected: 'Coleta município, pessoas, idades e plano anterior; não presume plano individual.' },
@@ -14,15 +14,17 @@ export const REVIEW_CASES = [
   { id: 'administrative', area: 'Integração', title: 'Pedido administrativo não vira venda', expected: 'Solicitação de boleto ou carteirinha recebe canal de atendimento adequado.' },
   { id: 'privacy', area: 'Integração', title: 'Histórico de outro contato fica inacessível', expected: 'Troca de identidade exige novo vínculo e não expõe conversa anterior.' },
   { id: 'responsive', area: 'Interface', title: 'Celular, teclado, documentos e rede funcionam', expected: 'Sem cortes ou rolagem horizontal; foco visível e documentos legíveis.' },
-  { id: 'whatsapp', area: 'Canal real', title: 'WhatsApp recebe, responde e transfere mensagens reais', expected: 'Evidência do número Amélia, mensagens, documentos e registro no CRM.' },
+  { id: 'whatsapp', area: 'Etapa posterior', title: 'Conectar e validar o WhatsApp posteriormente', expected: 'Fora do aceite de hoje, por decisão do usuário. Quando conectado, comprovar número Amélia, mensagens, documentos, transferência e registro no CRM.' },
   { id: 'production', area: 'Liberação', title: 'Aceite e teste controlado de produção', expected: 'Marcelo/TI validam versão, Marcos autoriza publicação, rollback pronto e jornada completa comprovada.' },
 ] as const;
-export type ReviewStatus = 'untested' | 'passed' | 'failed' | 'blocked';
+export type ReviewStatus = 'untested' | 'passed' | 'failed' | 'blocked' | 'deferred';
 export type ReviewEntry = { status: ReviewStatus; evidence: string };
-export const INITIAL_REVIEW = Object.fromEntries(REVIEW_CASES.map(item => [item.id, { status: 'untested' as ReviewStatus, evidence: '' }]));
+export const INITIAL_REVIEW: Record<string, ReviewEntry> = Object.fromEntries(REVIEW_CASES.map(item => [item.id, item.id === 'whatsapp'
+  ? { status: 'deferred', evidence: 'Conexão adiada por solicitação do usuário em 09/11/2026; fora do aceite de hoje.' }
+  : { status: 'untested', evidence: '' }]));
 export function reviewCounts(entries: Record<string, ReviewEntry>) {
-  return REVIEW_CASES.reduce((counts, item) => { counts[entries[item.id]?.status ?? 'untested']++; return counts; }, { untested: 0, passed: 0, failed: 0, blocked: 0 });
+  return REVIEW_CASES.reduce((counts, item) => { counts[entries[item.id]?.status ?? INITIAL_REVIEW[item.id].status]++; return counts; }, { untested: 0, passed: 0, failed: 0, blocked: 0, deferred: 0 });
 }
 export function reviewExport(entries: Record<string, ReviewEntry>, reviewer: string, note: string, timestamp: string) {
-  return { version: REVIEW_VERSION, exportedAt: timestamp, reviewer: reviewer.trim(), note: note.trim(), scope: 'Avaliação manual; o simulador não comprova CRM, WhatsApp ou produção.', cases: REVIEW_CASES.map(item => ({ ...item, ...(entries[item.id] ?? { status: 'untested', evidence: '' }) })) };
+  return { version: REVIEW_VERSION, exportedAt: timestamp, reviewer: reviewer.trim(), note: note.trim(), scope: 'Aceite de hoje: landing, webchat e CRM. WhatsApp é etapa posterior por decisão do usuário; não bloqueia o aceite de hoje. Avaliação manual: o simulador não comprova integrações ou produção.', cases: REVIEW_CASES.map(item => ({ ...item, required_today: item.id !== 'whatsapp', ...(entries[item.id] ?? INITIAL_REVIEW[item.id]) })) };
 }

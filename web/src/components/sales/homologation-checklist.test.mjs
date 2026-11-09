@@ -3,13 +3,16 @@ import test from 'node:test';
 import { INITIAL_REVIEW, REVIEW_CASES, reviewCounts, reviewExport } from './homologation-checklist.ts';
 import { createJourney, journeyView, advanceJourney, TOPICS } from '../../lib/sales-journey/engine.ts';
 
-test('checklist starts untested and never infers approval from a simulation', () => {
-  assert.deepEqual(reviewCounts(INITIAL_REVIEW), { untested: 15, passed: 0, failed: 0, blocked: 0 });
+test('only explicitly deferred WhatsApp starts outside current acceptance; no case is auto-approved', () => {
+  assert.deepEqual(reviewCounts(INITIAL_REVIEW), { untested: 14, passed: 0, failed: 0, blocked: 0, deferred: 1 });
   const edited = structuredClone(INITIAL_REVIEW);
   edited.personal = { status: 'passed', evidence: 'Teste pessoa: resumo conferido.' };
-  edited.whatsapp = { status: 'blocked', evidence: 'Número ainda não conectado.' };
-  assert.deepEqual(reviewCounts(edited), { untested: 13, passed: 1, failed: 0, blocked: 1 });
+  edited.commercial = { status: 'blocked', evidence: 'Tabela comercial pendente.' };
+  assert.deepEqual(reviewCounts(edited), { untested: 12, passed: 1, failed: 0, blocked: 1, deferred: 1 });
   assert.equal(INITIAL_REVIEW.personal.status, 'untested');
+  assert.equal(INITIAL_REVIEW.whatsapp.status, 'deferred');
+  assert.match(INITIAL_REVIEW.whatsapp.evidence, /solicitação do usuário/);
+  assert.ok(REVIEW_CASES.filter(item => item.id !== 'whatsapp').every(item => INITIAL_REVIEW[item.id].status === 'untested'));
 });
 
 test('export contains all test cases and evidence, including unanswered ones', () => {
@@ -20,7 +23,12 @@ test('export contains all test cases and evidence, including unanswered ones', (
   assert.equal(report.cases[0].status, 'failed');
   assert.equal(report.cases.at(-1).status, 'untested');
   assert.equal('messages' in report, false);
-  assert.match(report.scope, /não comprova CRM, WhatsApp ou produção/);
+  assert.match(report.scope, /WhatsApp é etapa posterior/);
+  const whatsapp = report.cases.find(item => item.id === 'whatsapp');
+  assert.equal(whatsapp.status, 'deferred');
+  assert.equal(whatsapp.required_today, false);
+  assert.ok(report.cases.filter(item => item.id !== 'whatsapp').every(item => item.required_today));
+  assert.match(report.scope, /não bloqueia o aceite de hoje/);
 });
 
 test('simulator uses shared journey options and retains data through direct topic menu', () => {
