@@ -1,4 +1,4 @@
-export const REVIEW_VERSION = '2026-11-09.6';
+export const REVIEW_VERSION = '2026-11-09.7';
 export const REVIEW_DATE = '09/11/2026';
 export const REVIEW_CASES = [
   { id: 'personal', area: 'Modelo', title: 'Pessoa / família completa a qualificação', expected: 'Coleta município, pessoas, idades e plano anterior; não presume plano individual.' },
@@ -20,7 +20,12 @@ export const REVIEW_CASES = [
   { id: 'privacy', area: 'Integração', title: 'Histórico de outro contato fica inacessível', expected: 'Troca de identidade exige novo vínculo e não expõe conversa anterior.' },
   { id: 'responsive', area: 'Interface', title: 'Celular, teclado, documentos e rede funcionam', expected: 'Página sem cortes ou rolagem horizontal; tabelas largas rolam dentro de sua região acessível, foco visível e materiais legíveis.' },
   { id: 'whatsapp', area: 'Etapa posterior', title: 'Conectar e validar o WhatsApp posteriormente', expected: 'Fora do aceite de hoje, por decisão do usuário. Quando conectado, comprovar número Amélia, mensagens, documentos, transferência e registro no CRM.' },
-  { id: 'production', area: 'Liberação', title: 'Aceite e teste controlado de produção', expected: 'Marcelo/TI validam versão, Marcos autoriza publicação, rollback pronto e jornada completa comprovada.' },
+  { id: 'ai_question', area: 'Preview integrada · IA', title: 'IA responde dúvida livre com fonte', expected: 'A resposta identifica o material usado, distingue informação recebida de condição aprovada e permite continuar a conversa.' },
+  { id: 'ai_missing', area: 'Preview integrada · IA', title: 'IA reconhece informação ausente ou não aprovada', expected: 'Não inventa preço, cobertura ou condição; explica a pendência sem obrigar o cliente a falar com vendedor.' },
+  { id: 'ai_failure', area: 'Preview integrada · IA', title: 'Indisponibilidade da IA permite continuar', expected: 'A falha é informada claramente e a conversa oferece um próximo passo, sem resposta falsa ou perda da jornada.' },
+  { id: 'integrated_paths', area: 'Preview integrada', title: 'Pessoa e empresa percorrem a jornada no chat integrado', expected: 'Os dois caminhos usam dados fictícios, percorrem os sete assuntos, retomam após correção e recarga e chegam ao resumo correto.' },
+  { id: 'commercial_approval', area: 'Validação comercial', title: 'Equipe confirma produtos, condições e fontes', expected: 'Versão, validade e responsável pelos materiais são confirmados; preço, rede, carência, vencimento e vigência não são tratados como aprovados sem confirmação.' },
+  { id: 'production', area: 'Liberação', title: 'Aceite e teste controlado de produção', expected: 'Após autorização separada de Marcos, com rollback pronto, equipe e TI executam teste controlado da versão publicada e conferem a jornada. O registro deste passo não publica nem autoriza produção.' },
 ] as const;
 export type ReviewStatus = 'untested' | 'passed' | 'failed' | 'blocked' | 'deferred';
 export type ReviewEntry = { status: ReviewStatus; evidence: string };
