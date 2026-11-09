@@ -1,6 +1,7 @@
+import { isValidCnpj, isValidDesiredStartDate } from "./sales-journey/engine.ts";
 export type Department = "sales" | "service";
 export type ChatAttribution = { page_path?: string; referrer_origin?: string; utm_source?: string; utm_medium?: string; utm_campaign?: string; utm_content?: string; utm_term?: string };
-export type ChatQualification = { city?: string; lives?: number; ages?: number[]; modality?: "empresarial" | "adesao" | "indefinido" };
+export type ChatQualification = { city?: string; lives?: number; ages?: number[]; modality?: "empresarial" | "adesao" | "indefinido"; interest?: "personal" | "business"; cnpj?: string; previous_plan?: "yes" | "no" | "unknown"; preferred_due_day?: number; desired_start_date?: string };
 export type ChatAction = "start" | "reset" | "recover" | "message" | "poll" | "register" | "handoff" | "request_review" | "email_code" | "verify_email" | "history" | "earlier_messages" | "resume" | "logout";
 export type ChatRequest = { action: ChatAction; department: Department; token?: string; input?: string; request_id?: string; attribution?: ChatAttribution; qualification?: ChatQualification; contact?: { name: string; phone: string; email: string; consent: true }; email?: string; phone?: string; code?: string; conversation_id?: string; cursor?: string };
 export type ChatOption = { label: string; value: string };
@@ -8,7 +9,8 @@ export type ChatMessage = { id: string; text: string; quickReplies?: ChatOption[
 export type ChatStatus = "active" | "waiting_human" | "in_progress" | "closed";
 export type ChatConversation = { id: string; updated_at: string; status: ChatStatus; preview: string; can_resume: boolean };
 export type ChatVerification = { enabled: boolean; status: "unverified" | "pending" | "verified"; resend_after?: number; expires_at?: string };
-export type ChatResponse = { token?: string; messages: ChatMessage[]; input: { kind: string; placeholder: string; hint?: string } | null; handoff: boolean; crmSynced: boolean; brand: "amelia"; department: Department; agentMessages?: { id: string; text: string }[]; history?: { id: string; text: string; role: "bot" | "user" | "agent" }[]; registered?: boolean; status?: ChatStatus; read_only?: boolean; conversation_id?: string; session_expires_at?: string; verification?: ChatVerification; conversations?: ChatConversation[]; conversations_cursor?: string | null; history_cursor?: string | null; waiting_since?: string | null };
+export type ChatJourney = { version: string; step: string; text: string; options: ChatOption[]; qualification: ChatQualification };
+export type ChatResponse = { journey?: ChatJourney; token?: string; messages: ChatMessage[]; input: { kind: string; placeholder: string; hint?: string } | null; handoff: boolean; crmSynced: boolean; brand: "amelia"; department: Department; agentMessages?: { id: string; text: string }[]; history?: { id: string; text: string; role: "bot" | "user" | "agent" }[]; registered?: boolean; status?: ChatStatus; read_only?: boolean; conversation_id?: string; session_expires_at?: string; verification?: ChatVerification; conversations?: ChatConversation[]; conversations_cursor?: string | null; history_cursor?: string | null; waiting_since?: string | null };
 
 const campaignKeys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"] as const;
 
@@ -57,6 +59,26 @@ export function parseChatQualification(value: unknown): ChatQualification | null
   if (input.modality !== undefined) {
     if (!["empresarial", "adesao", "indefinido"].includes(String(input.modality))) return null;
     result.modality = input.modality as ChatQualification["modality"];
+  }
+  if (input.interest !== undefined) {
+    if (!["personal", "business"].includes(String(input.interest))) return null;
+    result.interest = input.interest as ChatQualification["interest"];
+  }
+  if (input.cnpj !== undefined) {
+    if (typeof input.cnpj !== "string" || !isValidCnpj(input.cnpj)) return null;
+    result.cnpj = input.cnpj.replace(/\D/g, "");
+  }
+  if (input.previous_plan !== undefined) {
+    if (!["yes", "no", "unknown"].includes(String(input.previous_plan))) return null;
+    result.previous_plan = input.previous_plan as ChatQualification["previous_plan"];
+  }
+  if (input.preferred_due_day !== undefined) {
+    if (!Number.isInteger(input.preferred_due_day) || Number(input.preferred_due_day) < 1 || Number(input.preferred_due_day) > 31) return null;
+    result.preferred_due_day = Number(input.preferred_due_day);
+  }
+  if (input.desired_start_date !== undefined) {
+    if (typeof input.desired_start_date !== "string" || !isValidDesiredStartDate(input.desired_start_date)) return null;
+    result.desired_start_date = input.desired_start_date;
   }
   if (result.lives && result.ages && result.ages.length !== result.lives) return null;
   return Object.keys(result).length ? result : null;
@@ -169,8 +191,16 @@ export async function relayAmeliaChat(body: ChatRequest, options: { endpoint?: s
       if (cursor !== undefined && cursor !== null && (typeof cursor !== "string" || !cursorPattern.test(cursor))) return { status: 502, payload: { error: "invalid_chat_response" } };
     }
     if (data.waiting_since !== undefined && data.waiting_since !== null && (typeof data.waiting_since !== "string" || !Number.isFinite(Date.parse(data.waiting_since)))) return { status: 502, payload: { error: "invalid_chat_response" } };
+    let journey: ChatJourney | undefined;
+    if (data.journey !== undefined) {
+      const value = data.journey;
+      if (!value || typeof value.version !== "string" || value.version.length > 100 || typeof value.step !== "string" || value.step.length > 50 || typeof value.text !== "string" || value.text.length > 10000 || !safeOptions(value.options) || !value.qualification || typeof value.qualification !== "object" || Array.isArray(value.qualification)) return { status: 502, payload: { error: "invalid_chat_response" } };
+      const qualification = Object.keys(value.qualification).length ? parseChatQualification(value.qualification) : {};
+      if (!qualification || value.options.some(option => !/^sales:[a-z_:]+$/.test(option.value))) return { status: 502, payload: { error: "invalid_chat_response" } };
+      journey = { version: value.version, step: value.step, text: value.text, qualification, options: data.status === "closed" || data.status === "in_progress" || data.status === "waiting_human" || data.handoff || data.read_only ? [] : value.options.map(({ label, value }) => ({ label, value })) };
+    }
     // Only explicitly reviewed fields can cross the public boundary.
-    return { status: 200, payload: { token: data.token,
+    return { status: 200, payload: { token: data.token, ...(journey ? { journey } : {}),
       ...(data.conversations_cursor !== undefined ? { conversations_cursor: data.conversations_cursor } : {}),
       ...(data.history_cursor !== undefined ? { history_cursor: data.history_cursor } : {}),
       ...(data.waiting_since !== undefined ? { waiting_since: data.status === "waiting_human" ? data.waiting_since : null } : {}),

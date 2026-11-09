@@ -347,3 +347,27 @@ test("expired or revoked sessions clear browser bindings, while conflicts keep t
   assert.equal(shouldClearChatCookies("logout",200),true);
   assert.equal(shouldClearChatCookies("logout",503),true);
 });
+
+test("commercial qualification validates CNPJ, dates and preferences without inventing modality", () => {
+  const base = { action: "message", department: "sales", input: "sales:resume", request_id: "11111111-1111-4111-8111-111111111111" };
+  const qualification = { interest: "business", cnpj: "11.222.333/0001-81", city: "Niterói", lives: 2, ages: [0, 35], previous_plan: "no", preferred_due_day: 10, desired_start_date: "2026-11-20", secret: "discard" };
+  const parsed = parseChatRequest({ ...base, qualification });
+  assert.equal(parsed.qualification.cnpj, "11222333000181");
+  assert.equal(parsed.qualification.modality, undefined);
+  assert.equal(parsed.qualification.secret, undefined);
+  for (const patch of [{ cnpj: "11111111111111" }, { preferred_due_day: 32 }, { desired_start_date: "2026-02-30" }, { ages: [1] }, { interest: "individual" }]) {
+    assert.equal(parseChatRequest({ ...base, qualification: { ...qualification, ...patch } }), null);
+  }
+});
+
+test("journey projection strips metadata and removes actions during human ownership", async () => {
+  const journey = { version: "test-v1", step: "interest", text: "Para quem?", qualification: {}, options: [{label: "Família", value: "sales:interest:personal", secret: "private"}], secret: "private" };
+  const relay = patch => relayAmeliaChat(body, { ...options, fetchImpl: async () => Response.json({ ...fixture(), journey, ...patch }) });
+  const active = await relay({});
+  assert.equal(active.status, 200);
+  assert.equal(JSON.stringify(active.payload.journey).includes("private"), false);
+  assert.equal(active.payload.journey.options.length, 1);
+  for (const status of ["waiting_human", "in_progress", "closed"]) assert.deepEqual((await relay({ status })).payload.journey.options, []);
+  assert.equal((await relay({ journey: { ...journey, options: [{ label: "Unsafe", value: "javascript:alert(1)" }] } })).status, 502);
+  assert.equal((await relay({ journey: { ...journey, qualification: { cnpj: "123" } } })).status, 502);
+});

@@ -66,6 +66,12 @@ export function App({initialPath = '/'}) {
     setMenuOpen(false);setQuoteOpen(false);
     requestAnimationFrame(()=>chatRef.current?.open(trigger?.isConnected ? trigger : headerQuoteRef.current));
   },[]);
+  const startLandingChat = useCallback(prefill=>{
+    const trigger = document.activeElement;
+    setMenuOpen(false);setQuoteOpen(false);
+    if (!chatRef.current) throw new Error('Chat indisponível');
+    return chatRef.current.open(trigger instanceof HTMLElement ? trigger : headerQuoteRef.current, prefill);
+  },[]);
   const navigate = useCallback(href=>{
     const destination = new URL(href,window.location.origin);
     const routeChanged = destination.pathname!==window.location.pathname;
@@ -113,7 +119,7 @@ export function App({initialPath = '/'}) {
     </header>
     <ClosingStack enabled={isHome}>
     <main ref={mainRef} id="main-content" tabIndex={-1}>
-      {isHome?<Home navigate={navigate} openSalesChat={openSalesChat}/>:isLanding?<LandingPage navigate={navigate} openQuote={pageQuoteAction}/>:route==='/cotacao'?<section className="quote-page"><div className="quote-page-intro"><span className="eyebrow">Simule seu plano</span><h1>Planos feitos para cuidar de você de verdade.</h1><p>Planos de saúde feitos para você</p><img src="/assets/familia-bg.webp" alt="Família reunida"/></div><div className="quote-page-form"><QuoteForm navigate={navigate}/></div></section>:<Suspense fallback={<div className="page-loading" role="status">Carregando…</div>}><InteriorPage path={path} navigate={navigate} openQuote={openQuote}/></Suspense>}
+      {isHome?<Home navigate={navigate} openSalesChat={openSalesChat}/>:isLanding?<LandingPage navigate={navigate} openQuote={pageQuoteAction} onStartChat={startLandingChat}/>:route==='/cotacao'?<section className="quote-page"><div className="quote-page-intro"><span className="eyebrow">Simule seu plano</span><h1>Planos feitos para cuidar de você de verdade.</h1><p>Planos de saúde feitos para você</p><img src="/assets/familia-bg.webp" alt="Família reunida"/></div><div className="quote-page-form"><QuoteForm navigate={navigate}/></div></section>:<Suspense fallback={<div className="page-loading" role="status">Carregando…</div>}><InteriorPage path={path} navigate={navigate} openQuote={openQuote}/></Suspense>}
     </main>
     {isHome?<div className="closing-card closing-stack-footer" data-closing-card><Footer navigate={navigate}/></div>:<Footer navigate={navigate}/>}
     </ClosingStack>
